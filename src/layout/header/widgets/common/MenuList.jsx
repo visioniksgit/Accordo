@@ -89,12 +89,16 @@ const getLinkColumns = (menu) => {
 const MENU_TITLES_WITH_CHILD_THUMBS = [
   'Shop by Herbs',
   'Shop by Health Concerns',
+  'Shop by Category',
   'For Business',
 ];
 
-const MENU_TITLES_WITH_THUMB_GRID = ['Shop by Health Concerns', 'For Business'];
+const MENU_TITLES_WITH_THUMB_GRID = [
+  'Shop by Health Concerns',
+  'Shop by Category',
+];
 
-const SHOP_BY_CATEGORY_TITLE = 'Shop by Category';
+const FOR_BUSINESS_TITLE = 'For Business';
 
 const resolveMenuItemImage = (item) => {
   const candidate =
@@ -382,7 +386,7 @@ const MenuList = ({
           </div>
         )}
 
-        {menu?.styleType == 'link' && menu?.title === SHOP_BY_CATEGORY_TITLE && (
+        {menu?.styleType == 'link' && menu?.title === FOR_BUSINESS_TITLE && (
           <div
             className={`dropdown-menu dropdown-menu-2 dropdown-shop-by-category ${isOpen[level] === menu.title ? 'show' : ''}`}
           >
@@ -433,7 +437,7 @@ const MenuList = ({
           </div>
         )}
 
-        {menu?.styleType == 'link' && menu?.title !== SHOP_BY_CATEGORY_TITLE && (
+        {menu?.styleType == 'link' && menu?.title !== FOR_BUSINESS_TITLE && (
           <div
             className={`dropdown-menu dropdown-menu-2 ${useThumbGridLayout ? 'dropdown-thumbs-grid' : ''} ${isOpen[level] === menu.title ? 'show' : ''}`}
           >

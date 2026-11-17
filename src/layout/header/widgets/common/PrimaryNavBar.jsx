@@ -8,11 +8,11 @@ import { usePathname } from 'next/navigation';
 const PRIMARY_NAV_TITLES = [
   'Home',
   'Shop All',
-  'Shop by Category',
+  'For Business',
   'Best Sellers',
   'Deals',
   'AI Negotiations',
-  'For Business',
+  'Shop by Category',
   'About Us',
   // 'Blogs',
   // 'Media',
