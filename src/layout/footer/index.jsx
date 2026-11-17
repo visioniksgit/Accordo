@@ -31,10 +31,6 @@ const MainFooter = () => {
                 footerMenu={footerMenu}
                 setFooterMenu={setFooterMenu}
               />
-              <FooterUseFul
-                footerMenu={footerMenu}
-                setFooterMenu={setFooterMenu}
-              />
               <FooterQuickPage
                 footerMenu={footerMenu}
                 setFooterMenu={setFooterMenu}
