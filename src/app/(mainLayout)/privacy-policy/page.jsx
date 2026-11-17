@@ -6,10 +6,7 @@ import styles from './page.module.scss';
 export const metadata = {
   title: 'Privacy Policy',
   description:
-    'Read the Privacy Policy for www.sdlindia.com, including legal notices, privacy references, jurisdiction, and usage rules.',
-  alternates: {
-    canonical: 'https://www.sdlindia.com/privacy-policy',
-  },
+    'Read our Privacy Policy, including legal notices, data protection, usage rules, and privacy practices.',
 };
 
 export default function PrivacyPolicyPage() {
@@ -41,29 +38,21 @@ export default function PrivacyPolicyPage() {
             <article className={styles.legalCard}>
               <h2 className={styles.sectionTitle}>Privacy Policy:</h2>
               <p>
-                At Shree Dhootapapeshwar Limited Online Store, accessible from{' '}
-                <a href="/" target="_blank" rel="noopener noreferrer">
-                  www.sdlindia.com
-                </a>
-                , our top priority is the privacy of our visitors. This Privacy
-                Policy document contains types of information that is collected
-                and recorded by Shree Dhootapapeshwar Limited and how we use it.
-                All natural persons, whose personal information is either
-                collected/ received/ possessed/ stored/ dealt in/ handled by
-                Company or who visit the site{' '}
-                <a href="/" target="_blank" rel="noopener noreferrer">
-                  www.sdlindia.com
-                </a>{' '}
-                and provide information to the Company online, are covered under
-                this Policy.
+                At our store, accessible from our website, our top priority is
+                the privacy of our visitors. This Privacy Policy document contains
+                types of information that is collected and recorded by the Company
+                and how we use it. All natural persons whose personal information
+                is either collected, received, possessed, stored, dealt in, or
+                handled by the Company, or who visit our website and provide
+                information to the Company online, are covered under this Policy.
               </p>
 
               <h3 className={styles.subTitle}>
                 Information covered by this Policy
               </h3>
               <p>
-                This Policy seeks to cover personal information of the
-                customers/persons i.e. which may include any of the following:
+                This Policy seeks to cover personal information of customers and
+                visitors, which may include any of the following:
               </p>
 
               <ul>
@@ -71,34 +60,33 @@ export default function PrivacyPolicyPage() {
                 <li>E-mail</li>
                 <li>Phone number</li>
                 <li>IP address</li>
-                <li>GST Number (if applicable)</li>
-                <li>Comments</li>
-                <li>Queries</li>
+                <li>GST / Tax Identification Number (if applicable)</li>
+                <li>Comments and inquiries</li>
+                <li>Order details and transaction history</li>
               </ul>
 
               <h3 className={styles.subTitle}>Log Files</h3>
               <p>
-                Shree Dhootapapeshwar Limited follows a standard procedure of
-                using log files. These files log visitors when they visit
-                websites. All hosting companies do this and a part of hosting
-                services & analytics.
+                We follow a standard procedure of using log files. These files log
+                visitors when they visit websites. All hosting companies do this
+                as part of hosting services and analytics.
               </p>
               <p>
-                The information collected by log files include internet protocol
+                The information collected by log files includes internet protocol
                 (IP) addresses, browser type, Internet Service Provider (ISP),
-                date and time stamp, referring/exit pages, and possibly the
+                date and time stamps, referring/exit pages, and possibly the
                 number of clicks. These are not linked to any information that
-                is personally identifiable. The purpose of the information is
-                for analysing trends, administering the site, tracking users,
-                movement on the website and gathering demographic information.
+                is personally identifiable. The purpose of the information is for
+                analyzing trends, administering the site, tracking user movement
+                on the website, and gathering demographic information.
               </p>
 
               <h3 className={styles.subTitle}>Data Retention</h3>
               <p>
-                We retain your personal information only for as long as
-                necessary to provide our services, maintain your account,
-                fulfill orders, provide customer support, comply with applicable
-                laws, resolve disputes, and enforce our legal agreements.
+                We retain your personal information only for as long as necessary
+                to provide our services, maintain your account, fulfill orders,
+                provide customer support, comply with applicable laws, resolve
+                disputes, and enforce our legal agreements.
               </p>
               <p>
                 Order history, invoices, payment-related records, and other
@@ -113,18 +101,11 @@ export default function PrivacyPolicyPage() {
 
               <h3 className={styles.subTitle}>Data Deletion</h3>
               <p>
-                You may request the deletion of your account and personal data
-                by submitting a request through our Contact Us page:{' '}
-                <a
-                  href="/delete-account"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  https://sdlindia.com/delete-account
-                </a>{' '}
-                After receiving your request, our support team will verify your
-                request and will begin the account deletion process within 24
-                hours.
+                You may request the deletion of your account and personal data by
+                submitting a request through our Contact Us page or account
+                settings. After receiving your request, our support team will
+                verify your request and begin the account deletion process
+                within a reasonable time frame.
               </p>
               <p>Upon approval:</p>
               <ul>
@@ -134,11 +115,11 @@ export default function PrivacyPolicyPage() {
                   deleted.
                 </li>
                 <li>
-                  Order history, invoices, payment records, and other
-                  information that we are legally required to retain for tax,
-                  accounting, fraud prevention, dispute resolution, or other
-                  regulatory purposes will be retained for the legally required
-                  period and will not be deleted until those obligations expire.
+                  Order history, invoices, payment records, and other information
+                  that we are legally required to retain for tax, accounting,
+                  fraud prevention, dispute resolution, or other regulatory
+                  purposes will be retained for the legally required period and
+                  will not be deleted until those obligations expire.
                 </li>
               </ul>
               <p>
@@ -149,56 +130,54 @@ export default function PrivacyPolicyPage() {
 
               <h3 className={styles.subTitle}>Cookies and Web Beacons</h3>
               <p>
-                Like any other website, SDL uses cookies. These cookies are used
-                to store information including visitor preferences, and the
+                Like any other website, our website uses cookies. These cookies
+                are used to store information including visitor preferences and the
                 pages on the website that the visitor accessed or visited. The
-                information is used to optimise the users’ experience by
-                customising our webpage content based on visitors or browser
-                type and/or other information. You can choose to disable cookies
-                through your individual browser options. To know more in detail
-                about cookie management with specific web browsers, it can be
-                found at the browsers’ respective websites.
+                information is used to optimize users’ experience by customizing
+                our webpage content based on browser type and/or other
+                information. You can choose to disable cookies through your
+                individual browser options. To learn more about cookie management
+                with specific web browsers, visit the browsers’ respective
+                websites.
               </p>
 
               <h3 className={styles.subTitle}>Our Advertising Partners</h3>
               <p>
-                Some of advertisers on our site may use cookies and web beacons.
-                Each of our advertising partners have their own Privacy Policy
-                for their policies on user data.
+                Some advertisers or analytics providers on our site may use cookies
+                and web beacons. Each partner maintains their own Privacy Policy
+                governing user data.
               </p>
 
               <h3 className={styles.subTitle}>Third Party Privacy Policies</h3>
               <p>
-                Shree Dhootapapeshwar Limited’s Privacy Policy does not apply to
-                other advertisers or websites whose hyperlinks may feature on
-                our website. Thus, we are advising you to consult the respective
-                Privacy Policies of these third-party ad servers for more
-                detailed information.
+                Our Privacy Policy does not apply to other advertisers or websites
+                whose hyperlinks may feature on our website. We advise you to
+                consult the respective Privacy Policies of these third-party
+                services for more detailed information.
               </p>
 
               <h3 className={styles.subTitle}>
-                Link to privacy policy of third-party service providers used by
-                the app:
+                Third-Party Service Providers
               </h3>
-              <p>Firebase Analytics</p>
+              <p>
+                We may utilize third-party services such as web and app analytics
+                providers (e.g., Google Analytics / Firebase Analytics) to help us
+                understand site usage and improve customer experience.
+              </p>
 
               <h3 className={styles.subTitle}>Online Privacy Policy Only</h3>
               <p>
                 This Privacy Policy applies only to our online activities and is
                 valid for visitors to our website with regard to the information
-                that they shared and/or collect on Shree Dhootapapeshwar
-                Limited. This policy is not applicable to any information
-                collected offline or via channels other than this website.
+                that they share and/or collect on the website. This policy is not
+                applicable to any information collected offline or via channels
+                other than this website.
               </p>
 
               <h3 className={styles.subTitle}>Consent</h3>
               <p>
-                By using our website, you hereby consent to our Privacy Policy
-                and agree to its Terms & Conditions.Information contained on
-                this website is not a substitute to expert advice by a
-                registered ayurvedic practitioner. The products, services &
-                information featured on this website is for consumption in India
-                only.
+                By using our website, you hereby consent to our Privacy Policy and
+                agree to its Terms & Conditions.
               </p>
             </article>
           </Col>

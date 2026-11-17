@@ -9,20 +9,12 @@ const SubFooter2 = () => {
       <FooterSocial />
 
       <h6 className="text-content-color my-md-1 term-policy">
-        <a href="/disclaimer" target="_blank" rel="noreferrer">
-          Disclaimer
-        </a>{' '}
-        |{' '}
         <a href="/privacy-policy" target="_blank" rel="noreferrer">
           Privacy Policy
         </a>{' '}
         |{' '}
         <a href="/return-policy" target="_blank" rel="noreferrer">
           Return & Refund Policy
-        </a>{' '}
-        |{' '}
-        <a href="/grievance-policy" target="_blank" rel="noreferrer">
-          Grievance Policy
         </a>{' '}
         |{' '}
         <a href="/terms-and-conditions" target="_blank" rel="noreferrer">
