@@ -1886,20 +1886,21 @@ header {
               align-items: flex-start;
               gap: 12px;
               padding: 12px;
-              background: var(--light-gray);
+              // background: var(--light-gray);
+              background: #F7F9FE;
               border-radius: 8px;
               cursor: pointer;
               transition: all 0.2s ease;
 
               &:hover {
-                background: #f0f0f0;
+                background: #F7F9FE;
               }
 
               .location-icon-wrapper {
                 flex-shrink: 0;
                 width: 40px;
                 height: 40px;
-                background: #e0e0e0;
+                background: #D4DEF3;
                 border-radius: 6px;
                 display: flex;
                 align-items: center;
@@ -1908,6 +1909,7 @@ header {
 
                 svg {
                   font-size: 20px;
+                  color: var(--theme-color);
                 }
               }
 

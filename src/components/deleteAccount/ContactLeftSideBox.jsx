@@ -28,7 +28,7 @@ const ContactLeftSideBox = () => {
               <Row className="g-4">
                 <h3>Registered office :</h3>
                 <Col xxl={4} lg={4} sm={6}>
-                  <a href='tel:2223829874' className="contact-detail-box h-100">
+                  <a href='tel:9898989898' className="contact-detail-box h-100">
                     <div className="contact-icon">
                       <RiPhoneLine />
                     </div>
@@ -37,13 +37,13 @@ const ContactLeftSideBox = () => {
                     </div>
 
                     <div className="contact-detail-contain">
-                      <p>+91-22-23829874</p>
+                      <p>+91-9898989898</p>
                     </div>
                   </a>
                 </Col>
 
                 <Col xxl={4} lg={4} sm={6}>
-                  <a href='mailto:healthcare@sdlindia.com' className="contact-detail-box h-100">
+                  <a href='mailto:test@gmail.com' className="contact-detail-box h-100">
                     <div className="contact-icon">
                       <RiMailLine />
                     </div>
@@ -52,7 +52,7 @@ const ContactLeftSideBox = () => {
                     </div>
 
                     <div className="contact-detail-contain">
-                      <p>healthcare@sdlindia.com</p>
+                      <p>test@gmail.com</p>
                     </div>
                   </a>
                 </Col>
@@ -67,8 +67,7 @@ const ContactLeftSideBox = () => {
                     </div>
 
                     <div className="contact-detail-contain">
-                      <p>135, Nanubhai Desai Road, Khetwadi,
-                        Girgaon, Mumbai,- 400004.
+                      <p>701, Haware Infotech Park, Sector 30A, Near Inorbit Mall, Vashi, Navi Mumbai, Maharashtra 400703
                       </p>
                     </div>
                   </div>
@@ -94,7 +93,7 @@ const ContactLeftSideBox = () => {
               <Row className="g-4">
                 <h3>Administrative office :</h3>
                 <Col xxl={4} lg={4} sm={6}>
-                  <a href='tel:2269715000' className="contact-detail-box h-100">
+                  <a href='tel:9898989898' className="contact-detail-box h-100">
                     <div className="contact-icon">
                       <RiPhoneLine />
                     </div>
@@ -103,13 +102,13 @@ const ContactLeftSideBox = () => {
                     </div>
 
                     <div className="contact-detail-contain">
-                      <p>+91-22-69715000</p>
+                      <p>+91-9898989898</p>
                     </div>
                   </a>
                 </Col>
 
                 <Col xxl={4} lg={4} sm={6}>
-                  <a href='mailto:healthcare@sdlindia.com' className="contact-detail-box h-100">
+                  <a href='mailto:test@gmail.com' className="contact-detail-box h-100">
                     <div className="contact-icon">
                       <RiMailLine />
                     </div>
@@ -118,7 +117,7 @@ const ContactLeftSideBox = () => {
                     </div>
 
                     <div className="contact-detail-contain">
-                      <p>healthcare@sdlindia.com</p>
+                      <p>test@gmail.com</p>
                     </div>
                   </a>
                 </Col>
@@ -133,8 +132,7 @@ const ContactLeftSideBox = () => {
                     </div>
 
                     <div className="contact-detail-contain">
-                      <p>5th floor, Vastu Central, J. K. Sawant Marg,
-                        Dadar (West), Mumbai,- 400028
+                      <p>701, Haware Infotech Park, Sector 30A, Near Inorbit Mall, Vashi, Navi Mumbai, Maharashtra 400703
                       </p>
                     </div>
                   </div>

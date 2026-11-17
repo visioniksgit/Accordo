@@ -20,7 +20,7 @@ const ContactUsContent = () => {
           <h1 className="events-title">Contact Us</h1>
           <h2 className="sr-only">This is a contact us page.</h2>
           <p className="events-subtitle">
-            Reach out to Shree Dhootapapeshwar Limited for product enquiries, customer support, and office locations across India.
+            Reach out to Accordo Ai for enquiries, customer support, and office locations across India.
           </p>
         </div>
         <Row className="g-4 align-items-stretch">

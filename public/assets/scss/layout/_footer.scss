@@ -6,7 +6,8 @@
 @use '../utils/mixin/breakpoints';
 
 footer {
-  background-color: var(--light-gray);
+  // background-color: var(--light-gray);
+  background-color: #F7F9FE;
   position: relative;
   z-index: unset;
 

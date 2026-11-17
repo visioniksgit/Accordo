@@ -398,18 +398,20 @@ const ProductsDetailPage = ({ slug }) => {
 
     return [
       { key: 'description', label: 'Description', content: p.description },
-      { key: 'benefits', label: 'Benefits', content: p.benefits },
-      { key: 'ingredients', label: 'Ingredients', content: p.ingredients },
-      { key: 'indication', label: 'Indication', content: p.indication },
-      { key: 'dosage', label: 'Dosage', content: p.dosage },
-      { key: 'caution', label: 'Caution', content: p.caution },
-      { key: 'availability', label: 'Availability', content: p.availability },
-      {
-        key: 'productMarketAuth',
-        label: 'Market Authorization',
-        content: buildMarketAuthHtml(p.productMarketAuth, p.name || ''),
-      },
+      { key: 'key_attributes', label: 'Key Attributes', content: '', alwaysShow: true },
+      // { key: 'benefits', label: 'Benefits', content: p.benefits },
+      // { key: 'ingredients', label: 'Ingredients', content: p.ingredients },
+      // { key: 'indication', label: 'Indication', content: p.indication },
+      // { key: 'dosage', label: 'Dosage', content: p.dosage },
+      // { key: 'caution', label: 'Caution', content: p.caution },
+      // { key: 'availability', label: 'Availability', content: p.availability },
+      // {
+      //   key: 'productMarketAuth',
+      //   label: 'Market Authorization',
+      //   content: buildMarketAuthHtml(p.productMarketAuth, p.name || ''),
+      // },
     ].filter((tab) => {
+      if (tab.alwaysShow) return true;
       if (tab.key === 'productMarketAuth') {
         return Array.isArray(p.productMarketAuth) || p.productMarketAuth !== undefined;
       }
@@ -632,7 +634,7 @@ const ProductsDetailPage = ({ slug }) => {
                           <div className={isSelected ? styles['tab-fade'] : undefined}>
                             <div
                               className={styles['tab-content-html']}
-                              dangerouslySetInnerHTML={{ __html: tab.content }}
+                              dangerouslySetInnerHTML={{ __html: tab.content || '' }}
                             />
                           </div>
                         </div>
@@ -688,9 +690,9 @@ const ProductsDetailPage = ({ slug }) => {
         useFallback={false}
       />
 
-      {productState.product?.metaKeywords && productState.product.metaKeywords.length > 0 && (
+      {/* {productState.product?.metaKeywords && productState.product.metaKeywords.length > 0 && (
         <KeywordsSection keywords={productState.product.metaKeywords} />
-      )}
+      )} */}
 
       {productState.product?.uid && (
         <StickyCheckout
