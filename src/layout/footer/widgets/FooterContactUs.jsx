@@ -11,7 +11,7 @@ import { useTranslation } from '@/utils/translations';
 const FooterContactUs = () => {
   const { themeOption } = useContext(ThemeOptionContext);
   return (
-    <Col xl={3} lg={4} >
+    <Col xl={3} lg={3} md={6} sm={12}>
       {/* <div className={`footer-title contact-title`}>
         <h4><a href="/contact-us" className="" style={{ color: 'inherit', textDecoration: 'none' }}>Contact Us</a> </h4>
       </div> */}

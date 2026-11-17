@@ -3,14 +3,14 @@ import { Col } from 'reactstrap';
 
 const FooterQuickPage = ({ footerMenu, setFooterMenu }) => {
   return (
-    <Col xl={2} md={4} sm={4}>
+    <Col xl={2} lg={2} md={6} sm={6}>
       <div
         className={`footer-title ${footerMenu == 'pages' ? 'show' : ''}`}
         onClick={() =>
           setFooterMenu((prev) => (prev !== 'pages' ? 'pages' : ''))
         }
       >
-        <h4>Quick Pages</h4>
+        <h4>Other Pages</h4>
       </div>
       <div className="footer-contain">
         <ul>
@@ -20,23 +20,13 @@ const FooterQuickPage = ({ footerMenu, setFooterMenu }) => {
             </a>
           </li>
           <li style={{ marginBottom: '10px' }}>
-            <a href={`/collections`} className="text-content-color">
-              Products Range
+            <a href={`/wishlist`} className="text-content-color">
+              Wishlist
             </a>
           </li>
           <li style={{ marginBottom: '10px' }}>
-            <a href={`/press`} className="text-content-color">
-              Press
-            </a>
-          </li>
-          <li style={{ marginBottom: '10px' }}>
-            <a href={`/events`} className="text-content-color">
-              Events
-            </a>
-          </li>
-          <li style={{ marginBottom: '10px' }}>
-            <a href={`/blogs`} className="text-content-color">
-              Blogs
+            <a href={`/`} className="text-content-color">
+              AI Negotiations
             </a>
           </li>
           <li style={{ marginBottom: '10px' }}>
@@ -44,11 +34,11 @@ const FooterQuickPage = ({ footerMenu, setFooterMenu }) => {
               Contact Us
             </a>
           </li>
-          {/* <li style={{ marginBottom: '10px' }}>
-            <a href={`/company-documents`} className="text-content-color">
-              Company Documents
+          <li style={{ marginBottom: '10px' }}>
+            <a href={`/account/orders`} className="text-content-color">
+              My Orders
             </a>
-          </li> */}
+          </li>
         </ul>
       </div>
     </Col>
