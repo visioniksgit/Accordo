@@ -209,20 +209,16 @@ const ContactUsForm = () => {
                 children: (
                   <>
                     <option value="">{t('Select Option')}</option>
-                    <option value="Help Desk">
-                      {t('Help Desk')}
+                    <option value="test1">
+                      {t('test1')}
                     </option>
-                    <option value="Ecommerce Support">
-                      {t('Ecommerce Support')}
+                    <option value="test2">
+                      {t('test2')}
                     </option>
-                    <option value="Human Resources">
-                      {t('Human Resources')}
+                    <option value="test3">
+                      {t('test3')}
                     </option>
-                    <option value="Marketing & PR">
-                      {t('Marketing & PR')}
-                    </option>
-                    <option value="Grievance">{t('Grievance')}</option>
-                    <option value="Others">{t('Others')}</option>
+
                   </>
                 ),
               },

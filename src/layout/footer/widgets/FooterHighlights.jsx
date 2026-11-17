@@ -17,28 +17,27 @@ const FooterHighlights = () => {
         label: 'Toll Free Number',
         // value:themeOption?.footer?.support_number ||
         // themeOption?.header?.support_number || '',
-        value: '1800-229-874',
+        value: '+91-9898989898',
         icon: <FiHeadphones />,
       },
       {
         id: 2,
         label: 'Alternative Helpline',
-        value: '+91-22-23829874',
+        value: '+91-9898989898',
         icon: <FiPhoneCall />,
       },
       {
         id: 3,
         label: 'Email',
         // value: themeOption?.footer?.support_email || '',
-        value: 'healthcare@sdlindia.com',
+        value: 'test@gmail.com',
         icon: <FiMail />,
       },
       {
         id: 4,
         label: 'Address',
         // value: themeOption?.footer?.about_address || '',
-        value: `5th floor, Vastu Central, J. K. Sawant Marg,
-Dadar (West), Mumbai,- 400028
+        value: `701, Haware Infotech Park, Sector 30A, Near Inorbit Mall, Vashi, Navi Mumbai, Maharashtra 400703
 `,
         icon: <FiMapPin />,
       },

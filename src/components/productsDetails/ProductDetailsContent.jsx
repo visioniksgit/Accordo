@@ -195,7 +195,7 @@ const ProductDetailsContent = ({
       {/* )} */}
 
       {/* ── SDL Coins earned */}
-      {superCoins > 0 && (
+      {/* {superCoins > 0 && (
         <div className="variation-coin-inline">
           <span className="variation-coin-inline__text">
             Earn{' '}
@@ -206,7 +206,7 @@ const ProductDetailsContent = ({
             <strong>{superCoins} SDL Points</strong>
           </span>
         </div>
-      )}
+      )} */}
 
       {/* ── Cart actions: Buy Now / Add to Cart / delivery checker */}
       <PdpCartActions
@@ -221,35 +221,35 @@ const ProductDetailsContent = ({
       <div className={styles['trust-badges']}>
         <div className={styles['trust-badge-item']}>
           <img
-            src={'/assets/images/product/features/siddhantik_ayurved_sdl.svg'}
+            src={'/assets/images/category/truck.png'}
             alt="ISO Certified"
             className={styles['trust-badge-icon']}
           />
         </div>
         <div className={styles['trust-badge-item']}>
           <img
-            src={'/assets/images/product/features/legacy_sdl.svg'}
+            src={'/assets/images/category/electrical.png'}
             alt="Free Delivery"
             className={styles['trust-badge-icon']}
           />
         </div>
         <div className={styles['trust-badge-item']}>
           <img
-            src={'/assets/images/product/features/standard_sdl.svg'}
+            src={'/assets/images/category/truck.png'}
             alt="ISO Certified"
             className={styles['trust-badge-icon']}
           />
         </div>
         <div className={styles['trust-badge-item']}>
           <img
-            src={'/assets/images/product/features/pan_india.svg'}
+            src={'/assets/images/category/electrical.png'}
             alt="Cash on Delivery"
             className={styles['trust-badge-icon']}
           />
         </div>
         <div className={styles['trust-badge-item']}>
           <img
-            src={'/assets/images/product/features/secure_payment_sdl.svg'}
+            src={'/assets/images/category/truck.png'}
             alt="100% Ayurvedic"
             className={styles['trust-badge-icon']}
           />

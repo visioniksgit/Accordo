@@ -6,7 +6,7 @@ const SubFooter = () => {
   return (
     <div translate="no" className="sub-footer s-footer-2">
       <h6 className="text-content-color rights-reserved">
-        &copy; {new Date().getFullYear()} Shree Dhootapapeshwar Limited
+        &copy; {new Date().getFullYear()} Accordo Ai Limited
       </h6>
 
       <div className="payment">
