@@ -9,19 +9,19 @@ const FooterCategory = ({ footerMenu, setFooterMenu }) => {
   const categoryData = filterCategory('product');
 
   const column1Items = [
-    { title: 'Wires & Cables', href: '/collections?department=consumer-ayurved' },
-    { title: 'Wiring Accessories', href: '/collections?department=electric' },
-    { title: 'Lighting', href: '/collections?department=electric' },
-    { title: 'Pumps & Valves', href: '/collections?department=electricr' },
-    { title: 'V-Belts', href: '/collections?department=electric' },
+    { title: 'Wires & Cables', href: '/collections?department=cables' },
+    { title: 'Wiring Accessories', href: '/collections?department=cables' },
+    { title: 'Lighting', href: '/collections?department=cables' },
+    { title: 'Pumps & Valves', href: '/collections?department=cables' },
+    { title: 'V-Belts', href: '/collections?department=cables' },
   ];
 
   const column2Items = [
-    { title: 'Fans & Ventilation', href: '/collections?department=electric' },
-    { title: 'Switchgears', href: '/collections?department=electric' },
-    { title: 'Motors', href: '/collections?department=electric' },
-    { title: 'Solar Panels', href: '/collections?department=electric' },
-    { title: 'Appliances', href: '/collections?department=electric' },
+    { title: 'Fans & Ventilation', href: '/collections?department=cables' },
+    { title: 'Switchgears', href: '/collections?department=cables' },
+    { title: 'Motors', href: '/collections?department=cables' },
+    { title: 'Solar Panels', href: '/collections?department=cables' },
+    { title: 'Appliances', href: '/collections?department=cables' },
   ];
 
   return (
