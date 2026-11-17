@@ -6,8 +6,6 @@ import Btn from '@/elements/buttons/Btn';
 import { AllCountryCode } from '@/data/AllCountryCode';
 // import Link from 'next/link';
 import { RiCheckboxCircleFill, RiCheckboxFill } from 'react-icons/ri';
-import { Turnstile } from "@marsidev/react-turnstile";
-import { isTurnstileRequired } from '@/utils/constants';
 import defaultBannerImage from '../../../../../public/assets/images/save-shop/shop-banner1.png';
 
 const PhoneNumberForm = ({
@@ -18,14 +16,8 @@ const PhoneNumberForm = ({
   handleSendOtp,
   loginMutation,
   phoneInputRef,
-  setTurnstileToken,
-  isTurnstileRequired: propIsTurnstileRequired,
   bannerImage,
 }) => {
-  const showTurnstile =
-    propIsTurnstileRequired !== undefined
-      ? propIsTurnstileRequired
-      : isTurnstileRequired();
   return (
     <div className="otp-login-top-section">
       {bannerImage !== false && (
@@ -101,16 +93,6 @@ const PhoneNumberForm = ({
               </small>
             )}
           </FormGroup>
-
-          {showTurnstile && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
-            <div className="mb-3 d-flex justify-content-center">
-              <Turnstile
-                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-                onSuccess={(token) => setTurnstileToken(token)}
-                onExpire={() => setTurnstileToken("")}
-              />
-            </div>
-          )}
 
           <Btn
             type="submit"

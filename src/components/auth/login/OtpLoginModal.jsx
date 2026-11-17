@@ -31,7 +31,6 @@ import {
   registrationFormSchema,
 } from '@/utils/validation/ZodValidationSchema';
 import CartContext from '@/helper/cartContext';
-import { isTurnstileRequired } from '@/utils/constants';
 
 // Hooks
 import { useOtpAuthFlow } from './hooks/useOtpAuthFlow';
@@ -595,22 +594,15 @@ const OtpLoginModal = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, isEditDoctorMode, userData]);
 
-  const turnstileRequired = isTurnstileRequired();
-
   // Handlers
   const handleSendOtp = useCallback(
     async (data) => {
-      if (turnstileRequired && !turnstileToken) {
-        ToastNotification('error', 'Please complete the security check');
-        return;
-      }
       const phoneNum = `${data.countryCode}${data.phone}`;
       loginMutation.mutate({
         phone: phoneNum,
-        ...(turnstileToken ? { turnstileToken } : {}),
       });
     },
-    [loginMutation, turnstileToken, turnstileRequired]
+    [loginMutation]
   );
 
   const handleVerify = useCallback(
@@ -811,13 +803,12 @@ const OtpLoginModal = ({
           <PhoneNumberForm
             phoneControl={phoneControl}
             phoneErrors={phoneErrors}
-            isPhoneValid={isPhoneValid && (!turnstileRequired || !!turnstileToken)}
+            // isPhoneValid={isPhoneValid && (!turnstileRequired || !!turnstileToken)}
+            isPhoneValid={isPhoneValid}
             handlePhoneSubmit={handlePhoneSubmit}
             handleSendOtp={handleSendOtp}
             loginMutation={loginMutation}
             phoneInputRef={authFlow.phoneInputRef}
-            setTurnstileToken={setTurnstileToken}
-            isTurnstileRequired={turnstileRequired}
             bannerImage={bannerImage}
           />
         );
