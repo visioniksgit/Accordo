@@ -159,7 +159,7 @@ const ProductAdditionalInfoAccordion = ({ product }) => {
           files: additionalInfoFiles,
         }
         : null,
-      expiryText ? { label: 'Expiry', value: expiryText } : null,
+      // expiryText ? { label: 'Expiry', value: expiryText } : null,
       manufacturedBy
         ? { label: 'Manufactured By', isCompany: true, data: manufacturedBy }
         : null,

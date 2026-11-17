@@ -194,7 +194,7 @@ const ProductBox1 = ({
           {/* {companyName && ( */}
           <span className="product-company-name">
             {/* {companyName} */}
-            Dhootapapeshwar
+            polycab
           </span>
           {/* )} */}
           <h3 style={{ fontSize: 'inherit' }}>

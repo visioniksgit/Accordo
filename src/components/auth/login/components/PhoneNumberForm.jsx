@@ -43,7 +43,7 @@ const PhoneNumberForm = ({
       <Form className="otp-step" onSubmit={handlePhoneSubmit(handleSendOtp)}>
         <div className="otp-welcome-card">
           <h4 className="otp-welcome-title mb-1">
-            Welcome to Dhootapapeshwar!
+            Welcome to Accordo.AI!
           </h4>
           <p className="otp-welcome-text mb-1">
             Enter your mobile number to get an OTP.
