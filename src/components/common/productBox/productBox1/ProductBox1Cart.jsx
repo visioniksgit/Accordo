@@ -438,7 +438,7 @@ const ProductBox1Cart = ({
         ) : !isProductInStock ? (
           <div className="dual-cart-buttons out-of-stock-buttons">
             <button className="btn-out-of-stock" disabled>
-              Out of Stock
+              Unavailable
             </button>
             <button
               className="btn-notify-me btn-primary"
