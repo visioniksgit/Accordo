@@ -203,126 +203,73 @@ const ProductBox1 = ({
             </Link>
           </h3>
           <div className="product-detail-bottom">
-            {(productDetail?.stock_status === 'in_stock') && (
-              <>
-                <div className="meta-1">
-                  <div className="">
-                    {productDetail?.unit && productDetail?.weight ? (
-                      <h6 className="unit">
-                        {productDetail?.weight}
-                        {productDetail?.unit}
-                      </h6>
-                    ) : null}
-                    {productDetail?.stock_status === 'in_stock' && (
-                      <span className="in_stock-color">
-                        {ModifyString(productDetail.stock_status, false, '_')}
-                      </span>
-                    )}
-                  </div>
-                  {ratingData.rating > 0 && (
-                    <div className="">
-                      <div className="rating-section">
-                        <span className="stars">
-                          <RiStarFill size={14} />
-                        </span>
-                        <span className="review-count">
-                          <span className="count">
-                            {ratingData.rating.toFixed(1)}
-                          </span>{' '}
-                          ({formatReviewCount(ratingData.reviewCount)})
-                        </span>
-                        {/* <span
-                          id={reviewTooltipId}
-                          className="d-inline-flex align-items-center"
-                          style={{
-                            cursor: 'pointer',
-                            color: 'var(--9e9e9e)',
-                          }}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                          }}
-                        >
-                          <RiInformationLine size={14} className="" />
-                        </span>
-                        <UncontrolledTooltip
-                          placement="top"
-                          target={reviewTooltipId}
-                          style={{ fontSize: 12 }}
-                        >
-                          Average Rating Across Marketplaces & SDL India
-                        </UncontrolledTooltip> */}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="price-row">
-                  {isDoctorProduct &&
-                    !(isAuthenticated && userData?.isDoctor === true) ? (
-                    // CASE 1: Restricted Doctor Product
-                    // (It's a doctor product, but user is NOT an authenticated doctor)
-                    // -> Show ONLY MRP inside disc-price
-                    <div className="disc-price">
-                      <span
-                        style={{
-                          fontSize: 14,
-                          color: '#535E75',
-                          lineHeight: 1,
-                        }}
-                      >
-                        M.R.P.
+            <div className="meta-1">
+              <div className="">
+                {productDetail?.unit && productDetail?.weight ? (
+                  <h6 className="unit">
+                    {productDetail?.weight}
+                    {productDetail?.unit}
+                  </h6>
+                ) : null}
+                {productDetail?.stock_status === 'in_stock' && (
+                  <span className="in_stock-color">
+                    {ModifyString(productDetail.stock_status, false, '_')}
+                  </span>
+                )}
+              </div>
+              {ratingData.rating > 0 && (
+                <div className="">
+                  <div className="rating-section">
+                    <span className="stars">
+                      <RiStarFill size={14} />
+                    </span>
+                    <span className="review-count">
+                      <span className="count">
+                        {ratingData.rating.toFixed(1)}
                       </span>{' '}
+                      ({formatReviewCount(ratingData.reviewCount)})
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="price-row">
+              {displayPrices.salePrice === displayPrices.price ? (
+                // Sale price and MRP are the same -> Only show one price
+                <div className="disc-price">
+                  <span
+                    style={{
+                      fontSize: 14,
+                      color: '#535E75',
+                      lineHeight: 1,
+                    }}
+                  >
+                    M.R.P.
+                  </span>{' '}
+                  {convertToRupees(displayPrices.salePrice)}
+                </div>
+              ) : (
+                // Sale price is different from MRP -> Show both + conditional discount
+                <>
+                  <div className="price-group d-flex align-items-center gap-2">
+                    <div className="disc-price">
+                      {convertToRupees(displayPrices.salePrice)}
+                    </div>
+
+                    <div className="selling-price">
                       {convertToRupees(displayPrices.price)}
                     </div>
-                  ) : // CASE 2: Authorized Viewer
-                    // (Either a regular product OR a logged-in doctor viewing a doctor product)
-                    displayPrices.salePrice === displayPrices.price ? (
-                      // 2A: Sale price and MRP are the same -> Only show one price
-                      <div className="disc-price">
-                        <span
-                          style={{
-                            fontSize: 14,
-                            color: '#535E75',
-                            lineHeight: 1,
-                          }}
-                        >
-                          M.R.P.
-                        </span>{' '}
-                        {convertToRupees(displayPrices.salePrice)}
-                      </div>
-                    ) : (
-                      // 2B: Sale price is different from MRP -> Show both + conditional discount
-                      <>
-                        <div className="price-group d-flex align-items-center gap-2">
-                          <div className="disc-price">
-                            {convertToRupees(displayPrices.salePrice)}
-                          </div>
+                  </div>
 
-                          <div className="selling-price">
-                            {/* <span
-                              style={{
-                                fontSize: 14,
-                                color: '#535E75',
-                                lineHeight: 1,
-                              }}
-                            >
-                              M.R.P.
-                            </span>{' '} */}
-                            {convertToRupees(displayPrices.price)}
-                          </div>
-                        </div>
-
-                        {displayPrices.discount > 0 && (
-                          <div className="percent-off">
-                            {displayPrices.discount}% Off
-                          </div>
-                        )}
-                      </>
-                    )}
-                </div>
-              </>
-            )}
+                  {displayPrices.discount > 0 && (
+                    <div className="percent-off">
+                      {displayPrices.discount}% Off
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
 
             {addAction && (
               <ProductBox1Cart

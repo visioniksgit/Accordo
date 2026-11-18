@@ -83,7 +83,7 @@ async function getProductFallbackMetadata(productSlug) {
         currency: "INR",
       },
       mrp: mrp,
-      availability: defaultVariant?.inStockFlag == true ? "In Stock" : "Out of Stock",
+      availability: defaultVariant?.inStockFlag == true ? "In Stock" : "Unavailable",
       retailerItemId: gtinCode || defaultVariant?.skuCode,
       condition: "new",
       ...(primaryImage ? { image: primaryImage } : {}),

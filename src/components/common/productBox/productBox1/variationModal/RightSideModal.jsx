@@ -139,12 +139,24 @@ const RightVariationModal = ({
   // Get price and discount
   const displaySalePrice =
     cloneVariation?.selectedVariation?.sale_price ??
-    cloneVariation?.product?.sale_price;
+    cloneVariation?.selectedVariation?.disPrice ??
+    cloneVariation?.product?.sale_price ??
+    cloneVariation?.product?.disPrice ??
+    0;
   const displayPrice =
-    cloneVariation?.selectedVariation?.price ?? cloneVariation?.product?.price;
+    cloneVariation?.selectedVariation?.price ??
+    cloneVariation?.selectedVariation?.mrp ??
+    cloneVariation?.product?.price ??
+    cloneVariation?.product?.mrp ??
+    displaySalePrice;
   const displayDiscount =
     cloneVariation?.selectedVariation?.discount ??
-    cloneVariation?.product?.discount;
+    cloneVariation?.selectedVariation?.discountPercent ??
+    cloneVariation?.product?.discount ??
+    cloneVariation?.product?.discountPercent ??
+    (Number(displayPrice) > 0 && Number(displaySalePrice) < Number(displayPrice)
+      ? Math.round(((Number(displayPrice) - Number(displaySalePrice)) / Number(displayPrice)) * 100)
+      : 0);
 
   // Selected quantity snapshot for the badge
   const selectedQuantity =
@@ -359,34 +371,14 @@ const RightVariationModal = ({
 
       {/* 4. Price Row */}
       <div className="price-row">
-        {isDoctorProduct ? (
-          // CASE 1: Doctor Product
-          isVerifiedDoctor ? (
-            // Logged-in doctor -> Show both prices + GST + discount
-            <>
-              <div className="disc-price">
-                {convertToRupees(displaySalePrice)}
-                <div className="inclusive-taxes">(Inclusive of GST)</div>
-              </div>
-              <div className="selling-price">
-                <span
-                  style={{
-                    fontSize: 13,
-                    color: '#535E75',
-                    lineHeight: 1,
-                  }}
-                >
-                  M.R.P.
-                </span>{' '}
-                {convertToRupees(displayPrice)}
-              </div>
-              {displayDiscount && (
-                <div className="percent-off">{displayDiscount}% Off</div>
-              )}
-            </>
-          ) : (
-            // Not a logged-in doctor -> Show ONLY MRP inside disc-price + GST
-            <div className="disc-price">
+        <div className="disc-price">
+          {convertToRupees(displaySalePrice)}
+          <div className="inclusive-taxes">(Inclusive of GST)</div>
+        </div>
+
+        {Number(displaySalePrice) !== Number(displayPrice) && (
+          <>
+            <div className="selling-price">
               <span
                 style={{
                   fontSize: 13,
@@ -397,36 +389,10 @@ const RightVariationModal = ({
                 M.R.P.
               </span>{' '}
               {convertToRupees(displayPrice)}
-              <div className="inclusive-taxes">(Inclusive of GST)</div>
-            </div>
-          )
-        ) : (
-          // CASE 2: Regular Product -> Always show both prices + GST + discount
-          <>
-            <div className="disc-price">
-              {convertToRupees(displaySalePrice)}
-              <div className="inclusive-taxes">(Inclusive of GST)</div>
             </div>
 
-            {Number(displaySalePrice) !== Number(displayPrice) && (
-              <>
-                <div className="selling-price">
-                  <span
-                    style={{
-                      fontSize: 13,
-                      color: '#535E75',
-                      lineHeight: 1,
-                    }}
-                  >
-                    M.R.P.
-                  </span>{' '}
-                  {convertToRupees(displayPrice)}
-                </div>
-
-                {displayDiscount > 0 && (
-                  <div className="percent-off">{displayDiscount}% Off</div>
-                )}
-              </>
+            {displayDiscount > 0 && (
+              <div className="percent-off">{displayDiscount}% Off</div>
             )}
           </>
         )}
@@ -504,9 +470,8 @@ const RightVariationModal = ({
                   <button
                     type="button"
                     key={variationId ?? valueLabel}
-                    className={`variation-radio-card ${isSelected ? 'active' : ''} ${!inStock ? 'disabled' : ''}`}
-                    onClick={() => inStock && handleVariantSelect(variation)}
-                    disabled={!inStock}
+                    className={`variation-radio-card ${isSelected ? 'active' : ''}`}
+                    onClick={() => handleVariantSelect(variation)}
                     aria-pressed={isSelected}
                   >
                     <div className="variation-radio-content">
@@ -521,46 +486,17 @@ const RightVariationModal = ({
                         )}
                       </div>
 
-                      <div className="variation-radio-bottom price-row d-flex align-items-center gap-2 mt-1">
-                        {isDoctorProduct ? (
-                          // CASE 1: Doctor Product
-                          isVerifiedDoctor ? (
-                            <>
-                              <>
-                                <div className="disc-price">
-                                  {convertToRupees(disPrice)}
-                                </div>
+                      <div className="variation-radio-bottom price-row d-flex align-items-baseline gap-1 mt-1">
+                        <div className="disc-price">
+                          {convertToRupees(disPrice)}
+                        </div>
 
-                                {Number(mrp) !== Number(disPrice) && (
-                                  <>
-                                    <div className="selling-price">
-                                      <span
-                                        style={{
-                                          fontSize: 13,
-                                          color: '#535E75',
-                                          lineHeight: 1,
-                                        }}
-                                      >
-                                        M.R.P.
-                                      </span>{' '}
-                                      {convertToRupees(mrp)}
-                                    </div>
-
-                                    {discount > 0 && (
-                                      <div className="percent-off">
-                                        {discount}% Off
-                                      </div>
-                                    )}
-                                  </>
-                                )}
-                              </>
-                            </>
-                          ) : (
-                            // Not a logged-in doctor -> Show ONLY MRP inside disc-price
-                            <div className="disc-price">
+                        {Number(mrp) !== Number(disPrice) && (
+                          <>
+                            <div className="selling-price">
                               <span
                                 style={{
-                                  fontSize: 13,
+                                  fontSize: 10,
                                   color: '#535E75',
                                   lineHeight: 1,
                                 }}
@@ -569,35 +505,11 @@ const RightVariationModal = ({
                               </span>{' '}
                               {convertToRupees(mrp)}
                             </div>
-                          )
-                        ) : (
-                          // CASE 2: Regular Product -> Always show both prices + discount
-                          <>
-                            <div className="disc-price">
-                              {convertToRupees(disPrice)}
-                            </div>
 
-                            {Number(mrp) !== Number(disPrice) && (
-                              <>
-                                <div className="selling-price">
-                                  <span
-                                    style={{
-                                      fontSize: 13,
-                                      color: '#535E75',
-                                      lineHeight: 1,
-                                    }}
-                                  >
-                                    M.R.P.
-                                  </span>{' '}
-                                  {convertToRupees(mrp)}
-                                </div>
-
-                                {discount > 0 && (
-                                  <div className="percent-off">
-                                    {discount}% Off
-                                  </div>
-                                )}
-                              </>
+                            {discount > 0 && (
+                              <div className="percent-off">
+                                {discount}% Off
+                              </div>
                             )}
                           </>
                         )}

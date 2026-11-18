@@ -238,34 +238,12 @@ const ShowProduct = ({
 
                   {/* --- Updated Pricing Logic Block --- */}
                   <div className="sticky-price-row">
-                    {isDoctorProduct ? (
-                      isVerifiedDoctor ? (
-                        <>
-                          <div className="sticky-disc-price">
-                            <span
-                              style={{
-                                fontSize: 13,
-                                color: '#535E75',
-                                lineHeight: 1,
-                              }}
-                            >
-                              M.R.P.
-                            </span>{' '}
-                            {salePrice}
-                          </div>
-                          {hasDiscount && (
-                            <>
-                              <div className="sticky-selling-price">
-                                {originalPrice}
-                              </div>
-                              <div className="sticky-percent-off">
-                                {discount}% Off
-                              </div>
-                            </>
-                          )}
-                        </>
-                      ) : (
-                        <div className="sticky-disc-price">
+                    <div className="sticky-disc-price">
+                      {salePrice}
+                    </div>
+                    {hasDiscount && (
+                      <>
+                        <div className="sticky-selling-price">
                           <span
                             style={{
                               fontSize: 13,
@@ -277,31 +255,9 @@ const ShowProduct = ({
                           </span>{' '}
                           {originalPrice}
                         </div>
-                      )
-                    ) : (
-                      <>
-                        <div className="sticky-disc-price">
-                          <span
-                            style={{
-                              fontSize: 13,
-                              color: '#535E75',
-                              lineHeight: 1,
-                            }}
-                          >
-                            M.R.P.
-                          </span>{' '}
-                          {salePrice}
+                        <div className="sticky-percent-off">
+                          {discount}% Off
                         </div>
-                        {hasDiscount && (
-                          <>
-                            <div className="sticky-selling-price">
-                              {originalPrice}
-                            </div>
-                            <div className="sticky-percent-off">
-                              {discount}% Off
-                            </div>
-                          </>
-                        )}
                       </>
                     )}
                   </div>
@@ -323,7 +279,7 @@ const ShowProduct = ({
                   </p>
                 ) : isOutOfStock ? (
                   <button className="sticky-btn-out-of-stock" disabled>
-                    Out of Stock
+                    Unavailable
                   </button>
                 ) : (
                   <div className="sticky-dual-cart-buttons">

@@ -30,8 +30,6 @@ const PdpVariantSelector = ({
   const getVariantRouteValue = (variant) => variant?.slug || '';
 
   const handleVariantSelect = (variant) => {
-    if (!variant.inStockFlag) return;
-
     const routeVariant = getVariantRouteValue(variant);
     const currentVariant = searchParams?.get('productVariant') || '';
     const nextParams = new URLSearchParams(searchParams?.toString());
@@ -106,7 +104,6 @@ const PdpVariantSelector = ({
                   className={`variation-radio-card ${isSelected ? 'active' : ''
                     } ${!inStock ? 'disabled' : ''}`}
                   onClick={() => handleVariantSelect(variant)}
-                  disabled={!inStock}
                   aria-pressed={isSelected}
                 >
                   <div className="variation-radio-content">
@@ -123,48 +120,31 @@ const PdpVariantSelector = ({
                     </div>
 
                     <div className="variation-radio-bottom price-row d-flex align-items-center gap-2 mt-1 mb-0">
-                      {isDoctorProduct && !isVerifiedDoctor ? (
-                        <div className="disc-price variation-price-discount">
-                          <span
-                            style={{
-                              fontSize: 14,
-                              color: '#535E75',
-                              lineHeight: 1,
-                            }}
-                          >
-                            M.R.P.
-                          </span>{' '}
-                          {convertToRupees(mrp)}
-                        </div>
-                      ) : (
+                      <div className="disc-price variation-price-discount">
+                        {convertToRupees(disPrice)}
+                      </div>
+
+                      {mrp !== disPrice && (
                         <>
-                          <div className="disc-price variation-price-discount">
-                            {convertToRupees(disPrice)}
+                          <div
+                            className="selling-price"
+                            style={{ textDecoration: 'lineThrough' }}
+                          >
+                            <span
+                              style={{
+                                fontSize: 14,
+                                color: '#535E75',
+                                lineHeight: 1,
+                              }}
+                            >
+                              M.R.P.
+                            </span>{' '}
+                            {convertToRupees(mrp)}
                           </div>
 
-                          {mrp !== disPrice && (
-                            <>
-                              <div
-                                className="selling-price"
-                                style={{ textDecoration: 'lineThrough' }}
-                              >
-                                <span
-                                  style={{
-                                    fontSize: 14,
-                                    color: '#535E75',
-                                    lineHeight: 1,
-                                  }}
-                                >
-                                  M.R.P.
-                                </span>{' '}
-                                {convertToRupees(mrp)}
-                              </div>
-
-                              <div className="percent-off">
-                                {discount ? `${discount}% Off` : null}
-                              </div>
-                            </>
-                          )}
+                          <div className="percent-off">
+                            {discount ? `${discount}% Off` : null}
+                          </div>
                         </>
                       )}
                     </div>

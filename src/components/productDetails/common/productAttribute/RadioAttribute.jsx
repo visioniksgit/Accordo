@@ -25,7 +25,7 @@ const RadioAttribute = ({
 
         const salePrice = variationMatch?.sale_price ?? variationMatch?.price;
         const listPrice = variationMatch?.price;
-        const stockLabel = variationMatch?.stock_status === 'in_stock' ? 'In Stock' : 'Out of Stock';
+        const stockLabel = variationMatch?.stock_status === 'in_stock' ? 'In Stock' : 'Unavailable';
 
         return (
         <Fragment key={index}>

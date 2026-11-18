@@ -352,44 +352,14 @@ const PdpProductInfo = ({
       {/* --- Updated Pricing Logic Block --- */}
       <div className="price-rating">
         <h3 className="price">
-
-          {isDoctorProduct ? (
-            isVerifiedDoctor ? (
-              // CASE 1: Doctor Product + Verified Doctor
-              <>
-                {convertCurrency(rawDis)}
-                {rawMrp !== rawDis && (
-                  <>
-                    <span style={{
-                      fontSize: 15, color: '#535E75', lineHeight: 1
-                    }}>M.R.P.</span>{" "}
-                    <del className="text-content">{convertCurrency(rawMrp)}</del>
-                    {discount ? <span className="offer-top">{discount}% Off</span> : null}
-                  </>
-                )}
-              </>
-            ) : (
-              // CASE 2: Doctor Product + Unverified User (ONLY MRP SHOWS)
-              <>
-                <span style={{
-                  fontSize: 15, color: '#535E75', lineHeight: 1
-                }}>M.R.P.</span>{" "}
-                {convertCurrency(rawMrp)}
-              </>
-            )
-          ) : (
-            // CASE 3: Regular Product
+          {convertCurrency(rawDis)}
+          {rawMrp !== rawDis && (
             <>
-              {convertCurrency(rawDis)}
-              {rawMrp !== rawDis && (
-                <>
-                  <span style={{
-                    fontSize: 15, color: '#535E75', lineHeight: 1
-                  }}>M.R.P.</span>{" "}
-                  <del className="text-content">{convertCurrency(rawMrp)}</del>
-                  {discount ? <span className="offer-top">{discount}% Off</span> : null}
-                </>
-              )}
+              <span style={{
+                fontSize: 15, color: '#535E75', lineHeight: 1
+              }}>M.R.P.</span>{" "}
+              <del className="text-content">{convertCurrency(rawMrp)}</del>
+              {discount ? <span className="offer-top">{discount}% Off</span> : null}
             </>
           )}
 
