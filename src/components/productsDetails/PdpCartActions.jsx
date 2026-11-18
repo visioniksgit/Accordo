@@ -60,6 +60,22 @@ const PdpCartActions = ({ productState, setProductState }) => {
   // For cart lookups, variation id is usually `uid` in raw data
   const selectedVariationId = getSelectedVariationId(selectedVariation);
 
+  const activeColorUid = useMemo(() => {
+    return (
+      productState?.selectedColorUid ||
+      productState?.selectedColor?.uid ||
+      productState?.colorUid ||
+      selectedVariation?.colorUid ||
+      (Array.isArray(selectedVariation?.colorUids)
+        ? selectedVariation.colorUids[0]
+        : typeof selectedVariation?.colorUids === 'string'
+        ? selectedVariation.colorUids.split(',')[0]?.trim()
+        : null) ||
+      selectedVariation?.colors?.[0]?.uid ||
+      null
+    );
+  }, [productState, selectedVariation]);
+
   const cartLineForProduct = useMemo(() => {
     if (!rawCartProducts?.length || !product.uid) return null;
 
@@ -72,7 +88,8 @@ const PdpCartActions = ({ productState, setProductState }) => {
         rawCartProducts.find(
           (item) =>
             byProduct(item) &&
-            String(item?.variation_id) === String(selectedVariationId)
+            String(item?.variation_id) === String(selectedVariationId) &&
+            (!activeColorUid || String(item?.color_id ?? item?.colorUid ?? '') === String(activeColorUid))
         ) ?? null
       );
     }
@@ -82,7 +99,7 @@ const PdpCartActions = ({ productState, setProductState }) => {
       rawCartProducts.find((item) => byProduct(item) && !item?.variation_id) ??
       null
     );
-  }, [rawCartProducts, product.uid, selectedVariationId]);
+  }, [rawCartProducts, product.uid, selectedVariationId, activeColorUid]);
 
   const maxAvailableQty = useMemo(() => {
     const rawQuantity =
@@ -124,15 +141,6 @@ const PdpCartActions = ({ productState, setProductState }) => {
 
   // Build cart-compatible productState for CartContext calls
   const cartCompatibleState = useMemo(() => {
-    const activeColorUid =
-      productState?.selectedColorUid ||
-      productState?.selectedColor?.uid ||
-      (Array.isArray(selectedVariation?.colorUids)
-        ? selectedVariation.colorUids[0]
-        : selectedVariation?.colorUids) ||
-      selectedVariation?.colors?.[0]?.uid ||
-      null;
-
     const cartVariation = selectedVariation
       ? {
         ...selectedVariation,
@@ -140,6 +148,7 @@ const PdpCartActions = ({ productState, setProductState }) => {
         sale_price: selectedVariation.disPrice,
         price: selectedVariation.mrp,
         colorUid: activeColorUid,
+        selectedColorUid: activeColorUid,
       }
       : null;
     return {
@@ -149,7 +158,7 @@ const PdpCartActions = ({ productState, setProductState }) => {
       selectedColorUid: activeColorUid,
       colorUid: activeColorUid,
     };
-  }, [productState, cartCompatibleProduct, selectedVariation]);
+  }, [productState, cartCompatibleProduct, selectedVariation, activeColorUid]);
 
   const handleAddToCart = () => {
     if (isOutOfStock) return;
@@ -184,15 +193,6 @@ const PdpCartActions = ({ productState, setProductState }) => {
     if (isOutOfStock) return;
     const nextQty = productQty > 0 ? productQty : 1;
     setIsBuyingNow(true);
-
-    const activeColorUid =
-      productState?.selectedColorUid ||
-      productState?.selectedColor?.uid ||
-      (Array.isArray(selectedVariation?.colorUids)
-        ? selectedVariation.colorUids[0]
-        : selectedVariation?.colorUids) ||
-      selectedVariation?.colors?.[0]?.uid ||
-      null;
 
     const checkoutPayload = {
       productUid: product.uid,

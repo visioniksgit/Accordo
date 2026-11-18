@@ -36,7 +36,7 @@ const ProductBox1Cart = ({
     Boolean(removeFromCartMutation?.isPending);
   const departmentName = productObj?.department?.name;
   const isBook = departmentName === "Books";
-
+  // console.log("productObj", { productObj })
   const getVariantUid = (v) =>
     v?.uid ?? v?.id ?? v?.variation_id ?? v?.variationId ?? v?._id ?? null;
 
@@ -161,10 +161,43 @@ const ProductBox1Cart = ({
   }, [singleVariant, activeCartVariantUid, productObj]);
 
   // 3. Build the cloneVariation so handleIncDec knows WHICH variant to target
-  const cloneVariation = activeVariantObject
+  const targetVariant =
+    activeVariantObject ||
+    singleVariant ||
+    productObj?.productVariants?.[0] ||
+    null;
+
+  const activeColorUid = useMemo(() => {
+    const v = targetVariant;
+    return (
+      cartItemsForProduct[0]?.color_id ||
+      cartItemsForProduct[0]?.colorUid ||
+      v?.selectedColorUid ||
+      v?.selectedColor?.uid ||
+      v?.colorUid ||
+      (Array.isArray(v?.colorUids)
+        ? v.colorUids[0]
+        : typeof v?.colorUids === 'string'
+          ? v.colorUids.split(',')[0]?.trim()
+          : null) ||
+      v?.colors?.[0]?.uid ||
+      (Array.isArray(productObj?.colorUids)
+        ? productObj.colorUids[0]
+        : typeof productObj?.colorUids === 'string'
+          ? productObj.colorUids.split(',')[0]?.trim()
+          : null) ||
+      productObj?.colors?.[0]?.uid ||
+      productObj?.colorUid ||
+      null
+    );
+  }, [targetVariant, cartItemsForProduct, productObj]);
+
+  const cloneVariation = targetVariant
     ? {
-      selectedVariation: activeVariantObject,
-      variation_id: getVariantUid(activeVariantObject),
+      selectedVariation: targetVariant,
+      variation_id: getVariantUid(targetVariant),
+      colorUid: activeColorUid,
+      selectedColorUid: activeColorUid,
     }
     : null;
 
@@ -276,6 +309,7 @@ const ProductBox1Cart = ({
         const checkoutPayload = {
           productUid: productObj?.uid,
           variantUid: getVariantUid(selectedOrDefaultVariant),
+          ...(activeColorUid ? { colorUid: activeColorUid } : {}),
           quantity: 1,
         };
 

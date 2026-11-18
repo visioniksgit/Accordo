@@ -244,10 +244,10 @@ export const formatDateNew = (
 /**
  * Upload a file to S3 using presigned URL
  * @param {File} file - The file to upload
- * @param {string} folder - The S3 folder path (e.g., "SDL/profile", "SDL/documents")
+ * @param {string} folder - The S3 folder path (e.g., "Unity/profile", "Unity/documents")
  * @returns {Promise<string>} The S3 key of the uploaded file
  */
-export const uploadFileToS3 = async (file, folder = "SDL/uploads") => {
+export const uploadFileToS3 = async (file, folder = "Unity/uploads") => {
   if (!file || !(file instanceof File)) {
     throw new Error("Invalid file provided for upload");
   }

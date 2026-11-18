@@ -257,7 +257,7 @@ export const createProfile = async (profileData) => {
   if (profileImageFile instanceof File) {
     profileImageFileKey = await uploadFileToS3(
       profileImageFile,
-      "SDL/profile"
+      "Unity/profile"
     );
   }
 
@@ -265,7 +265,7 @@ export const createProfile = async (profileData) => {
   if (registrationFile instanceof File) {
     registrationFileKey = await uploadFileToS3(
       registrationFile,
-      "SDL/documents/registration"
+      "Unity/documents/registration"
     );
   }
 
@@ -273,7 +273,7 @@ export const createProfile = async (profileData) => {
   if (degreeFile instanceof File) {
     degreeFileKey = await uploadFileToS3(
       degreeFile,
-      "SDL/documents/degree"
+      "Unity/documents/degree"
     );
   }
 
@@ -644,7 +644,7 @@ export const updateProfile = async (profileData) => {
   if (profilePhotoFile instanceof File) {
     requestBody.profileImageFileKey = await uploadFileToS3(
       profilePhotoFile,
-      "SDL/profile"
+      "Unity/profile"
     );
   }
 
@@ -652,7 +652,7 @@ export const updateProfile = async (profileData) => {
   if (thesisFile instanceof File) {
     const uploadedThesisKey = await uploadFileToS3(
       thesisFile,
-      "SDL/documents/thesis"
+      "Unity/documents/thesis"
     );
 
     requestBody.thesisFileKey = uploadedThesisKey;
@@ -669,7 +669,7 @@ export const updateProfile = async (profileData) => {
   if (degreeFile instanceof File) {
     requestBody.degreeFileKey = await uploadFileToS3(
       degreeFile,
-      "SDL/documents/degree"
+      "Unity/documents/degree"
     );
   }
 
@@ -677,7 +677,7 @@ export const updateProfile = async (profileData) => {
   if (registrationFile instanceof File) {
     requestBody.registrationFileKey = await uploadFileToS3(
       registrationFile,
-      "SDL/documents/registration"
+      "Unity/documents/registration"
     );
   }
 

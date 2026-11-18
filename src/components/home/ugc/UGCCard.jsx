@@ -134,6 +134,35 @@ const UGCCard = ({ data, onPlay, index, eagerLoad = false }) => {
     }
   }, [cartProducts, productObj]);
 
+  const lowestVariantWithColor = useMemo(() => {
+    if (!data?.lowestVariant) return null;
+    const variant = data.lowestVariant;
+    const colorUid =
+      variant.selectedColorUid ||
+      variant.selectedColor?.uid ||
+      variant.colorUid ||
+      variant.colors?.[0]?.uid ||
+      (Array.isArray(variant.colorUids)
+        ? variant.colorUids[0]
+        : typeof variant.colorUids === 'string'
+        ? variant.colorUids.split(',')[0]?.trim()
+        : null) ||
+      (Array.isArray(productObj?.colorUids)
+        ? productObj.colorUids[0]
+        : typeof productObj?.colorUids === 'string'
+        ? productObj.colorUids.split(',')[0]?.trim()
+        : null) ||
+      productObj?.colors?.[0]?.uid ||
+      productObj?.colorUid ||
+      null;
+
+    return {
+      ...variant,
+      colorUid,
+      selectedColorUid: colorUid,
+    };
+  }, [data?.lowestVariant, productObj]);
+
   const handleAddToCart = () => {
     if (data?.lowestVariant?.inStockFlag) {
       handleIncDec(
@@ -142,7 +171,7 @@ const UGCCard = ({ data, onPlay, index, eagerLoad = false }) => {
         productQty,
         setProductQty,
         setIsOpen,
-        data?.lowestVariant
+        lowestVariantWithColor
       );
     }
   };
@@ -317,7 +346,7 @@ const UGCCard = ({ data, onPlay, index, eagerLoad = false }) => {
                         productQty,
                         setProductQty,
                         setIsOpen,
-                        data?.lowestVariant
+                        lowestVariantWithColor
                       )
                     }
                   >
@@ -334,7 +363,7 @@ const UGCCard = ({ data, onPlay, index, eagerLoad = false }) => {
                         productQty,
                         setProductQty,
                         setIsOpen,
-                        data?.lowestVariant
+                        lowestVariantWithColor
                       )
                     }
                   >

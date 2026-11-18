@@ -76,6 +76,17 @@ const SidebarProduct = ({
             variation?.unit ||
             product?.unit ||
             'Standard';
+          const color =
+            item?.color ||
+            variation?.color ||
+            item?.variant?.color ||
+            (Array.isArray(variation?.colors) && (item?.colorUid || item?.color_id)
+              ? variation.colors.find((c) => c?.uid === (item?.colorUid || item?.color_id))
+              : null) ||
+            (Array.isArray(variation?.colors) && variation.colors.length === 1
+              ? variation.colors[0]
+              : null) ||
+            null;
           const salePrice = Number(
             pricing?.snapPrice ||
               item?.sale_price ||
@@ -148,10 +159,31 @@ const SidebarProduct = ({
                 >
                   {productName}
                 </span>
-                {/* variant name */}
-                <span className="meta">{variantName}</span>
+                {/* variant name & color */}
+                <div className="meta d-flex align-items-center flex-wrap gap-1 mt-1">
+                  {variantName && <span>{variantName}</span>}
+                  {color && (color.name || color.hexcode) && (
+                    <span className="d-inline-flex align-items-center gap-1">
+                      {variantName && <span style={{ color: '#bbb', margin: '0 2px' }}>•</span>}
+                      {color.hexcode && (
+                        <span
+                          style={{
+                            width: '12px',
+                            height: '12px',
+                            borderRadius: '50%',
+                            backgroundColor: color.hexcode,
+                            display: 'inline-block',
+                            border: '1px solid rgba(0, 0, 0, 0.2)',
+                            flexShrink: 0,
+                          }}
+                        />
+                      )}
+                      <span>{color.name || color.hexcode}</span>
+                    </span>
+                  )}
+                </div>
                 {totalDiscountAmount > 0 && (
-                  <span className="meta success fw-bold d-block">
+                  <span className="meta success fw-bold d-block mt-1">
                     Discount - {convertToRupees(totalDiscountAmount)}
                   </span>
                 )}

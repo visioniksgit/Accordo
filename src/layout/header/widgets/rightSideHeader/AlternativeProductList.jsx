@@ -72,6 +72,7 @@ const AlternativeProductList = ({
           );
           const name = item?.product?.name || item?.name || 'Product';
           const variantName = item?.variation?.name || '';
+          const color = item?.color || item?.variation?.color || null;
           const image = getImageUrl(
             item?.variation?.variation_image,
             item?.product?.product_thumbnail,
@@ -95,9 +96,28 @@ const AlternativeProductList = ({
                 <a href={`/products/${item?.product?.slug || ''}`}>
                   <span className="name">{name}</span>
                 </a>
-                <span className="meta">
-                  {variantName ? `${variantName} • ` : ''}Qty: {quantity}
-                </span>
+                <div className="meta d-flex align-items-center flex-wrap gap-1">
+                  {variantName && <span>{variantName} • </span>}
+                  {color && (color.name || color.hexcode) && (
+                    <span className="d-inline-flex align-items-center gap-1">
+                      {color.hexcode && (
+                        <span
+                          style={{
+                            width: '12px',
+                            height: '12px',
+                            borderRadius: '50%',
+                            backgroundColor: color.hexcode,
+                            display: 'inline-block',
+                            border: '1px solid rgba(0, 0, 0, 0.2)',
+                            flexShrink: 0,
+                          }}
+                        />
+                      )}
+                      <span>{color.name || color.hexcode} • </span>
+                    </span>
+                  )}
+                  <span>Qty: {quantity}</span>
+                </div>
               </div>
 
               {/* <div className="price alternative-products__price">
