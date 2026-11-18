@@ -265,7 +265,7 @@ const PdpCartActions = ({ productState, setProductState }) => {
           </div>
         ) : isOutOfStock ? (
           <Btn className="btn-out-of-stock w-100" disabled>
-            Out of Stock
+            Unavailable
           </Btn>
         ) : (
           <div className="dual-cart-buttons dynamic-checkout d-none d-lg-flex w-100">
