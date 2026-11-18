@@ -15,7 +15,7 @@ const BlogDesclaimer = () => {
             </p>
 
             <p className={styles.text}>
-              If you receive any unauthorised, suspicious or fraudulent offers or interview call or in case of any queries, please email us at <a href="mailto:healthcare@sdlindia.com">healthcare@sdlindia.com</a>
+              If you receive any unauthorised, suspicious or fraudulent offers or interview call or in case of any queries, please email us at <a href="mailto:test@gmail.com">test@gmail.com</a>
             </p> <br />
 
             <h3 className={styles.title}>Translation Disclaimer</h3>

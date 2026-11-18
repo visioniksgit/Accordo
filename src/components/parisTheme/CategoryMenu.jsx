@@ -26,7 +26,7 @@ const CategoryMenu = ({ dataAPI }) => {
                   name={elem?.name}
                 />
                 <h5>
-                  <Link href={`/collections?category=${elem?.slug}`}>
+                  <Link href={`/collections?categories=${elem?.slug}`}>
                     {elem?.name}
                   </Link>
                 </h5>

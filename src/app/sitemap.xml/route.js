@@ -1,5 +1,5 @@
 
-const BASE_URL = "https://www.sdlindia.com";
+const BASE_URL = "https://accordo-liart.vercel.app";
 
 const sitemapFiles = [
     "sitemap-static.xml",

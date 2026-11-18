@@ -10,7 +10,7 @@ export const metadata = {
   title: 'Delete Account',
   description: 'Permanently delete your account and associated data from the Shree Dhootapapeshwar Limited website. Read important information before proceeding.',
   alternates: {
-    canonical: 'https://www.sdlindia.com/delete-account',
+    canonical: 'https://accordo-liart.vercel.app/delete-account',
   },
 };
 

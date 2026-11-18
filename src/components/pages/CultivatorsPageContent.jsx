@@ -133,10 +133,10 @@ const CultivatorsPageContent = () => {
                     <span className="d-flex gap-2 align-items-center">
                       <FiMail className="theme-color" />
                       <a
-                        href="mailto:healthcare@sdlindia.com"
+                        href="mailto:test@gmail.com"
                         className="cultivators-email-link"
                       >
-                        healthcare@sdlindia.com
+                        test@gmail.com
                       </a>
                     </span>
                   </span>
@@ -184,10 +184,10 @@ const CultivatorsPageContent = () => {
                   <span className="d-flex gap-2 align-items-center">
                     <FiMail className="theme-color" />
                     <a
-                      href="mailto:healthcare@sdlindia.com"
+                      href="mailto:test@gmail.com"
                       className="cultivators-email-link"
                     >
-                      healthcare@sdlindia.com
+                      test@gmail.com
                     </a>
                   </span>
                 </p>

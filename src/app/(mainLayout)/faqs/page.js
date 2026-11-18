@@ -15,7 +15,7 @@ export async function generateMetadata() {
 
 function createFaqPageSchema(faqData) {
   const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || 'https://www.sdlindia.com';
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://accordo-liart.vercel.app';
   const faqUrl = `${siteUrl}/faqs`;
 
   const categories = Array.isArray(faqData?.faq) ? faqData.faq : [];

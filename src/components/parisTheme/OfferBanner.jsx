@@ -40,7 +40,7 @@ const OfferBanner = ({
       ) : elem?.redirect_link?.link_type === 'collection' ? (
         <Link
           href={
-            `/collections?category=${elem?.redirect_link?.link}` ||
+            `/collections?categories=${elem?.redirect_link?.link}` ||
             '/'
           }
         >

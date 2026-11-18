@@ -91,7 +91,7 @@ const Timeline = () => {
             Dhamankar.
           </p>
           <a
-            href="http://www.sdlindia.com/publications"
+            href="https://accordo-liart.vercel.app/publications"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.linkButton}

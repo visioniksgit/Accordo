@@ -25,6 +25,17 @@ export const useHomeSectionQuery = (section, options = {}) => {
 // Section 1
 export const useHeroBanner = (options) => useHomeSectionQuery(1, options);
 export const useBestSellers = (options) => useHomeSectionQuery(1, options);
+export const useHomeCategories = (options = {}) => {
+  return useQuery({
+    queryKey: ['home', 1],
+    queryFn: () => fetchHomeSection(1),
+    staleTime: 60 * 60 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+    ...options,
+  });
+};
+export const useHomeSection1 = useHomeCategories;
 
 // Section 2
 export const useSeasonProducts = (options) => useHomeSectionQuery(2, options);

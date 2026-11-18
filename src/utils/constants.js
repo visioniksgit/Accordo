@@ -4,7 +4,7 @@ export const APP_URLS = {
 }
 
 export const PUBLIC_SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || 'https://www.sdlindia.com'
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://accordo-liart.vercel.app'
 ).replace(/\/+$/, '');
 
 export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;

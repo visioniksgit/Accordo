@@ -42,7 +42,7 @@ const HeaderCategory = ({ customClass, icon, dropDownClass }) => {
               {filteredCategories?.map((elem, i) => (
                 <li className="onhover-category-list" key={i}>
                   <Link
-                    href={`/collections?category=${elem?.slug}`}
+                    href={`/collections?categories=${elem?.slug}`}
                     className="category-name"
                   >
                     <Avatar

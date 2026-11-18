@@ -66,7 +66,7 @@ async function getProductFallbackMetadata(productSlug) {
     description:
       product.description || 'Explore product details and available variants.',
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.sdlindia.com'}/products/${productSlug}`,
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://accordo-liart.vercel.app'}/products/${productSlug}`,
     },
     openGraph: {
       title: product.name || 'Product Details',
@@ -102,7 +102,7 @@ function createProductSchema(productData, productSlug, imagesData) {
   }
 
   const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || 'https://www.sdlindia.com';
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://accordo-liart.vercel.app';
 
   const productUrl = `${siteUrl}/products/${productSlug}`;
   const webpageId = `${productUrl}#webpage`;

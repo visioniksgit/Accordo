@@ -99,7 +99,7 @@ const ShopByCategory = () => {
         {categories.map((category) => (
           <Link
             key={category.uid}
-            href={`/collections?category=${category.slug}`}
+            href={`/collections?categories=${category.slug}`}
             className={styles['category-card']}
             aria-label={`Shop ${category.name}`}
           >
