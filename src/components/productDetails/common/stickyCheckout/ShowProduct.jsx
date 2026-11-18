@@ -92,6 +92,15 @@ const ShowProduct = ({
 
   // Build cart-compatible state for CartContext calls
   const cartCompatibleState = useMemo(() => {
+    const activeColorUid =
+      productState?.selectedColorUid ||
+      productState?.selectedColor?.uid ||
+      (Array.isArray(selectedVariation?.colorUids)
+        ? selectedVariation.colorUids[0]
+        : selectedVariation?.colorUids) ||
+      selectedVariation?.colors?.[0]?.uid ||
+      null;
+
     const cartVariation = selectedVariation
       ? {
         ...selectedVariation,
@@ -100,12 +109,15 @@ const ShowProduct = ({
           selectedVariation.disPrice ?? selectedVariation.sale_price,
         price: selectedVariation.mrp ?? selectedVariation.price,
         product_id: baseProduct?.uid ?? baseProduct?.id,
+        colorUid: activeColorUid,
       }
       : null;
     return {
       ...productState,
       product: cartCompatibleProduct,
       selectedVariation: cartVariation,
+      selectedColorUid: activeColorUid,
+      colorUid: activeColorUid,
     };
   }, [
     productState,

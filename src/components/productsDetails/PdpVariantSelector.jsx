@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import PdpColorSelector from './PdpColorSelector';
 
 const convertToRupees = (value) => {
   const amount = Number(value);
@@ -59,6 +60,20 @@ const PdpVariantSelector = ({
   return (
     <div className="pickup-box">
       <div className="product-info">
+        {/* Colors Selector */}
+        <PdpColorSelector
+          key={selectedVariation?.uid}
+          selectedVariant={selectedVariation}
+          selectedColorUid={productState?.selectedColorUid}
+          onSelectColor={(color) => {
+            setProductState((prev) => ({
+              ...prev,
+              selectedColorUid: color?.uid || null,
+              selectedColor: color || null,
+            }));
+          }}
+        />
+
         <fieldset className="variation-fieldset">
           <legend className="variation-availability-label fw-semibold">
             Availability: Net Quantity
@@ -162,142 +177,6 @@ const PdpVariantSelector = ({
         </fieldset>
       </div>
     </div>
-    // <div className="pickup-box">
-    //   <div className="product-info">
-    //     <div className="variation-availability-summary">
-    //       <span className="variation-availability-label">
-    //         <h4>Availability: Net Quantity</h4>
-    //       </span>
-    //     </div>
-
-    //     <div className="variation-radio-list">
-    //       {variants.map((variant) => {
-    //         const label =
-    //           variant?.name ||
-    //           (variant.weight ? String(variant.weight) : '-') +
-    //           (variant.unit ? ` ${variant.unit}` : '') ||
-    //           '-';
-
-    //         // --- Extract pricing values ---
-    //         const mrp = variant?.mrp ?? 0;
-    //         const disPrice = variant?.disPrice ?? mrp;
-    //         // Use provided discount or calculate it as a fallback
-    //         const discount =
-    //           variant?.discount ||
-    //           (mrp > 0 && disPrice < mrp
-    //             ? Math.round(((mrp - disPrice) / mrp) * 100)
-    //             : 0);
-
-    //         const inStock = variant.inStockFlag;
-    //         const isSelected = selectedVariation?.uid === variant.uid;
-
-    //         return (
-    //           <button
-    //             type="button"
-    //             key={variant.uid}
-    //             className={`variation-radio-card ${isSelected ? 'active' : ''} ${!inStock ? 'disabled' : ''}`}
-    //             onClick={() => handleVariantSelect(variant)}
-    //             disabled={!inStock}
-    //             aria-pressed={isSelected}
-    //           >
-    //             <div className="variation-radio-content">
-    //               <div className="variation-radio-pricing">
-    //                 <span className="variation-price-strong" title={label}>
-    //                   {label}
-    //                 </span>
-    //                 <span
-    //                   className={`variation-radio-stock ${inStock ? 'in-stock' : 'out-of-stock'}`}
-    //                 >
-    //                   {inStock ? 'In stock' : 'Out of stock'}
-    //                 </span>
-    //               </div>
-
-    //               {/* --- Updated Pricing Logic Block --- */}
-    //               <div className="variation-radio-bottom price-row d-flex align-items-center gap-2 mt-1 mb-0">
-    //                 {isDoctorProduct ? (
-    //                   isVerifiedDoctor ? (
-    //                     // CASE 1: Doctor Product + Verified Doctor
-    //                     <>
-    //                       <div className="disc-price variation-price-discount">
-    //                         {convertToRupees(disPrice)}
-    //                       </div>
-    //                       {mrp !== disPrice && (
-    //                         <>
-    //                           <div
-    //                             className="selling-price"
-    //                             style={{ textDecoration: 'lineThrough' }}
-    //                           >
-    //                             <span
-    //                               style={{
-    //                                 fontSize: 14,
-    //                                 color: '#535E75',
-    //                                 lineHeight: 1,
-    //                               }}
-    //                             >
-    //                               M.R.P.
-    //                             </span>{' '}
-    //                             {convertToRupees(mrp)}
-    //                           </div>
-    //                           <div className="percent-off">
-    //                             {discount ? `${discount}% Off` : null}
-    //                           </div>
-    //                         </>
-    //                       )}
-    //                     </>
-    //                   ) : (
-    //                     // CASE 2: Doctor Product + Unverified User (ONLY MRP SHOWS)
-    //                     <div className="disc-price variation-price-discount">
-    //                       <span
-    //                         style={{
-    //                           fontSize: 14,
-    //                           color: '#535E75',
-    //                           lineHeight: 1,
-    //                         }}
-    //                       >
-    //                         M.R.P.
-    //                       </span>{' '}
-    //                       {convertToRupees(mrp)}
-    //                     </div>
-    //                   )
-    //                 ) : (
-    //                   // CASE 3: Regular Product
-    //                   <>
-    //                     <div className="disc-price variation-price-discount">
-    //                       {convertToRupees(disPrice)}
-    //                     </div>
-    //                     {mrp !== disPrice && (
-    //                       <>
-    //                         <div
-    //                           className="selling-price"
-    //                           style={{ textDecoration: 'lineThrough' }}
-    //                         >
-    //                           <span
-    //                             style={{
-    //                               fontSize: 14,
-    //                               color: '#535E75',
-    //                               lineHeight: 1,
-    //                             }}
-    //                           >
-    //                             M.R.P.
-    //                           </span>{' '}
-    //                           {convertToRupees(mrp)}
-    //                         </div>
-    //                         <div className="percent-off">
-    //                           {discount ? `${discount}% Off` : null}
-    //                         </div>
-    //                       </>
-    //                     )}
-    //                   </>
-    //                 )}
-    //               </div>
-    //               {/* --- End Updated Pricing Logic Block --- */}
-    //             </div>
-    //           </button>
-    //         );
-    //       })}
-    //     </div>
-    //   </div>
-    // </div>
   );
 };
 
