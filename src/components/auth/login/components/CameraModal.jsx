@@ -63,8 +63,8 @@ const CameraModal = ({
             className="w-100 profile-picker-secondary-btn"
             style={{
               backgroundColor: 'transparent',
-              color: '#0da487',
-              border: '1px solid #0da487',
+              color: 'var(--theme-color)',
+              border: '1px solid var(----btn-add-cart-bg-hover)',
             }}
             onClick={onClose}
           >
