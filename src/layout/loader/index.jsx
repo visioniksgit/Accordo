@@ -12,7 +12,9 @@ const Loader = () => {
   return (
     <div className="loader-wrapper">
       <Lottie
+        src={accordoLoader}
         animationData={accordoLoader}
+        autoplay={true}
         loop={true}
         style={{ width: 200, height: 200 }}
       />
