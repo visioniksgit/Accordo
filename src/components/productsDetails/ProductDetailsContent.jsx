@@ -221,35 +221,35 @@ const ProductDetailsContent = ({
       <div className={styles['trust-badges']}>
         <div className={styles['trust-badge-item']}>
           <img
-            src={'/assets/images/category/truck.png'}
+            src={'/assets/images/category/img1.png'}
             alt="ISO Certified"
             className={styles['trust-badge-icon']}
           />
         </div>
         <div className={styles['trust-badge-item']}>
           <img
-            src={'/assets/images/category/electrical.png'}
+            src={'/assets/images/category/img2.png'}
             alt="Free Delivery"
             className={styles['trust-badge-icon']}
           />
         </div>
         <div className={styles['trust-badge-item']}>
           <img
-            src={'/assets/images/category/truck.png'}
+            src={'/assets/images/category/img3.png'}
             alt="ISO Certified"
             className={styles['trust-badge-icon']}
           />
         </div>
         <div className={styles['trust-badge-item']}>
           <img
-            src={'/assets/images/category/electrical.png'}
+            src={'/assets/images/category/img4.png'}
             alt="Cash on Delivery"
             className={styles['trust-badge-icon']}
           />
         </div>
         <div className={styles['trust-badge-item']}>
           <img
-            src={'/assets/images/category/truck.png'}
+            src={'/assets/images/category/img5.png'}
             alt="100% Ayurvedic"
             className={styles['trust-badge-icon']}
           />
