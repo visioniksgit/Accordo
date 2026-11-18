@@ -27,7 +27,7 @@ const SingleBanner = ({ classes = {}, image_url, height, width, dataAPI }) => {
           ) : dataAPI?.redirect_link?.link_type === 'collection' ? (
             <Link
               href={
-                `/collections?category=${dataAPI?.redirect_link?.link}` ||
+                `/collections?categories=${dataAPI?.redirect_link?.link}` ||
                 '/'
               }
             >

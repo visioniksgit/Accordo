@@ -1,28 +1,32 @@
-import { useContext } from 'react';
+'use client';
+
+import React, { useMemo } from 'react';
+import Link from 'next/link';
 import { Col, Row } from 'reactstrap';
-import ThemeOptionContext from '@/helper/themeOptionsContext';
-import CategoryContext from '@/helper/categoryContext';
+import { useHomeCategories } from '@/utils/hooks/useHome';
 
 const FooterCategory = ({ footerMenu, setFooterMenu }) => {
-  const { themeOption } = useContext(ThemeOptionContext);
-  const { filterCategory } = useContext(CategoryContext);
-  const categoryData = filterCategory('product');
+  const { data } = useHomeCategories();
 
-  const column1Items = [
-    { title: 'Wires & Cables', href: '/collections?department=cables' },
-    { title: 'Wiring Accessories', href: '/collections?department=cables' },
-    { title: 'Lighting', href: '/collections?department=cables' },
-    { title: 'Pumps & Valves', href: '/collections?department=cables' },
-    { title: 'V-Belts', href: '/collections?department=cables' },
-  ];
+  // Support both data.data.categories and data.categories if response shape varies
+  const apiCategories = useMemo(() => {
+    return data?.data?.categories || data?.categories || [];
+  }, [data]);
 
-  const column2Items = [
-    { title: 'Fans & Ventilation', href: '/collections?department=cables' },
-    { title: 'Switchgears', href: '/collections?department=cables' },
-    { title: 'Motors', href: '/collections?department=cables' },
-    { title: 'Solar Panels', href: '/collections?department=cables' },
-    { title: 'Appliances', href: '/collections?department=cables' },
-  ];
+  const items = useMemo(() => {
+    if (Array.isArray(apiCategories) && apiCategories.length > 0) {
+      return apiCategories.map((cat) => ({
+        uid: cat.uid || cat.id || cat.slug,
+        title: cat.name || cat.title || '',
+        href: cat.slug ? `/collections?categories=${cat.slug}` : (cat.href || '/collections'),
+      }));
+    }
+    return [];
+  }, [apiCategories]);
+
+  // Fill first column first (up to 5 items), then second column (up to 5 items)
+  const column1Items = items.slice(0, 5);
+  const column2Items = items.slice(5, 10);
 
   return (
     <Col xl={4} lg={4} md={6} sm={12}>
@@ -40,10 +44,10 @@ const FooterCategory = ({ footerMenu, setFooterMenu }) => {
           <Col xs={6}>
             <ul>
               {column1Items.map((item, idx) => (
-                <li key={idx} style={{ marginBottom: '10px' }}>
-                  <a href={item.href} className="text-content-color">
+                <li key={item.uid || idx} style={{ marginBottom: '10px' }}>
+                  <Link href={item.href} className="text-content-color">
                     {item.title}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -51,10 +55,10 @@ const FooterCategory = ({ footerMenu, setFooterMenu }) => {
           <Col xs={6}>
             <ul>
               {column2Items.map((item, idx) => (
-                <li key={idx} style={{ marginBottom: '10px' }}>
-                  <a href={item.href} className="text-content-color">
+                <li key={item.uid || idx} style={{ marginBottom: '10px' }}>
+                  <Link href={item.href} className="text-content-color">
                     {item.title}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

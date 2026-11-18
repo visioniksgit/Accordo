@@ -33,7 +33,7 @@ const ProductSection2 = ({
           {categoryData?.map((elem) => (
             <div key={elem.id}>
               <Link
-                href={`/collections?category=${elem?.slug}`}
+                href={`/collections?categories=${elem?.slug}`}
                 className={`category-box ${classes?.link} category-dark`}
               >
                 <div>

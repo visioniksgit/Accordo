@@ -93,12 +93,12 @@ const MobileCategoryBrowser = ({ isOpen, onClose }) => {
 
   const handleSubcategoryClick = (subcategory) => {
     onClose();
-    router.push(`/collections?category=${subcategory.slug}`);
+    router.push(`/collections?categories=${subcategory.slug}`);
   };
 
   const handleCategoryNavigate = (category) => {
     onClose();
-    router.push(`/collections?category=${category.slug}`);
+    router.push(`/collections?categories=${category.slug}`);
   };
 
   if (!isOpen) return null;

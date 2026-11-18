@@ -32,10 +32,10 @@ const VegetableBanner = ({ dataAPI }) => {
           </div>
         </Link>
       ) : dataAPI?.main_content?.section8_full_width_banner?.redirect_link
-          ?.link_type === 'collection' ? (
+        ?.link_type === 'collection' ? (
         <Link
           href={
-            `/collections?category=${dataAPI?.main_content?.section8_full_width_banner?.redirect_link?.link}` ||
+            `/collections?categories=${dataAPI?.main_content?.section8_full_width_banner?.redirect_link?.link}` ||
             '/'
           }
         >
@@ -51,7 +51,7 @@ const VegetableBanner = ({ dataAPI }) => {
           </div>
         </Link>
       ) : dataAPI?.main_content?.section8_full_width_banner?.redirect_link
-          ?.link_type === 'product' ? (
+        ?.link_type === 'product' ? (
         <Link
           href={
             `/${redirectToProduct(dataAPI?.main_content?.section8_full_width_banner?.redirect_link?.link)}` ||

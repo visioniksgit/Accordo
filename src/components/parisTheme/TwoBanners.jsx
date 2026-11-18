@@ -38,10 +38,10 @@ const TwoBanners = ({ dataAPI }) => {
               </div>
             </Link>
           ) : dataAPI?.main_content?.section6_two_column_banners?.banner_1
-              ?.redirect_link?.link_type === 'collection' ? (
+            ?.redirect_link?.link_type === 'collection' ? (
             <Link
               href={
-                `/collections?category=${dataAPI?.main_content?.section6_two_column_banners?.banner_1?.redirect_link?.link}` ||
+                `/collections?categories=${dataAPI?.main_content?.section6_two_column_banners?.banner_1?.redirect_link?.link}` ||
                 '/'
               }
             >
@@ -60,7 +60,7 @@ const TwoBanners = ({ dataAPI }) => {
               </div>
             </Link>
           ) : dataAPI?.main_content?.section6_two_column_banners?.banner_1
-              ?.redirect_link?.link_type === 'product' ? (
+            ?.redirect_link?.link_type === 'product' ? (
             <Link
               href={
                 `/${redirectToProduct(dataAPI?.main_content?.section6_two_column_banners?.banner_1?.redirect_link?.link)}` ||
@@ -122,10 +122,10 @@ const TwoBanners = ({ dataAPI }) => {
               />
             </Link>
           ) : dataAPI?.main_content?.section6_two_column_banners?.banner_2
-              ?.redirect_link?.link_type === 'collection' ? (
+            ?.redirect_link?.link_type === 'collection' ? (
             <Link
               href={
-                `/collections?category=${dataAPI?.main_content?.section6_two_column_banners?.banner_2?.redirect_link?.link}` ||
+                `/collections?categories=${dataAPI?.main_content?.section6_two_column_banners?.banner_2?.redirect_link?.link}` ||
                 '/'
               }
               className="banner-contain hover-effect"
@@ -143,7 +143,7 @@ const TwoBanners = ({ dataAPI }) => {
               />
             </Link>
           ) : dataAPI?.main_content?.section6_two_column_banners?.banner_2
-              ?.redirect_link?.link_type === 'product' ? (
+            ?.redirect_link?.link_type === 'product' ? (
             <Link
               href={
                 `/${redirectToProduct(dataAPI?.main_content?.section6_two_column_banners?.banner_2?.redirect_link?.link)}` ||
