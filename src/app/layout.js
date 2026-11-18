@@ -24,7 +24,7 @@ export const viewport = {
 }
 
 export const metadata = {
-  metadataBase: new URL('https://www.sdlindia.com'),
+  metadataBase: new URL('https://accordo-liart.vercel.app'),
   icons: {
     // icon: '/favicon.ico',
     // apple: '/apple-touch-icon.png',

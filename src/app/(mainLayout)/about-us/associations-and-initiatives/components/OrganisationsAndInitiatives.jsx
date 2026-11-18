@@ -194,18 +194,6 @@ const OrganisationsAndInitiatives = () => {
               <strong>Ayurvediya Aushadhi Dravya Shodanvidhi</strong> by Vd.
               Dhamankar.
             </p>
-            {/* <p>
-              View our publications{' '}
-              <a
-                href="http://www.sdlindia.com/resources/journal-publication"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.link}
-              >
-                here
-              </a>
-              .
-            </p> */}
           </div>
         </Col>
       </WrapperComponent>

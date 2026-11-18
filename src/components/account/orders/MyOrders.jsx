@@ -321,7 +321,7 @@ const MyOrders = () => {
   const handleHelpClick = (event) => {
     event.preventDefault();
     // setHelpModal(true);
-    const mailtoLink = `mailto:healthcare@sdlindia.com?subject=Issue with Order #${selectedOrderDetails?.orderId}`;
+    const mailtoLink = `mailto:test@gmail.com?subject=Issue with Order #${selectedOrderDetails?.orderId}`;
     window.location.href = mailtoLink;
     // window.open(mailtoLink, '_blank');
   };

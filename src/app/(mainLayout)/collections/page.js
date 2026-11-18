@@ -16,7 +16,7 @@ export async function generateMetadata() {
 
 function createCollectionPageSchema(products = []) {
   const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || 'https://www.sdlindia.com';
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://accordo-liart.vercel.app';
   const collectionsUrl = `${siteUrl}/collections`;
 
   const collectionsId = collectionsUrl;

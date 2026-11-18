@@ -25,7 +25,7 @@ async function getHealthConcernFallbackMetadata(healthConcernSlug) {
     return {
       title: metaTitle || `${name} | Ayurvedic Care & Natural Wellness`,
       alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.sdlindia.com'}/health-concerns/${healthConcernSlug}`,
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://accordo-liart.vercel.app'}/health-concerns/${healthConcernSlug}`,
       },
       description:
         metaDescription ||

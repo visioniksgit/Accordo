@@ -35,7 +35,7 @@ export const SEO_TYPES = {
 };
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || 'https://www.sdlindia.com';
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://accordo-liart.vercel.app';
 
 const SCHEMA_FIELDS = [
   'articleSchema',

@@ -960,7 +960,7 @@ const ReturnOrderDetails = ({ isOpen, returnUid, onClose }) => {
           <div className={styles.stickyFooter}>
             <a
               // href="tel:+918888888888"
-              href="mailto:healthcare@sdlindia.com"
+              href="mailto:test@gmail.com"
               className={`${styles.footerBtn} ${styles.footerBtnOutline}`}
             >
               <RiCustomerServiceLine />

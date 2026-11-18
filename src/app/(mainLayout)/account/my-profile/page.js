@@ -5,7 +5,7 @@ export const metadata = {
   title: 'My Profile',
   description: 'Manage your profile and personal information as a registered user on Shree Dhootapapeshwar Limited.',
   alternates: {
-    canonical: 'https://www.sdlindia.com/account/my-profile',
+    canonical: 'https://accordo-liart.vercel.app/account/my-profile',
   },
 };
 

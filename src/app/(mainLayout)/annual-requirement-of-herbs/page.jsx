@@ -93,7 +93,7 @@ export const metadata = {
   title: 'Annual Requirement of Medicinal Herbs',
   description: 'Discover the annual requirement of medicinal herbs in India. SDL India provides insights into demand, cultivation trends, and market opportunities for herb suppliers and cultivators.',
   alternates: {
-    canonical: 'https://www.sdlindia.com/annual-requirement-of-herbs',
+    canonical: 'https://accordo-liart.vercel.app/annual-requirement-of-herbs',
   },
 };
 
