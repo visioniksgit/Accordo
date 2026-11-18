@@ -203,7 +203,7 @@ const ProductBox1 = ({
             </Link>
           </h3>
           <div className="product-detail-bottom">
-            {((productDetail?.unit && productDetail?.weight) || productDetail?.stock_status === 'in_stock') && (
+            {(productDetail?.stock_status === 'in_stock') && (
               <>
                 <div className="meta-1">
                   <div className="">
