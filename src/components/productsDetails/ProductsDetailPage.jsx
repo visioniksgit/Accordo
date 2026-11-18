@@ -24,6 +24,7 @@ import ProductDetailSkeleton from './ProductDetailSkeleton';
 import { trackMetaEvent } from '@/utils/metaPixel';
 import KeywordsSection from '../common/KeywordsSection';
 import CartContext from '@/helper/cartContext';
+import ProductSpecificationsTable from './ProductSpecificationsTable';
 
 const getVariantRouteValue = (variant) =>
   variant?.slug || variant?.productVariantSlug || variant?.uid || null;
@@ -396,9 +397,37 @@ const ProductsDetailPage = ({ slug }) => {
     const p = productState.product || data?.data?.product;
     if (!p) return [];
 
+    const productSpecs =
+      Array.isArray(p.productSpecifications) && p.productSpecifications.length > 0
+        ? p.productSpecifications
+        : Array.isArray(p.specifications) && p.specifications.length > 0
+          ? p.specifications
+          : Array.isArray(productState.selectedVariation?.productSpecifications) && productState.selectedVariation.productSpecifications.length > 0
+            ? productState.selectedVariation.productSpecifications
+            : [];
+
+    const keyAttributesHtml = p.keyAttribute
+      ? `<ul>${String(p.keyAttribute)
+        .split('|')
+        .map((item) => item.trim())
+        .filter(Boolean)
+        .map((item) => `<li>${item}</li>`)
+        .join('')}</ul>`
+      : '';
+
     return [
       { key: 'description', label: 'Description', content: p.description },
-      { key: 'key_attributes', label: 'Key Attributes', content: '', alwaysShow: true },
+      { key: 'key_attributes', label: 'Key Attributes', content: keyAttributesHtml, alwaysShow: true },
+      ...(productSpecs.length > 0
+        ? [
+          {
+            key: 'specifications',
+            label: 'Specifications',
+            component: <ProductSpecificationsTable specifications={productSpecs} />,
+            alwaysShow: true,
+          },
+        ]
+        : []),
       // { key: 'benefits', label: 'Benefits', content: p.benefits },
       // { key: 'ingredients', label: 'Ingredients', content: p.ingredients },
       // { key: 'indication', label: 'Indication', content: p.indication },
@@ -412,12 +441,13 @@ const ProductsDetailPage = ({ slug }) => {
       // },
     ].filter((tab) => {
       if (tab.alwaysShow) return true;
+      if (tab.component) return true;
       if (tab.key === 'productMarketAuth') {
         return Array.isArray(p.productMarketAuth) || p.productMarketAuth !== undefined;
       }
       return hasRenderableContent(tab.content);
     });
-  }, [productState.product, data?.data?.product]);
+  }, [productState.product, productState.selectedVariation, data?.data?.product]);
 
   useEffect(() => {
     if (!resolvedTabs.length) {
@@ -430,6 +460,13 @@ const ProductsDetailPage = ({ slug }) => {
       if (resolvedTabs.some((t) => t.key === hash)) {
         setActiveTab(hash);
         return;
+      }
+      if (hash === 'productSpecifications' || hash === 'specifications') {
+        const specTab = resolvedTabs.find((t) => t.key === 'specifications' || t.key === 'productSpecifications');
+        if (specTab) {
+          setActiveTab(specTab.key);
+          return;
+        }
       }
     }
     setActiveTab((prev) => {
@@ -632,10 +669,14 @@ const ProductsDetailPage = ({ slug }) => {
                             }`}
                         >
                           <div className={isSelected ? styles['tab-fade'] : undefined}>
-                            <div
-                              className={styles['tab-content-html']}
-                              dangerouslySetInnerHTML={{ __html: tab.content || '' }}
-                            />
+                            {tab.component ? (
+                              tab.component
+                            ) : (
+                              <div
+                                className={styles['tab-content-html']}
+                                dangerouslySetInnerHTML={{ __html: tab.content || '' }}
+                              />
+                            )}
                           </div>
                         </div>
                       );

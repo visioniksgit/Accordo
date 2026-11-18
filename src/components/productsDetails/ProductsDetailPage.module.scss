@@ -937,3 +937,91 @@
     }
   }
 }
+
+// ─── Product Specifications Table ──────────────────────────────────────────
+
+.specifications-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+  background-color: #FFFFFF;
+  margin-top: 4px;
+}
+
+.specifications-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.5;
+
+  thead {
+    background-color: #F8FAFC;
+    border-bottom: 2px solid #E2E8F0;
+
+    th {
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #0F172A;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #EDF2F7;
+      transition: background-color 0.15s ease;
+
+      &:nth-child(even) {
+        background-color: #F8FAFC;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background-color: #F1F5F9;
+      }
+    }
+
+    td {
+      padding: 10px 14px;
+      vertical-align: middle;
+    }
+  }
+
+  .spec-name {
+    font-weight: 600;
+    color: #1E293B;
+    width: 35%;
+    min-width: 140px;
+  }
+
+  .spec-value {
+    font-weight: 500;
+    color: #475569;
+    width: 65%;
+  }
+
+  @include breakpoints.mq-max(sm) {
+    font-size: 13px;
+
+    thead th {
+      padding: 10px 12px;
+      font-size: 12px;
+    }
+
+    tbody td {
+      padding: 10px 12px;
+    }
+
+    .spec-name {
+      width: 40%;
+      min-width: 110px;
+    }
+  }
+}
