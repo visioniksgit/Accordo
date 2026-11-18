@@ -14,8 +14,8 @@ export const STATIC_BANNER_SLIDES = [
   {
     id: 'static-banner-1',
     title: 'Immunity Support',
-    desktopImage: '/assets/images/accordo-test-image/slide1.png',
-    mobileImage: '/assets/images/accordo-test-image/slide1.png',
+    desktopImage: '/assets/images/accordo-test-image/banner-l1.jpeg',
+    mobileImage: '/assets/images/accordo-test-image/banner-p1.png',
     // desktopImage: '/assets/images/static-banners/1920-x-576-for-desktop-screens.webp',
     // mobileImage: '/assets/images/static-banners/768-x-384-for-mobile-screens.webp',
     alt: 'Immunity Support',
@@ -25,8 +25,8 @@ export const STATIC_BANNER_SLIDES = [
   {
     id: 'static-banner-2',
     title: 'Swamala Classic',
-    desktopImage: '/assets/images/accordo-test-image/slide2.png',
-    mobileImage: '/assets/images/accordo-test-image/slide2.png',
+    desktopImage: '/assets/images/accordo-test-image/banner-p2.png',
+    mobileImage: '/assets/images/accordo-test-image/banner-l2.png',
     // desktopImage: '/assets/images/static-banners/Final .webp',
     // mobileImage: '/assets/images/static-banners/Untitled design.webp',
     alt: 'Swamala Classic',

@@ -1466,7 +1466,12 @@ header {
               .delivery-icon {
                 .login-signup-icon {
                   font-size: 20px;
-                  color: var(--light-btn-text);
+                  color: var(--light-btn-tex);
+
+                  &:hover {
+                    color: var(--white);
+                  }
+
                 }
 
                 .login-signup-text {
