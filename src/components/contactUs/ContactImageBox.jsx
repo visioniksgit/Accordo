@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Col } from 'reactstrap';
-import contactUsImage from '../../../public/assets/images/contact/contact.jpeg';
+import contactUsImage from '../../../public/assets/images/contact/contact.png';
 
 const ContactImageBox = () => {
 

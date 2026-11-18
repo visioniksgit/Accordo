@@ -58,11 +58,11 @@ const ClassicHeaderMenu = () => {
                 <MainHeaderMenu />
               </div>
 
-              <div className="text-center app-promo-text-wrapper">
+              {/* <div className="text-center app-promo-text-wrapper">
                 <div className="text-center mb-1 fs-6 app-promo-text-title">Dhootapapeshwar App is LIVE!</div>
                 <p className="text-center app-promo-text-description">Download & Signup, to get {signupBonusCoins} SDL Points.</p>
-              </div>
-              <div className="d-flex d-xl-none justify-content-center gap-2 flex-nowrap">
+              </div> */}
+              {/* <div className="d-flex d-xl-none justify-content-center gap-2 flex-nowrap">
                 {themeOption?.footer?.play_store_url && (
                   <div className="position-relative sidebar-appstore-image">
                     <Link
@@ -97,7 +97,7 @@ const ClassicHeaderMenu = () => {
                     </Link>
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

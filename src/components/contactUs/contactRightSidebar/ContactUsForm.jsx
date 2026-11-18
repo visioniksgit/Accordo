@@ -173,32 +173,32 @@ const ContactUsForm = () => {
                 },
                 colprops: { xxl: 6, sm: 6 },
               },
-              {
-                name: 'pincode',
-                placeholder: t('EnterPincode'),
-                toplabel: 'Pincode',
-                require: 'true',
-                className: 'input-common contact-us-form-input',
-                type: 'tel',
-                inputMode: 'numeric',
-                maxLength: 6,
-                onInput: (e) => {
-                  e.target.value = e.target.value
-                    .replace(/\D/g, '')
-                    .slice(0, 6);
-                },
-                colprops: { xxl: 6, lg: 12, sm: 6 },
-              },
-              {
-                name: 'subject',
-                placeholder: t('EnterSubject'),
-                toplabel: 'Subject',
-                require: 'false',
-                className: 'input-common contact-us-form-input',
-                colprops: { xxl: 6, lg: 12, sm: 6 },
-                onInput: (e) =>
-                  (e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '')),
-              },
+              // {
+              //   name: 'pincode',
+              //   placeholder: t('EnterPincode'),
+              //   toplabel: 'Pincode',
+              //   require: 'true',
+              //   className: 'input-common contact-us-form-input',
+              //   type: 'tel',
+              //   inputMode: 'numeric',
+              //   maxLength: 6,
+              //   onInput: (e) => {
+              //     e.target.value = e.target.value
+              //       .replace(/\D/g, '')
+              //       .slice(0, 6);
+              //   },
+              //   colprops: { xxl: 6, lg: 12, sm: 6 },
+              // },
+              // {
+              //   name: 'subject',
+              //   placeholder: t('EnterSubject'),
+              //   toplabel: 'Subject',
+              //   require: 'false',
+              //   className: 'input-common contact-us-form-input',
+              //   colprops: { xxl: 6, lg: 12, sm: 6 },
+              //   onInput: (e) =>
+              //     (e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '')),
+              // },
               {
                 name: 'enquiryType',
                 toplabel: 'Send Message To',
@@ -210,13 +210,13 @@ const ContactUsForm = () => {
                   <>
                     <option value="">{t('Select Option')}</option>
                     <option value="test1">
-                      {t('test1')}
+                      {t('Purchase')}
                     </option>
                     <option value="test2">
-                      {t('test2')}
+                      {t('Become a partner')}
                     </option>
                     <option value="test3">
-                      {t('test3')}
+                      {t('Support')}
                     </option>
 
                   </>

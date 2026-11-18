@@ -20,7 +20,7 @@ const FooterSocial = () => {
           {/* {themeOption?.footer?.facebook && ( */}
           <li>
             <a
-              href={"https://www.facebook.com/Dhootapapeshwar/"}
+              href={"https://www.facebook.com/"}
               target="_blank"
               rel="noreferrer"
               aria-label="Facebook"
@@ -33,7 +33,7 @@ const FooterSocial = () => {
           {/* {themeOption?.footer?.twitter && ( */}
           <li>
             <a
-              href={"https://x.com/SDLINDIA"}
+              href={"https://x.com/"}
               target="_blank"
               rel="noreferrer"
               aria-label="Twitter"
@@ -46,7 +46,7 @@ const FooterSocial = () => {
           {/* {themeOption?.footer?.instagram && ( */}
           <li>
             <a
-              href={"https://www.instagram.com/sdlindia/?hl=en"}
+              href={"https://www.instagram.com/"}
               target="_blank"
               rel="noreferrer"
               aria-label="Instagram"
@@ -59,7 +59,7 @@ const FooterSocial = () => {
           {/* {themeOption?.footer?.pinterest && ( */}
           <li>
             <a
-              href={"https://www.youtube.com/c/shreedhootapapeshwarlimited"}
+              href={"https://www.youtube.com/"}
               target="_blank"
               rel="noreferrer"
               aria-label="YouTube"
