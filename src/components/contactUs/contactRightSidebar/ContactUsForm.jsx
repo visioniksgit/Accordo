@@ -34,10 +34,10 @@ const contactSchema = z.object({
     .string()
     .trim()
     .regex(/^\d{10}$/, 'Enter a valid phone number'),
-  pincode: z
-    .string()
-    .trim()
-    .regex(/^\d{6}$/, 'Pincode must be 6 digits'),
+  // pincode: z
+  //   .string()
+  //   .trim()
+  //   .regex(/^\d{6}$/, 'Pincode must be 6 digits'),
   subject: z
     .string()
     .trim()
