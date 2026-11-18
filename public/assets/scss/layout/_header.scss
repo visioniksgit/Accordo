@@ -693,13 +693,38 @@ header {
     }
 
     &.header-top-bar {
+      display: grid;
+      grid-template-rows: 1fr;
       overflow: hidden;
-      max-height: 120px;
-      transition: max-height 0.35s ease;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      opacity: 1;
+      visibility: visible;
+      transition:
+        grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        padding-top 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        padding-bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0.35s;
+      will-change: grid-template-rows, opacity, padding-top, padding-bottom;
+
+      .header-top-bar__inner {
+        min-height: 0;
+        overflow: hidden;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      }
 
       &.is-hidden {
-        max-height: 0;
-        padding: 0;
+        grid-template-rows: 0fr;
+        padding-top: 0;
+        padding-bottom: 0;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+
+        .header-top-bar__inner {
+          transform: translateY(-8px);
+        }
       }
     }
 
@@ -6301,6 +6326,7 @@ header.basic-header-redesign {
     // border-bottom: 1px solid rgba(variables.$title-color, 0.06);
     box-shadow: 0 12px 28px rgba(variables.$title-color, 0.05);
     // padding: 8px 0 0;
+    transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &.active {
