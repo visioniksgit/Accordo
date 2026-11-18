@@ -1,12 +1,21 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import accordoLoader from "../../../public/assets/images/loader/accordo-loader.json";
+
+const Lottie = dynamic(
+  () => import("lottie-react").then((mod) => mod.Lottie || mod.default),
+  { ssr: false }
+);
+
 const Loader = () => {
   return (
     <div className="loader-wrapper">
-      <div>
-        <div className="loader"></div>
-        {/* <h3>Loading</h3> */}
-      </div>
+      <Lottie
+        animationData={accordoLoader}
+        loop={true}
+        style={{ width: 200, height: 200 }}
+      />
     </div>
   );
 };

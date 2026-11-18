@@ -2451,7 +2451,7 @@
         transition: background 0.3s ease;
 
         &:hover {
-          background: #178a65 !important;
+          background: var(--btn-add-cart-bg-hover) !important;
         }
       }
 
