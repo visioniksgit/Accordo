@@ -320,6 +320,7 @@ const ProductDetailAction = ({
 
   const handleCheckPincode = async (event) => {
     event.preventDefault();
+    return;
     const trimmed = (pincode || '').trim();
     const selectedVariationForDelivery =
       selectedVariation ?? product?.productVariants?.[0];

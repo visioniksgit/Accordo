@@ -28,6 +28,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
+  padding-left: 4px;
 }
 
 .colorItem {
@@ -49,6 +50,7 @@
 
   &:focus-visible {
     outline: none;
+
     .colorCircle {
       box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--theme-color, #0da487);
     }

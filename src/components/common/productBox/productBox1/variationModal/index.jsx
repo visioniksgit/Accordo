@@ -14,12 +14,13 @@ import {
 } from '@/utils/hooks/useCart';
 import { RiAddLine, RiSubtractLine } from 'react-icons/ri';
 import { trackMetaEvent } from '@/utils/metaPixel';
+import { useProductModal } from '@/utils/hooks/useProduct';
 
 const getSelectedVariationId = (variation) =>
+  variation?.uid ??
   variation?.id ??
   variation?.variation_id ??
   variation?.variationId ??
-  variation?.uid ??
   null;
 
 const getProductId = (product) =>
@@ -98,10 +99,61 @@ const VariationModal = ({
   //   console.log(cloneVariation);
   // }, [productObj])
 
+  const productUid = getProductId(cloneVariation?.product ?? productObj);
+  const isModalOpen = Boolean(
+    productObj?.uid && (productObj?.uid === variationModal || productObj?.id === variationModal)
+  );
+  const { data: modalData } = useProductModal(isModalOpen ? productUid : null);
+
+  useEffect(() => {
+    const modalProduct = modalData?.data?.product;
+    if (!modalProduct) return;
+
+    setCloneVariation((prev) => {
+      const enrichedVariants =
+        Array.isArray(modalProduct.productVariants) && modalProduct.productVariants.length > 0
+          ? modalProduct.productVariants
+          : Array.isArray(modalProduct.variations) && modalProduct.variations.length > 0
+          ? modalProduct.variations
+          : [];
+
+      const currentSelectedId = getSelectedVariationId(prev.selectedVariation);
+
+      const matchedVariant = currentSelectedId
+        ? enrichedVariants.find(
+            (v) => (v.uid ?? v.id ?? v.variation_id) === currentSelectedId
+          )
+        : null;
+
+      const nextSelected =
+        matchedVariant ||
+        (enrichedVariants.length > 0
+          ? enrichedVariants.find((v) => v.inStockFlag || v.stock_status === 'in_stock') ||
+            enrichedVariants[0]
+          : prev.selectedVariation);
+
+      const defaultColor =
+        Array.isArray(nextSelected?.colors) && nextSelected.colors.length > 0
+          ? nextSelected.colors[0]
+          : null;
+
+      return {
+        ...prev,
+        product: {
+          ...prev.product,
+          ...modalProduct,
+          productVariants: modalProduct.productVariants ?? prev.product?.productVariants,
+        },
+        selectedVariation: nextSelected,
+        selectedColorUid: prev.selectedColorUid || defaultColor?.uid || null,
+        selectedColor: prev.selectedColor || defaultColor || null,
+      };
+    });
+  }, [modalData]);
+
   const selectedVariationId = getSelectedVariationId(
     cloneVariation?.selectedVariation
   );
-  const productUid = getProductId(cloneVariation?.product ?? productObj);
   const departmentName = productObj?.department?.name;
   const isBook = departmentName === 'Books';
 
@@ -112,10 +164,23 @@ const VariationModal = ({
       return null;
     }
 
+    const activeColorUid =
+      cloneVariation?.selectedColorUid ||
+      cloneVariation?.selectedColor?.uid ||
+      cloneVariation?.selectedVariation?.colors?.[0]?.uid ||
+      null;
+
+    const matchesColor = (item) => {
+      if (!activeColorUid) return true;
+      const itemColor = item?.color_id ?? item?.colorUid ?? null;
+      return !itemColor || String(itemColor) === String(activeColorUid);
+    };
+
     if (!selectedVariationId) {
       return (
-        cartProducts.find((item) => byProduct(item) && !item?.variation_id) ??
-        null
+        cartProducts.find(
+          (item) => byProduct(item) && !item?.variation_id && matchesColor(item)
+        ) ?? null
       );
     }
 
@@ -123,10 +188,18 @@ const VariationModal = ({
       cartProducts.find(
         (item) =>
           byProduct(item) &&
-          String(item?.variation_id) === String(selectedVariationId)
+          String(item?.variation_id) === String(selectedVariationId) &&
+          matchesColor(item)
       ) ?? null
     );
-  }, [cartProducts, productUid, selectedVariationId]);
+  }, [
+    cartProducts,
+    productUid,
+    selectedVariationId,
+    cloneVariation?.selectedColorUid,
+    cloneVariation?.selectedColor?.uid,
+    cloneVariation?.selectedVariation?.colors,
+  ]);
 
   const productQty = selectedCartItem?.quantity ?? 0;
   const maxAvailableQty = getAvailableQuantity(
@@ -252,11 +325,18 @@ const VariationModal = ({
       return;
     }
 
+    const activeColorUid =
+      cloneVariation?.selectedColorUid ||
+      cloneVariation?.selectedColor?.uid ||
+      cloneVariation?.selectedVariation?.colors?.[0]?.uid ||
+      null;
+
     setPendingAction('add');
     addToCartMutation.mutate(
       {
         productUid,
         variantUid: selectedVariationId,
+        ...(activeColorUid ? { colorUid: activeColorUid } : {}),
         count: requestedQuantity,
       },
       {
@@ -277,10 +357,18 @@ const VariationModal = ({
       return;
     }
 
+    const activeColorUid =
+      selectedCartItem.color_id ??
+      selectedCartItem.colorUid ??
+      cloneVariation?.selectedColorUid ??
+      cloneVariation?.selectedColor?.uid ??
+      null;
+
     setPendingAction('inc');
     addToCartMutation.mutate({
       productUid: selectedCartItem.product_id,
       variantUid: selectedCartItem.variation_id ?? null,
+      ...(activeColorUid ? { colorUid: activeColorUid } : {}),
     });
   };
 
@@ -289,10 +377,18 @@ const VariationModal = ({
       return;
     }
 
+    const activeColorUid =
+      selectedCartItem.color_id ??
+      selectedCartItem.colorUid ??
+      cloneVariation?.selectedColorUid ??
+      cloneVariation?.selectedColor?.uid ??
+      null;
+
     setPendingAction('dec');
     removeFromCartMutation.mutate({
       productUid: selectedCartItem.product_id,
       variantUid: selectedCartItem.variation_id ?? null,
+      ...(activeColorUid ? { colorUid: activeColorUid } : {}),
     });
   };
 

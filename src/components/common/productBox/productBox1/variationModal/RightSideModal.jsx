@@ -2,7 +2,7 @@ import { Label } from 'reactstrap';
 import ProductBox1Rating from '../ProductBox1Rating';
 import { ModifyString } from '@/utils/customFunctions/ModifyString';
 import TextLimit from '@/utils/customFunctions/TextLimit';
-import { useEffect, useOptimistic, useState } from 'react';
+import { useEffect, useMemo, useOptimistic, useState } from 'react';
 import {
   RiHeartLine,
   RiHeartFill,
@@ -33,6 +33,7 @@ import {
   storePendingPostLoginAction,
 } from '@/utils/postLoginAction';
 import { getProductEarnedSdlCoins } from '@/utils/cart/cartUtils';
+import PdpColorSelector from '@/components/productsDetails/PdpColorSelector';
 
 const RightVariationModal = ({
   cloneVariation,
@@ -45,17 +46,49 @@ const RightVariationModal = ({
   // const [showShareDropdown, setShowShareDropdown] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
-  const variations = cloneVariation?.product?.variations || [];
+  const variations =
+    Array.isArray(cloneVariation?.product?.productVariants) && cloneVariation.product.productVariants.length > 0
+      ? cloneVariation.product.productVariants
+      : Array.isArray(cloneVariation?.product?.variations) && cloneVariation.product.variations.length > 0
+        ? cloneVariation.product.variations
+        : [];
+
   const getVariationId = (v) =>
-    v?.id ?? v?.variation_id ?? v?.variationId ?? v?._id;
+    v?.uid ?? v?.id ?? v?.variation_id ?? v?.variationId ?? v?._id;
 
   const selectedVariationId = getVariationId(cloneVariation?.selectedVariation);
 
+  const checkVariantInStock = (v) => {
+    if (!v) return false;
+    if (typeof v.inStockFlag === 'boolean') return v.inStockFlag;
+    if (v.stock_status) return v.stock_status === 'in_stock';
+    const qty = Number(v.stockQty ?? v.quantity);
+    return Number.isFinite(qty) && qty > 0;
+  };
+
+  const currentVariant = useMemo(() => {
+    const sel = cloneVariation?.selectedVariation;
+    const selId = getVariationId(sel);
+    const enriched = selId
+      ? variations.find((v) => getVariationId(v) === selId)
+      : null;
+
+    return (
+      (enriched?.colors ? enriched : null) ||
+      (sel?.colors ? sel : null) ||
+      enriched ||
+      sel ||
+      variations.find((v) => checkVariantInStock(v)) ||
+      variations[0] ||
+      null
+    );
+  }, [cloneVariation?.selectedVariation, variations]);
+
   // Get current stock status
-  const stockStatus =
-    cloneVariation?.selectedVariation?.stock_status ??
-    cloneVariation?.product?.stock_status;
-  const isInStock = stockStatus === 'in_stock';
+  const isInStock = cloneVariation?.selectedVariation
+    ? checkVariantInStock(cloneVariation.selectedVariation)
+    : checkVariantInStock(cloneVariation?.product);
+  const stockStatus = isInStock ? 'in_stock' : 'out_of_stock';
 
   // Match product details SKU handling so variant changes are reflected here too.
   const representativeVariant =
@@ -137,6 +170,10 @@ const RightVariationModal = ({
       .filter(Boolean);
 
     const nextVariationId = getVariationId(variation);
+    const defaultColor =
+      Array.isArray(variation?.colors) && variation.colors.length > 0
+        ? variation.colors[0]
+        : null;
 
     setCloneVariation((prev) => ({
       ...prev,
@@ -145,6 +182,8 @@ const RightVariationModal = ({
       selectedVariation: variation,
       variation: variation,
       variation_id: nextVariationId,
+      selectedColorUid: defaultColor?.uid || null,
+      selectedColor: defaultColor || null,
     }));
   };
 
@@ -152,7 +191,7 @@ const RightVariationModal = ({
   useEffect(() => {
     if (selectedVariationId || !variations.length) return;
     const firstAvailable =
-      variations.find((v) => v?.stock_status === 'in_stock') || variations[0];
+      variations.find((v) => checkVariantInStock(v)) || variations[0];
     handleVariantSelect(firstAvailable);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedVariationId, variations]);
@@ -416,12 +455,27 @@ const RightVariationModal = ({
       {/* 7. Availability / Variants Section */}
       <div className="pickup-box">
         <div className="product-info">
-          {/* variation-availability-summary */}
-          <div className="">
-            <span className="variation-availability-label property-title">
-              <h4>Availability: Net Quantity</h4>
-            </span>
-          </div>
+          {/* Colors Selection */}
+          <PdpColorSelector
+            key={selectedVariationId || currentVariant?.uid || currentVariant?.id || 'default'}
+            selectedVariant={currentVariant?.colors ? currentVariant : (cloneVariation?.product?.colors ? { ...currentVariant, colors: cloneVariation.product.colors } : currentVariant)}
+            selectedColorUid={cloneVariation?.selectedColorUid}
+            onSelectColor={(color) => {
+              setCloneVariation((prev) => ({
+                ...prev,
+                selectedColorUid: color?.uid || null,
+                selectedColor: color || null,
+              }));
+            }}
+          />
+
+          {variations.length > 0 && (
+            <div className="">
+              <span className="variation-availability-label property-title">
+                <h4>Availability: Net Quantity</h4>
+              </span>
+            </div>
+          )}
 
           {variations.length > 0 && (
             <div className="variation-radio-list commom-scrollbar hide-scrollbar">
@@ -434,16 +488,14 @@ const RightVariationModal = ({
                 const label = variation?.name;
 
                 // Pulling the specific keys you requested
-                const mrp = variation?.mrp ?? variation?.price;
-                const disPrice = variation?.disPrice ?? variation?.sale_price;
-                const discount = variation?.discount;
+                const mrp = variation?.mrp ?? variation?.price ?? 0;
+                const disPrice = variation?.disPrice ?? variation?.sale_price ?? mrp;
+                const discount =
+                  variation?.discountPercent ??
+                  variation?.discount ??
+                  (mrp > 0 && disPrice < mrp ? Math.round(((mrp - disPrice) / mrp) * 100) : 0);
 
-                // console.log({variation});
-                // console.log({
-                //   mrp, disPrice, discount
-                // })
-
-                const inStock = variation?.stock_status === 'in_stock';
+                const inStock = checkVariantInStock(variation);
                 const variationId = getVariationId(variation);
                 const isSelected =
                   String(selectedVariationId) === String(variationId);
