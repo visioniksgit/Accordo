@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { Col, Row } from 'reactstrap';
 import ThemeOptionContext from '@/helper/themeOptionsContext';
 import { useHeaderScroll } from '@/utils/HeaderScroll';
-// import HeaderCategory from './common/HeaderCategory';
 import HeaderLogo from './common/HeaderLogo';
 import HeaderTopBar from './common/HeaderTopBar';
 import RightSideHeader from './rightSideHeader';
@@ -16,12 +15,11 @@ const BasicHeader = () => {
   return (
     <header
       translate="no"
-      className={`pb-md-0 pb-0 basic-header-redesign ${themeOption?.header?.sticky_header_enable && UpScroll ? 'active' : ''
-        }`}
+      className={`pb-md-0 pb-0 basic-header-redesign ${
+        themeOption?.header?.sticky_header_enable && UpScroll ? 'active' : ''
+      }`}
     >
-      {/* {themeOption?.header?.page_top_bar_enable && ( */}
       <HeaderTopBar isHidden={UpScroll} />
-      {/* )} */}
 
       <div className="top-nav top-header sticky-header">
         <div className="container-fluid-lg basic-header-redesign__top-wrap">

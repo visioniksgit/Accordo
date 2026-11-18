@@ -1,31 +1,39 @@
-import React, { useEffect, useState } from 'react';
-export function useHeaderScroll(value) {
-  const [UpScroll, setUpScroll] = useState(value);
+import { useEffect, useState, useRef } from 'react';
+
+export function useHeaderScroll(initialValue = false, options = {}) {
+  const { hideAt = 40, showAt = 10 } = options;
+  const [upScroll, setUpScroll] = useState(initialValue);
+  const upScrollRef = useRef(initialValue);
 
   useEffect(() => {
-    const hideAt = 72;
-    const showAt = 28;
+    let ticking = false;
 
-    const handleScroll = () => {
+    const updateScroll = () => {
       const currentY = window.scrollY;
+      const prev = upScrollRef.current;
+      const nextState = prev ? currentY > showAt : currentY > hideAt;
 
-      setUpScroll((prev) => {
-        // Use hysteresis to avoid rapid toggling near a single threshold.
-        if (prev) {
-          return currentY > showAt;
-        }
-
-        return currentY > hideAt;
-      });
+      if (nextState !== prev) {
+        upScrollRef.current = nextState;
+        setUpScroll(nextState);
+      }
+      ticking = false;
     };
 
-    handleScroll();
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScroll);
+        ticking = true;
+      }
+    };
+
+    updateScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [hideAt, showAt]);
 
-  return UpScroll;
+  return upScroll;
 }
