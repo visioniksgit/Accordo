@@ -90,17 +90,24 @@ const ShowProduct = ({
     [baseProduct]
   );
 
-  // Build cart-compatible state for CartContext calls
-  const cartCompatibleState = useMemo(() => {
-    const activeColorUid =
+  const activeColorUid = useMemo(() => {
+    return (
       productState?.selectedColorUid ||
       productState?.selectedColor?.uid ||
+      productState?.colorUid ||
+      selectedVariation?.colorUid ||
       (Array.isArray(selectedVariation?.colorUids)
         ? selectedVariation.colorUids[0]
-        : selectedVariation?.colorUids) ||
+        : typeof selectedVariation?.colorUids === 'string'
+        ? selectedVariation.colorUids.split(',')[0]?.trim()
+        : null) ||
       selectedVariation?.colors?.[0]?.uid ||
-      null;
+      null
+    );
+  }, [productState, selectedVariation]);
 
+  // Build cart-compatible state for CartContext calls
+  const cartCompatibleState = useMemo(() => {
     const cartVariation = selectedVariation
       ? {
         ...selectedVariation,
@@ -110,6 +117,7 @@ const ShowProduct = ({
         price: selectedVariation.mrp ?? selectedVariation.price,
         product_id: baseProduct?.uid ?? baseProduct?.id,
         colorUid: activeColorUid,
+        selectedColorUid: activeColorUid,
       }
       : null;
     return {
@@ -125,6 +133,7 @@ const ShowProduct = ({
     selectedVariation,
     baseProduct?.uid,
     baseProduct?.id,
+    activeColorUid,
   ]);
 
   const [productQty, setProductQty] = useState(0);
@@ -153,7 +162,8 @@ const ShowProduct = ({
         cartProducts.find(
           (item) =>
             byProduct(item) &&
-            String(item?.variation_id) === String(selectedVariationId)
+            String(item?.variation_id) === String(selectedVariationId) &&
+            (!activeColorUid || String(item?.color_id ?? item?.colorUid ?? '') === String(activeColorUid))
         ) ?? null
       );
     }
@@ -162,7 +172,7 @@ const ShowProduct = ({
       cartProducts.find((item) => byProduct(item) && !item?.variation_id) ??
       null
     );
-  }, [cartProducts, baseProduct?.uid, selectedVariationId]);
+  }, [cartProducts, baseProduct?.uid, selectedVariationId, activeColorUid]);
 
   useEffect(() => {
     if (cartLineForProduct) {

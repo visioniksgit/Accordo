@@ -32,12 +32,35 @@ const normalizeCartItem = (item) => {
   const quantity = Number(item?.qty ?? 0);
   const inStockFlag = variant?.inStockFlag ?? false;
 
+  const resolvedColor =
+    item?.color ??
+    variant?.color ??
+    product?.color ??
+    (Array.isArray(variant?.colors) && (item?.colorUid || item?.color_id)
+      ? variant.colors.find((c) => c?.uid === (item.colorUid || item.color_id))
+      : null) ??
+    (Array.isArray(product?.colors) && (item?.colorUid || item?.color_id)
+      ? product.colors.find((c) => c?.uid === (item.colorUid || item.color_id))
+      : null) ??
+    (Array.isArray(variant?.colors) && variant.colors.length === 1
+      ? variant.colors[0]
+      : null) ??
+    null;
+
+  const resolvedColorUid =
+    item?.colorUid ??
+    item?.color_id ??
+    item?.color?.uid ??
+    resolvedColor?.uid ??
+    null;
+
   return {
     id: item?.uid ?? null,
     product_id: item?.productUid ?? product?.uid ?? null,
     variation_id: item?.variantUid ?? variant?.uid ?? null,
-    color_id: item?.colorUid ?? item?.color_id ?? null,
-    colorUid: item?.colorUid ?? item?.color_id ?? null,
+    color_id: resolvedColorUid,
+    colorUid: resolvedColorUid,
+    color: resolvedColor,
     customerType: getCartItemCustomerType({ product }),
     quantity,
     sub_total: Number(salePrice * quantity),
@@ -52,6 +75,7 @@ const normalizeCartItem = (item) => {
       inStockFlag,
       quantity: variant?.inStockFlag ? stockQty : 0,
       prescriptionRequired: Boolean(product?.prescriptionRequired),
+      colors: product?.colors ?? [],
     },
     variation: variant
       ? {
@@ -63,6 +87,8 @@ const normalizeCartItem = (item) => {
         inStockFlag,
         quantity: variant?.inStockFlag ? stockQty : 0,
         variation_image: variant?.coverImage ?? product?.coverImage ?? null,
+        color: resolvedColor,
+        colors: variant?.colors ?? [],
       }
       : null,
   };
@@ -84,6 +110,7 @@ const normalizePreviewRequestPayload = (payload = {}) => {
   if (buyNow && typeof buyNow === 'object') {
     const productUid = String(buyNow?.productUid || '').trim();
     const variantUid = String(buyNow?.variantUid || '').trim();
+    const colorUid = String(buyNow?.colorUid || '').trim();
     const parsedQty = Number(buyNow?.qty ?? buyNow?.quantity ?? 1);
     const qty = Number.isFinite(parsedQty)
       ? Math.max(1, Math.floor(parsedQty))
@@ -93,6 +120,7 @@ const normalizePreviewRequestPayload = (payload = {}) => {
       normalizedPayload.buyNow = {
         productUid,
         variantUid,
+        ...(colorUid ? { colorUid } : {}),
         qty,
       };
     }
@@ -113,11 +141,36 @@ const normalizePreviewCartItem = (item = {}) => {
   const stockQty = Number(variant?.stockQty ?? 0);
   const inStockFlag = variant?.inStockFlag !== false;
 
+  const resolvedColor =
+    item?.color ??
+    variant?.color ??
+    product?.color ??
+    (Array.isArray(variant?.colors) && (item?.colorUid || item?.color_id)
+      ? variant.colors.find((c) => c?.uid === (item.colorUid || item.color_id))
+      : null) ??
+    (Array.isArray(product?.colors) && (item?.colorUid || item?.color_id)
+      ? product.colors.find((c) => c?.uid === (item.colorUid || item.color_id))
+      : null) ??
+    (Array.isArray(variant?.colors) && variant.colors.length === 1
+      ? variant.colors[0]
+      : null) ??
+    null;
+
+  const resolvedColorUid =
+    item?.colorUid ??
+    item?.color_id ??
+    item?.color?.uid ??
+    resolvedColor?.uid ??
+    null;
+
   return {
     id: item?.cartUid ?? null,
     cartUid: item?.cartUid ?? null,
     product_id: product?.uid ?? null,
     variation_id: variant?.uid ?? null,
+    color_id: resolvedColorUid,
+    colorUid: resolvedColorUid,
+    color: resolvedColor,
     customerType: getCartItemCustomerType({ product }),
     quantity,
     sub_total: Number(pricing?.subTotal ?? 0),
@@ -146,6 +199,7 @@ const normalizePreviewCartItem = (item = {}) => {
       inStockFlag,
       quantity: inStockFlag ? stockQty : 0,
       prescriptionRequired: Boolean(product?.prescriptionRequired),
+      colors: product?.colors ?? [],
     },
     variation: {
       id: variant?.uid ?? null,
@@ -158,6 +212,8 @@ const normalizePreviewCartItem = (item = {}) => {
       inStockFlag,
       quantity: inStockFlag ? stockQty : 0,
       variation_image: product?.coverImage ?? null,
+      color: resolvedColor,
+      colors: variant?.colors ?? [],
     },
   };
 };

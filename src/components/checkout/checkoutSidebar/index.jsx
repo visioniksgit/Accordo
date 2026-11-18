@@ -368,11 +368,69 @@ const CheckoutSidebar = ({
     }
   }, [appliedOfferUid, previewData?.discounts]);
 
-  const previewCheckoutProducts = previewData?.items?.buyable ?? [];
-  const previewRestrictedCheckoutProducts =
-    previewData?.items?.unavailable ?? [];
-  const previewOutOfStockCheckoutProducts =
-    previewData?.items?.outOfStock ?? [];
+  const enrichWithColor = (items = []) => {
+    if (!Array.isArray(items)) return [];
+    const sourceList = checkoutProducts || sourceCheckoutProducts || [];
+    return items.map((item) => {
+      const match = sourceList.find(
+        (r) =>
+          (r.id && item.cartUid && String(r.id) === String(item.cartUid)) ||
+          (r.cartUid && item.cartUid && String(r.cartUid) === String(item.cartUid)) ||
+          (String(r.product_id) === String(item.product_id) &&
+            String(r.variation_id) === String(item.variation_id))
+      );
+
+      const resolvedColor =
+        item?.color ||
+        item?.variation?.color ||
+        match?.color ||
+        match?.variation?.color ||
+        (Array.isArray(item?.variation?.colors) && (item?.colorUid || match?.colorUid)
+          ? item.variation.colors.find((c) => c?.uid === (item?.colorUid || match?.colorUid))
+          : null) ||
+        (Array.isArray(match?.variation?.colors) && (item?.colorUid || match?.colorUid)
+          ? match.variation.colors.find((c) => c?.uid === (item?.colorUid || match?.colorUid))
+          : null) ||
+        (Array.isArray(item?.variation?.colors) && item.variation.colors.length === 1
+          ? item.variation.colors[0]
+          : null) ||
+        null;
+
+      const resolvedColorUid =
+        item?.colorUid ||
+        item?.color_id ||
+        resolvedColor?.uid ||
+        match?.colorUid ||
+        match?.color_id ||
+        null;
+
+      return {
+        ...item,
+        colorUid: resolvedColorUid,
+        color_id: resolvedColorUid,
+        color: resolvedColor,
+        variation: item.variation
+          ? {
+              ...item.variation,
+              color: resolvedColor,
+            }
+          : item.variation,
+      };
+    });
+  };
+
+  const previewCheckoutProducts = useMemo(
+    () => enrichWithColor(previewData?.items?.buyable ?? []),
+    [previewData?.items?.buyable, checkoutProducts, sourceCheckoutProducts]
+  );
+  const previewRestrictedCheckoutProducts = useMemo(
+    () => enrichWithColor(previewData?.items?.unavailable ?? []),
+    [previewData?.items?.unavailable, checkoutProducts, sourceCheckoutProducts]
+  );
+  const previewOutOfStockCheckoutProducts = useMemo(
+    () => enrichWithColor(previewData?.items?.outOfStock ?? []),
+    [previewData?.items?.outOfStock, checkoutProducts, sourceCheckoutProducts]
+  );
 
   const displayCheckoutProducts = previewData
     ? previewCheckoutProducts
@@ -693,7 +751,28 @@ const CheckoutSidebar = ({
           >
             {name}
           </span>
-          <span className="meta">{variantName}</span>
+          <div className="meta d-flex align-items-center flex-wrap gap-1 mt-1">
+            {variantName && <span>{variantName}</span>}
+            {item?.color && (item.color.name || item.color.hexcode) && (
+              <span className="d-inline-flex align-items-center gap-1">
+                {variantName && <span style={{ color: '#bbb', margin: '0 2px' }}>•</span>}
+                {item.color.hexcode && (
+                  <span
+                    style={{
+                      width: '12px',
+                      height: '12px',
+                      borderRadius: '50%',
+                      backgroundColor: item.color.hexcode,
+                      display: 'inline-block',
+                      border: '1px solid rgba(0, 0, 0, 0.2)',
+                      flexShrink: 0,
+                    }}
+                  />
+                )}
+                <span>{item.color.name || item.color.hexcode}</span>
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="cart_qty">

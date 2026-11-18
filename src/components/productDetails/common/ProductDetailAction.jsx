@@ -68,6 +68,22 @@ const ProductDetailAction = ({
     [product]
   );
 
+  const activeColorUid = useMemo(() => {
+    return (
+      productState?.selectedColorUid ||
+      productState?.selectedColor?.uid ||
+      productState?.colorUid ||
+      selectedVariation?.colorUid ||
+      (Array.isArray(selectedVariation?.colorUids)
+        ? selectedVariation.colorUids[0]
+        : typeof selectedVariation?.colorUids === 'string'
+        ? selectedVariation.colorUids.split(',')[0]?.trim()
+        : null) ||
+      selectedVariation?.colors?.[0]?.uid ||
+      null
+    );
+  }, [productState, selectedVariation]);
+
   // Build cart-compatible state for CartContext (variation needs id, sale_price, price, product_id)
   const cartCompatibleState = useMemo(() => {
     const cartVariation = selectedVariation
@@ -78,6 +94,8 @@ const ProductDetailAction = ({
           selectedVariation.disPrice ?? selectedVariation.sale_price,
         price: selectedVariation.mrp ?? selectedVariation.price,
         product_id: product?.uid ?? product?.id,
+        colorUid: activeColorUid,
+        selectedColorUid: activeColorUid,
       }
       : null;
     return {
@@ -85,6 +103,8 @@ const ProductDetailAction = ({
       product: cartCompatibleProduct,
       selectedVariation: cartVariation,
       variation_id: selectedVariation?.uid ?? null,
+      colorUid: activeColorUid,
+      selectedColorUid: activeColorUid,
     };
   }, [
     productState,
@@ -92,6 +112,7 @@ const ProductDetailAction = ({
     selectedVariation,
     product?.uid,
     product?.id,
+    activeColorUid,
   ]);
 
   const isDeliverySuccess = deliveryStatus === 'success';
@@ -123,7 +144,8 @@ const ProductDetailAction = ({
           (item) =>
             byProduct(item) &&
             String(item?.variation_id ?? item?.variantUid) ===
-            String(selectedVariationId)
+            String(selectedVariationId) &&
+            (!activeColorUid || String(item?.color_id ?? item?.colorUid ?? '') === String(activeColorUid))
         ) ?? null
       );
     }
@@ -133,7 +155,7 @@ const ProductDetailAction = ({
         (item) => byProduct(item) && !(item?.variation_id ?? item?.variantUid)
       ) ?? null
     );
-  }, [rawCartProducts, product?.uid, selectedVariationId]);
+  }, [rawCartProducts, product?.uid, selectedVariationId, activeColorUid]);
 
   const resolvedStockQuantity = Number(
     cartLineForProduct?.variant?.stockQty ??
@@ -213,6 +235,7 @@ const ProductDetailAction = ({
       variantUid:
         productState?.selectedVariation?.uid ??
         product?.productVariants?.[0]?.uid,
+      ...(activeColorUid ? { colorUid: activeColorUid } : {}),
       quantity: nextQty,
     };
 

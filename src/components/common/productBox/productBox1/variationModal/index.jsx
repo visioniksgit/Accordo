@@ -114,22 +114,22 @@ const VariationModal = ({
         Array.isArray(modalProduct.productVariants) && modalProduct.productVariants.length > 0
           ? modalProduct.productVariants
           : Array.isArray(modalProduct.variations) && modalProduct.variations.length > 0
-          ? modalProduct.variations
-          : [];
+            ? modalProduct.variations
+            : [];
 
       const currentSelectedId = getSelectedVariationId(prev.selectedVariation);
 
       const matchedVariant = currentSelectedId
         ? enrichedVariants.find(
-            (v) => (v.uid ?? v.id ?? v.variation_id) === currentSelectedId
-          )
+          (v) => (v.uid ?? v.id ?? v.variation_id) === currentSelectedId
+        )
         : null;
 
       const nextSelected =
         matchedVariant ||
         (enrichedVariants.length > 0
           ? enrichedVariants.find((v) => v.inStockFlag || v.stock_status === 'in_stock') ||
-            enrichedVariants[0]
+          enrichedVariants[0]
           : prev.selectedVariation);
 
       const defaultColor =

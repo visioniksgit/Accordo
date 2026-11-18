@@ -196,9 +196,68 @@ const HeaderCartBottom = ({
   const previewAppliedCouponUid = String(
     previewAppliedCoupon?.uid || ''
   ).trim();
-  const previewBuyableProducts = previewData?.items?.buyable ?? [];
-  const previewOutOfStockProducts = previewData?.items?.outOfStock ?? [];
-  const previewUnavailableProducts = previewData?.items?.unavailable ?? [];
+  const enrichWithColor = (items = []) => {
+    if (!Array.isArray(items)) return [];
+    return items.map((item) => {
+      const rawMatch = (rawCartProducts || []).find(
+        (r) =>
+          (r.id && item.cartUid && String(r.id) === String(item.cartUid)) ||
+          (r.cartUid && item.cartUid && String(r.cartUid) === String(item.cartUid)) ||
+          (String(r.product_id) === String(item.product_id) &&
+            String(r.variation_id) === String(item.variation_id))
+      );
+
+      const resolvedColor =
+        item?.color ||
+        item?.variation?.color ||
+        rawMatch?.color ||
+        rawMatch?.variation?.color ||
+        (Array.isArray(item?.variation?.colors) && (item?.colorUid || rawMatch?.colorUid)
+          ? item.variation.colors.find((c) => c?.uid === (item?.colorUid || rawMatch?.colorUid))
+          : null) ||
+        (Array.isArray(rawMatch?.variation?.colors) && (item?.colorUid || rawMatch?.colorUid)
+          ? rawMatch.variation.colors.find((c) => c?.uid === (item?.colorUid || rawMatch?.colorUid))
+          : null) ||
+        (Array.isArray(item?.variation?.colors) && item.variation.colors.length === 1
+          ? item.variation.colors[0]
+          : null) ||
+        null;
+
+      const resolvedColorUid =
+        item?.colorUid ||
+        item?.color_id ||
+        resolvedColor?.uid ||
+        rawMatch?.colorUid ||
+        rawMatch?.color_id ||
+        null;
+
+      return {
+        ...item,
+        colorUid: resolvedColorUid,
+        color_id: resolvedColorUid,
+        color: resolvedColor,
+        variation: item.variation
+          ? {
+            ...item.variation,
+            color: resolvedColor,
+          }
+          : item.variation,
+      };
+    });
+  };
+
+  const previewBuyableProducts = useMemo(
+    () => enrichWithColor(previewData?.items?.buyable ?? []),
+    [previewData?.items?.buyable, rawCartProducts]
+  );
+  const previewOutOfStockProducts = useMemo(
+    () => enrichWithColor(previewData?.items?.outOfStock ?? []),
+    [previewData?.items?.outOfStock, rawCartProducts]
+  );
+  const previewUnavailableProducts = useMemo(
+    () => enrichWithColor(previewData?.items?.unavailable ?? []),
+    [previewData?.items?.unavailable, rawCartProducts]
+  );
 
   const cartProducts = previewBuyableProducts;
   const restrictedCartProducts = previewUnavailableProducts;
@@ -223,6 +282,10 @@ const HeaderCartBottom = ({
     hasRestrictedItems ||
     hasOutOfStockItems ||
     hasHiddenItems;
+
+  // console.log({
+  //   previewBuyableProducts,
+  // })
 
   const billDetails = previewData?.summary || null;
   const resolvedCoinUsedCount = useMemo(() => {
@@ -629,6 +692,17 @@ const HeaderCartBottom = ({
     const product = item?.product || {};
     const variation = item?.variation || item?.variant || {};
     const pricing = item?.pricing || {};
+    const color =
+      item?.color ||
+      variation?.color ||
+      item?.variant?.color ||
+      (Array.isArray(variation?.colors) && (item?.colorUid || item?.color_id)
+        ? variation.colors.find((c) => c?.uid === (item?.colorUid || item?.color_id))
+        : null) ||
+      (Array.isArray(variation?.colors) && variation.colors.length === 1
+        ? variation.colors[0]
+        : null) ||
+      null;
     // console.log('Rendering cart item with pricing:', pricing);
 
     const image = getImageUrl(
@@ -713,9 +787,30 @@ const HeaderCartBottom = ({
             >
               {name}
             </span>
-            <span className="meta">{variation?.name || ''}</span>
+            <div className="meta d-flex align-items-center flex-wrap gap-1 mt-1">
+              {variation?.name && <span>{variation.name}</span>}
+              {color && (color.name || color.hexcode) && (
+                <span className="d-inline-flex align-items-center gap-1">
+                  {variation?.name && <span style={{ color: '#bbb', margin: '0 2px' }}>•</span>}
+                  {color.hexcode && (
+                    <span
+                      style={{
+                        width: '12px',
+                        height: '12px',
+                        borderRadius: '50%',
+                        backgroundColor: color.hexcode,
+                        display: 'inline-block',
+                        border: '1px solid rgba(0, 0, 0, 0.2)',
+                        flexShrink: 0,
+                      }}
+                    />
+                  )}
+                  <span>{color.name || color.hexcode}</span>
+                </span>
+              )}
+            </div>
             {totalDiscountAmount > 0 && (
-              <span className="meta success fw-bold d-block">
+              <span className="meta success fw-bold d-block mt-1">
                 Discount - {convertCurrency(totalDiscountAmount)}
               </span>
             )}
@@ -812,7 +907,28 @@ const HeaderCartBottom = ({
           >
             {name}
           </span>
-          <span className="meta">{variantName}</span>
+          <div className="meta d-flex align-items-center flex-wrap gap-1 mt-1">
+            {variantName && <span>{variantName}</span>}
+            {item?.color && (item.color.name || item.color.hexcode) && (
+              <span className="d-inline-flex align-items-center gap-1">
+                {variantName && <span style={{ color: '#bbb', margin: '0 2px' }}>•</span>}
+                {item.color.hexcode && (
+                  <span
+                    style={{
+                      width: '12px',
+                      height: '12px',
+                      borderRadius: '50%',
+                      backgroundColor: item.color.hexcode,
+                      display: 'inline-block',
+                      border: '1px solid rgba(0, 0, 0, 0.2)',
+                      flexShrink: 0,
+                    }}
+                  />
+                )}
+                <span>{item.color.name || item.color.hexcode}</span>
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="cart_qty">
