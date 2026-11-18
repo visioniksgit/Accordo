@@ -320,6 +320,7 @@ const ProductDetailAction = ({
 
   const handleCheckPincode = async (event) => {
     event.preventDefault();
+    return;
     const trimmed = (pincode || '').trim();
     const selectedVariationForDelivery =
       selectedVariation ?? product?.productVariants?.[0];
@@ -518,7 +519,7 @@ const ProductDetailAction = ({
           <div className="add-to-cart-box">
             <div className="dual-cart-buttons out-of-stock-buttons">
               <button type="button" className="btn-out-of-stock" disabled>
-                Out of Stock
+                Unavailable
               </button>
               <button
                 type="button"

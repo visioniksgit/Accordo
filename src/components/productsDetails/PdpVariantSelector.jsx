@@ -115,12 +115,11 @@ const PdpVariantSelector = ({
                         {label}
                       </span>
 
-                      <span
-                        className={`variation-radio-stock ${inStock ? 'in-stock' : 'out-of-stock'
-                          }`}
-                      >
-                        {inStock ? 'In stock' : 'Out of stock'}
-                      </span>
+                      {inStock && (
+                        <span className="variation-radio-stock in-stock">
+                          In stock
+                        </span>
+                      )}
                     </div>
 
                     <div className="variation-radio-bottom price-row d-flex align-items-center gap-2 mt-1 mb-0">

@@ -203,7 +203,7 @@ const ProductBox1 = ({
             </Link>
           </h3>
           <div className="product-detail-bottom">
-            {productDetail?.stock_status && (
+            {(productDetail?.stock_status === 'in_stock') && (
               <>
                 <div className="meta-1">
                   <div className="">
@@ -213,11 +213,11 @@ const ProductBox1 = ({
                         {productDetail?.unit}
                       </h6>
                     ) : null}
-                    <span
-                      className={`${productDetail?.stock_status === 'out_of_stock' ? 'out_of_stock-color' : 'in_stock-color'}`}
-                    >
-                      {ModifyString(productDetail.stock_status, false, '_')}
-                    </span>
+                    {productDetail?.stock_status === 'in_stock' && (
+                      <span className="in_stock-color">
+                        {ModifyString(productDetail.stock_status, false, '_')}
+                      </span>
+                    )}
                   </div>
                   {ratingData.rating > 0 && (
                     <div className="">

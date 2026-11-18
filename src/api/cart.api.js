@@ -36,6 +36,8 @@ const normalizeCartItem = (item) => {
     id: item?.uid ?? null,
     product_id: item?.productUid ?? product?.uid ?? null,
     variation_id: item?.variantUid ?? variant?.uid ?? null,
+    color_id: item?.colorUid ?? item?.color_id ?? null,
+    colorUid: item?.colorUid ?? item?.color_id ?? null,
     customerType: getCartItemCustomerType({ product }),
     quantity,
     sub_total: Number(salePrice * quantity),

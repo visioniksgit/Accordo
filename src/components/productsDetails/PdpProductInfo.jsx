@@ -232,11 +232,11 @@ const PdpProductInfo = ({
           <span>
             <strong>SKU:</strong> {sku || 'N/A'}
           </span>
-          <span
-            className={`variation-stock-badge ${isInStock ? 'in-stock' : 'out-of-stock'}`}
-          >
-            {isInStock ? 'In Stock' : 'Out of Stock'}
-          </span>
+          {isInStock && (
+            <span className="variation-stock-badge in-stock">
+              In Stock
+            </span>
+          )}
         </div>
         <div className="variation-action-buttons">
           <button
