@@ -359,19 +359,23 @@ export const handleShare = async (platform = 'native') => {
 
   switch (platform) {
     case 'facebook':
-      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+      // shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+      shareUrl = `https://www.facebook.com/`;
       break;
 
     case 'twitter':
-      shareUrl = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${url}`;
+      // shareUrl = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${url}`;
+      shareUrl = `https://twitter.com/`;
       break;
 
     case 'linkedin':
-      shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+      // shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+      shareUrl = `https://www.linkedin.com/`;
       break;
 
     case 'whatsapp':
-      shareUrl = `https://wa.me/?text=${encodedTitle}%20${url}`;
+      // shareUrl = `https://wa.me/?text=${encodedTitle}%20${url}`;
+      shareUrl = `/`;
       break;
 
     case 'email':
@@ -430,4 +434,4 @@ export const getOptimizedCdnImageUrl = (
   }
 
   return url;
-};
+};

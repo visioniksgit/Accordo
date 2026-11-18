@@ -12,7 +12,7 @@ const STORAGE_KEY = 'recent_searches';
 const MAX_RECENT_SEARCHES = 5;
 const DEBOUNCE_DELAY = 750;
 const PLACEHOLDER_ROTATE_DELAY = 2400;
-const PLACEHOLDER_WORDS = ['Products', 'Categories', 'Blogs', 'Herbs'];
+const PLACEHOLDER_WORDS = ['Products', 'Categories', 'Blogs',];
 const LISTBOX_ID = 'global-search-listbox';
 
 /** @param {number} index @returns {string} */

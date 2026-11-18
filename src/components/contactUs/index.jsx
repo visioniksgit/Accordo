@@ -28,8 +28,8 @@ const ContactUsContent = () => {
             title={'Contact Us'}
             customtitleClass={'d-xxl-none d-block'}
           /> */}
-          <ContactImageBox />
           <ContactRightSidebar />
+          <ContactImageBox />
         </Row>
         <Row className="mt-4">
           <ContactLeftSideBox />

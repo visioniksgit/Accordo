@@ -1,28 +1,23 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import Slider from 'react-slick';
 import WrapperComponent from '../common/WrapperComponent';
 import CustomHeading from '@/components/common/CustomHeading';
-import { LeafSVG } from '@/components/common/CommonSVG';
 import { Col, Row } from 'reactstrap';
-import { useHealthInterest, useHome } from '@/utils/hooks/useHome';
+import { useHomeBrands } from '@/utils/hooks/useHome';
 import styles from './HealthConcerns.module.scss';
-import { getOptimizedCdnImageUrl } from '@/utils/helpers';
-// import SkHealthConcern from '@/components/common/skeletonLoader/homeSkeleton/SkHealthConcern';
 
 const sliderSettings = {
   dots: false,
   arrows: true,
   infinite: true,
   speed: 400,
-
   autoplay: true,
   autoplaySpeed: 3000,
   pauseOnHover: true,
   pauseOnFocus: true,
-
   slidesToScroll: 1,
   slidesToShow: 7,
   swipeToSlide: false,
@@ -34,12 +29,53 @@ const sliderSettings = {
   ],
 };
 
+// Fallback placeholder for brands without a logo
+const BrandPlaceholderSVG = ({ name }) => (
+  <div
+    style={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#f0f4ff',
+      borderRadius: '12px',
+      padding: '8px',
+    }}
+  >
+    <span
+      style={{
+        fontSize: '11px',
+        fontWeight: 700,
+        color: '#234BF3',
+        textAlign: 'center',
+        lineHeight: 1.3,
+        wordBreak: 'break-word',
+      }}
+    >
+      {name}
+    </span>
+  </div>
+);
+
 const ShopByHealthConcerns = () => {
   const sliderContainerRef = useRef(null);
-  // const { data } = useHome();
-  const { data } = useHealthInterest();
+  const { data, isLoading } = useHomeBrands();
 
-  const healthInterest = data?.data?.healthInterest || [];
+  const brands = useMemo(() => {
+    return data?.data?.brands || [];
+  }, [data]);
+
+  // Ensure enough slides to fill the slider without gaps
+  const displayBrands = useMemo(() => {
+    if (!brands.length) return [];
+    const minCount = sliderSettings.slidesToShow + 1;
+    let result = [...brands];
+    while (result.length < minCount) {
+      result = [...result, ...brands];
+    }
+    return result;
+  }, [brands]);
 
   useEffect(() => {
     const container = sliderContainerRef.current;
@@ -79,9 +115,7 @@ const ShopByHealthConcerns = () => {
           break;
         }
       }
-      if (shouldUpdate) {
-        updateInertState();
-      }
+      if (shouldUpdate) updateInertState();
     });
 
     observer.observe(container, {
@@ -91,46 +125,11 @@ const ShopByHealthConcerns = () => {
       subtree: true,
     });
 
-    return () => {
-      observer.disconnect();
-    };
-  }, [healthInterest]);
+    return () => observer.disconnect();
+  }, [displayBrands]);
 
-  // Show skeleton while loading
-  // if (isLoading) {
-  //   return (
-  //     <WrapperComponent
-  //       classes={{
-  //         sectionClass: `${styles['health-concerns-section']} section-b-space`,
-  //       }}
-  //       noRowCol={true}
-  //     >
-  //       <Row>
-  //         <Col>
-  //           <CustomHeading
-  //             customClass="mb-0"
-  //             title="Shop by Health Concerns"
-  //             subTitle="Explore trusted Ayurvedic care for every health condition"
-  //             svgUrl={<LeafSVG className="icon-width" />}
-  //           />
-  //         </Col>
-  //       </Row>
-
-  //       <Row>
-  //         <Col>
-  //           <SkHealthConcern count={10} sliderSettings={sliderSettings} />
-  //         </Col>
-  //       </Row>
-  //     </WrapperComponent>
-  //   );
-  // }
-
-  // Don't render anything if no data
-  if (!healthInterest.length) {
-    return null;
-  }
-
-  // console.log({ ...sliderSettings });
+  // Don't render anything if no data and not loading
+  if (!isLoading && !brands.length) return null;
 
   return (
     <WrapperComponent
@@ -144,8 +143,8 @@ const ShopByHealthConcerns = () => {
         <Col xs={9} sm={10}>
           <CustomHeading
             customClass="mb-0"
-            title="DEALS BY CATEGORY"
-            subTitle="Find the right electrical supplies for every project."
+            title="TOP BRANDS WE WORK WITH"
+            subTitle="Quality products from most trusted names in the industry."
           />
         </Col>
         <Col xs={3} sm={2} className="text-end">
@@ -162,37 +161,76 @@ const ShopByHealthConcerns = () => {
             className={`hero-carousel-section ${styles['health-concerns-slider-outer']}`}
           >
             <div className={styles['health-concerns-slider-inner']}>
-              <Slider {...sliderSettings}>
-                {healthInterest.slice(0, 12).map((concern) => (
-                  <div key={concern.uid}>
-                    <a
-                      draggable={false}
-                      href={`/health-concerns/${concern.slug}`}
-                      className={styles['health-concern-card']}
-                    >
-                      <div className={styles['health-concern-image-wrapper']}>
-                        <img
-                          src={getOptimizedCdnImageUrl(concern.image, 150, 150, 80)}
-                          height={150}
-                          width={150}
-                          alt={
-                            concern.imageAlt ||
-                            concern.name ||
-                            'Health Concern Image'
-                          }
-                          className={styles['health-concern-image']}
+              {isLoading ? (
+                // Skeleton shimmer while loading
+                <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
+                  {Array.from({ length: 7 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="skeleton-shimmer"
+                      style={{
+                        flex: '1 1 0',
+                        aspectRatio: '1 / 1',
+                        borderRadius: '25px',
+                        minWidth: 0,
+                      }}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <Slider {...sliderSettings}>
+                  {displayBrands.map((brand, index) => {
+                    const brandKey = `${brand.uid || brand.name}-${index}`;
+                    const brandName = brand.name || '';
+                    const brandLogo = brand.logo;
+                    const brandAlt = brand.imageAlt || brandName || 'Brand Logo';
+                    const brandSlug = brandName.toLowerCase().replace(/\s+/g, '-');
+                    const href = `/collections?brand=${encodeURIComponent(brandSlug)}`;
+
+                    return (
+                      <div key={brandKey}>
+                        <a
                           draggable={false}
-                          loading='lazy'
-                          decoding='async'
-                        />
+                          href={href}
+                          className={styles['health-concern-card']}
+                          aria-label={`Shop ${brandName}`}
+                        >
+                          <div className={styles['health-concern-image-wrapper']}>
+                            {brandLogo ? (
+                              <img
+                                src={brandLogo}
+                                height={150}
+                                width={150}
+                                alt={brandAlt}
+                                className={styles['health-concern-image']}
+                                draggable={false}
+                                loading="lazy"
+                                decoding="async"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                  const parent = e.currentTarget.parentElement;
+                                  if (parent) {
+                                    parent.style.display = 'flex';
+                                    parent.style.alignItems = 'center';
+                                    parent.style.justifyContent = 'center';
+                                    parent.style.backgroundColor = '#f0f4ff';
+                                    parent.innerHTML = `<span style="font-size:11px;font-weight:700;color:#234BF3;text-align:center;padding:8px">${brandName}</span>`;
+                                  }
+                                }}
+                              />
+                            ) : (
+                              <BrandPlaceholderSVG name={brandName} />
+                            )}
+                          </div>
+                          {/* <h3 className={styles['health-concern-name']}>
+                            {brandName}
+                          </h3> */}
+                        </a>
                       </div>
-                      <h3 className={styles['health-concern-name']}>
-                        {concern.name}
-                      </h3>
-                    </a>
-                  </div>
-                ))}
-              </Slider>
+                    );
+                  })}
+                </Slider>
+              )}
             </div>
           </div>
         </Col>

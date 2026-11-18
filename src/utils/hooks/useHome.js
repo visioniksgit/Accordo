@@ -40,12 +40,33 @@ export const useHomeSection1 = useHomeCategories;
 // Section 2
 export const useSeasonProducts = (options) => useHomeSectionQuery(2, options);
 export const useHealthInterest = (options) => useHomeSectionQuery(2, options);
+export const useHomeBrands = (options = {}) => {
+  return useQuery({
+    queryKey: ['home', 2],
+    queryFn: () => fetchHomeSection(2),
+    staleTime: 60 * 60 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+    ...options,
+  });
+};
 
 // Section 3
 export const useReviews = (options) => useHomeSectionQuery(3, options);
 export const useTestimonials = (options) => useHomeSectionQuery(3, options);
 export const useLatestBlogs = (options) => useHomeSectionQuery(3, options);
 export const useKeywords = (options = {}) => {
+  return useQuery({
+    queryKey: ['home', 3],
+    queryFn: () => fetchHomeSection(3),
+    staleTime: 60 * 60 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+    ...options,
+  });
+};
+// Brands from section 3 (shares same cache key as useKeywords)
+export const useSection3Brands = (options = {}) => {
   return useQuery({
     queryKey: ['home', 3],
     queryFn: () => fetchHomeSection(3),

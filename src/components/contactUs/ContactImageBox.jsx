@@ -3,22 +3,25 @@ import { Col } from 'reactstrap';
 import contactUsImage from '../../../public/assets/images/contact/contact.png';
 
 const ContactImageBox = () => {
-
   return (
-    <Col lg={6} className="h-100">
-      <div className="left-sidebar-box h-100">
-        <div className="contact-image h-100">
-          <Image
-            // src={themeOption?.contact_us?.imageUrl || contactUsImage}
-            src={contactUsImage}
-            className="img-fluid"
-            alt="contact"
-            height={461}
-            width={386}
-            unoptimized
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          />
-        </div>
+    <Col lg={6} className="d-flex flex-column order-1 order-lg-2">
+      <div
+        className="contact-image-box position-relative w-100 flex-grow-1"
+        style={{
+          minHeight: '280px',
+          borderRadius: '12px',
+          overflow: 'hidden',
+        }}
+      >
+        <Image
+          src={contactUsImage}
+          alt="Contact Accordo"
+          fill
+          priority
+          unoptimized
+          sizes="(max-width: 991px) 100vw, 50vw"
+          style={{ objectFit: 'cover', objectPosition: 'center' }}
+        />
       </div>
     </Col>
   );
