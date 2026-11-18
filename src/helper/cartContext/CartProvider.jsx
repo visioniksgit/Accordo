@@ -169,6 +169,14 @@ const CartProvider = ({ children }) => {
     const numericQty = Number(qty) || 0;
     const productUid = getProductId(productObj);
     const variantUid = getVariantId(cloneVariation);
+    const colorUid =
+      cloneVariation?.selectedColorUid ||
+      cloneVariation?.selectedColor?.uid ||
+      cloneVariation?.colorUid ||
+      cloneVariation?.selectedVariation?.colorUid ||
+      productObj?.selectedColorUid ||
+      productObj?.colorUid ||
+      null;
 
     // console.log('--- [handleIncDec] FLOW INITIATED ---');
     // console.log('[handleIncDec] 1. Request:', {
@@ -187,7 +195,8 @@ const CartProvider = ({ children }) => {
       (item) =>
         String(item?.product_id ?? item?.productUid) === String(productUid) &&
         String(item?.variation_id ?? item?.variantUid ?? null) ===
-        String(variantUid ?? null)
+        String(variantUid ?? null) &&
+        (!colorUid || String(item?.color_id ?? item?.colorUid ?? '') === String(colorUid))
     );
 
     const actualCartQty = existingCartItem
@@ -234,7 +243,7 @@ const CartProvider = ({ children }) => {
 
       // console.log('[handleIncDec] 4. Triggering AddToCart API...');
       addToCartMutation.mutate(
-        { productUid, variantUid, count: Math.abs(numericQty) },
+        { productUid, variantUid, ...(colorUid ? { colorUid } : {}), count: Math.abs(numericQty) },
         {
           onSuccess: () => {
             const finalQty = previousQty + numericQty;
@@ -313,7 +322,7 @@ const CartProvider = ({ children }) => {
     // HANDLE SUBTRACTION
     // console.log('[handleIncDec] 4. Triggering RemoveFromCart API...');
     removeFromCartMutation.mutate(
-      { productUid, variantUid, count: Math.abs(numericQty) },
+      { productUid, variantUid, ...(colorUid ? { colorUid } : {}), count: Math.abs(numericQty) },
       {
         onSuccess: () => {
           const finalQty = Math.max(0, previousQty + numericQty); // numericQty is negative here

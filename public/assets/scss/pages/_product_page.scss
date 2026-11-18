@@ -1700,7 +1700,8 @@
           flex-wrap: wrap;
 
           .disc-price {
-            font-size: calc(18px + (20 - 18) * ((100vw - 320px) / (1920 - 320)));
+            // font-size: calc(18px + (20 - 18) * ((100vw - 320px) / (1920 - 320)));
+            font-size: 14px;
             font-weight: 700;
             color: var(--product-card-discounted-price);
             white-space: nowrap;
@@ -1722,7 +1723,8 @@
           }
 
           .percent-off {
-            font-size: calc(11px + (12 - 11) * ((100vw - 320px) / (1920 - 320)));
+            // font-size: calc(11px + (12 - 11) * ((100vw - 320px) / (1920 - 320)));
+            font-size: 10px;
             font-weight: 600;
             color: #ffffff;
             background: #EF2D2E;

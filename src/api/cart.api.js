@@ -364,7 +364,7 @@ export const fetchCartPreview = async (payload = {}) => {
   };
 };
 
-export const addToCart = async ({ productUid, variantUid }) => {
+export const addToCart = async ({ productUid, variantUid, colorUid }) => {
   if (!productUid || !variantUid) {
     throw new Error('productUid and variantUid are required');
   }
@@ -380,13 +380,14 @@ export const addToCart = async ({ productUid, variantUid }) => {
     body: JSON.stringify({
       productUid,
       ...(variantUid ? { variantUid } : {}),
+      ...(colorUid ? { colorUid } : {}),
     }),
   });
 
   return parseResponse(response, 'Failed to add item to cart');
 };
 
-export const removeFromCart = async ({ productUid, variantUid }) => {
+export const removeFromCart = async ({ productUid, variantUid, colorUid }) => {
   if (!productUid || !variantUid) {
     throw new Error('productUid and variantUid are required');
   }
@@ -402,6 +403,7 @@ export const removeFromCart = async ({ productUid, variantUid }) => {
     body: JSON.stringify({
       productUid,
       ...(variantUid ? { variantUid } : {}),
+      ...(colorUid ? { colorUid } : {}),
     }),
   });
 

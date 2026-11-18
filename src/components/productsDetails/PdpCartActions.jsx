@@ -124,18 +124,30 @@ const PdpCartActions = ({ productState, setProductState }) => {
 
   // Build cart-compatible productState for CartContext calls
   const cartCompatibleState = useMemo(() => {
+    const activeColorUid =
+      productState?.selectedColorUid ||
+      productState?.selectedColor?.uid ||
+      (Array.isArray(selectedVariation?.colorUids)
+        ? selectedVariation.colorUids[0]
+        : selectedVariation?.colorUids) ||
+      selectedVariation?.colors?.[0]?.uid ||
+      null;
+
     const cartVariation = selectedVariation
       ? {
         ...selectedVariation,
         id: selectedVariation.uid,
         sale_price: selectedVariation.disPrice,
         price: selectedVariation.mrp,
+        colorUid: activeColorUid,
       }
       : null;
     return {
       ...productState,
       product: cartCompatibleProduct,
       selectedVariation: cartVariation,
+      selectedColorUid: activeColorUid,
+      colorUid: activeColorUid,
     };
   }, [productState, cartCompatibleProduct, selectedVariation]);
 
@@ -173,10 +185,20 @@ const PdpCartActions = ({ productState, setProductState }) => {
     const nextQty = productQty > 0 ? productQty : 1;
     setIsBuyingNow(true);
 
+    const activeColorUid =
+      productState?.selectedColorUid ||
+      productState?.selectedColor?.uid ||
+      (Array.isArray(selectedVariation?.colorUids)
+        ? selectedVariation.colorUids[0]
+        : selectedVariation?.colorUids) ||
+      selectedVariation?.colors?.[0]?.uid ||
+      null;
+
     const checkoutPayload = {
       productUid: product.uid,
       variantUid: selectedVariationId ?? product.productVariants?.[0]?.uid,
       quantity: nextQty,
+      ...(activeColorUid ? { colorUid: activeColorUid } : {}),
     };
 
     const itemPrice = Number(
