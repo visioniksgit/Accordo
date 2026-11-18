@@ -12,11 +12,11 @@ export const headerMenu = [
     customClass: 'nav-item dropdown',
     customChildren: false,
     children: [
-      { title: 'Company Profile', type: 'link', path: '/about-us/company-profile' },
-      { title: 'SDL Legacy', type: 'link', path: '/about-us/sdl-legacy' },
-      { title: 'Leadership', type: 'link', path: '/about-us/leadership' },
-      { title: 'Associations & Initiatives', type: 'link', path: '/about-us/associations-and-initiatives' },
-      { title: 'Quality & Excellence', type: 'link', path: '/about-us/quality-and-excellence' },
+      { title: 'about1', type: 'link', path: '/' },
+      { title: 'about2', type: 'link', path: '/' },
+      // { title: 'about', type: 'link', path: '/' },
+      // { title: 'about', type: 'link', path: '/' },
+      // { title: 'about', type: 'link', path: '/' },
     ],
   }
 ];

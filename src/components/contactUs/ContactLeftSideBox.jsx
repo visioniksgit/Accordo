@@ -84,7 +84,7 @@ const ContactLeftSideBox = () => {
                 </Col> */}
               </Row>
             </div>
-            <div className="contact-detail">
+            {/* <div className="contact-detail">
               <Row className="g-4">
                 <h3>Administrative office :</h3>
                 <Col xxl={4} lg={4} sm={6}>
@@ -133,22 +133,9 @@ const ContactLeftSideBox = () => {
                   </div>
                 </Col>
 
-                {/* <Col xxl={6} lg={12} sm={6}>
-                  <div className="contact-detail-box h-100">
-                    <div className="contact-icon">
-                      <RiBuildingLine />
-                    </div>
-                    <div className="contact-detail-title">
-                      <h4>{themeOption?.contact_us?.detail_4?.label}</h4>
-                    </div>
-
-                    <div className="contact-detail-contain">
-                      <p>{themeOption?.contact_us?.detail_4?.text}</p>
-                    </div>
-                  </div>
-                </Col> */}
+                
               </Row>
-            </div>
+            </div> */}
           </Col>
         </Row>
       </div>

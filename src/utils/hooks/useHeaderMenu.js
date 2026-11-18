@@ -4,9 +4,9 @@ import { headerMenu as staticHeaderMenu } from '@/data/HeadersMenu';
 
 const STATIC_TOP_LEVEL_TITLES = ['Home'];
 const API_TOP_LEVEL_TITLES = [
-  'For Business',
-  'Shop by Herbs',
   'Shop by Category',
+  'Shop by Herbs',
+  'For Business',
   'About Us',
   // 'Blogs',
 ];
@@ -150,11 +150,11 @@ const normalizeDynamicMenuItem = (item) => {
       customClass: 'nav-item dropdown',
       customChildren: false,
       children: [
-        { title: 'Company Profile', type: 'link', path: '/company-profile' },
-        { title: 'Leadership', type: 'link', path: '/leadership' },
-        { title: 'Manufacturing and Quality', type: 'link', path: '/manufacturing-and-quality' },
-        { title: 'Our Legacy', type: 'link', path: '/our-legacy' },
-        { title: 'Associations and Initiatives', type: 'link', path: '/associations-and-initiatives' },
+        { title: 'About1', type: 'link', path: '/' },
+        { title: 'About2', type: 'link', path: '/' },
+        { title: 'About3', type: 'link', path: '/' },
+        { title: 'About4', type: 'link', path: '/' },
+        { title: 'About5', type: 'link', path: '/' },
       ],
     };
   }
@@ -220,11 +220,11 @@ const buildHeaderMenu = (baseMenu = [], apiMenu = []) => {
   const orderPriority = [
     'Home',
     'Shop All',
-    'For Business',
+    'Shop by Category',
     'Best Sellers',
     'Deals',
     'AI Negotiations',
-    'Shop by Category',
+    'For Business',
     'About Us',
     // 'Blogs',
     // 'Media',
