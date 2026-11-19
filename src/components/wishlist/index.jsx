@@ -127,7 +127,7 @@ const WishlistContent = () => {
           </div>
           <h4>Your Wishlist is Empty</h4>
           <p>
-            Save your preferred Ayurvedic medicines and wellness products for easy access whenever you need them.
+            Save products you love and keep them handy. Start exploring and add your favourites to your wishlist.
           </p>
           <Link
             href="/collections"

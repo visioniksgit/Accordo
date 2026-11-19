@@ -109,6 +109,8 @@ const HeaderCartBottom = ({
   shippingCal,
   onCheckoutDataChange,
   selectedAddress,
+  isNegotiating,
+  onNegotiateWithAi,
 }) => {
   const { convertCurrency } = useContext(SettingContext);
   const onCheckoutDataChangeRef = useRef(onCheckoutDataChange);
@@ -1129,7 +1131,11 @@ const HeaderCartBottom = ({
             {/* show Order Summary only if there are eligible cart items */}
             {hasEligibleCartProducts && billDetails && (
               <div style={{ padding: '16px 16px 0' }}>
-                <CheckoutOrderSummary summary={billDetails} />
+                <CheckoutOrderSummary
+                  summary={billDetails}
+                  isNegotiating={isNegotiating}
+                  onNegotiateWithAi={onNegotiateWithAi}
+                />
               </div>
             )}
           </>

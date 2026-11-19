@@ -88,7 +88,7 @@ export default function HomeClient({ sliderSettings }) {
   return (
     <>
       <h1 className='sr-only'>
-        Shree Dhootapapeshwar Limited – 150+ Years of Excellence in Ayurvedic Medicines
+        Accordo AI
       </h1>
 
       <Suspense fallback={<HeroSkeleton />}>
