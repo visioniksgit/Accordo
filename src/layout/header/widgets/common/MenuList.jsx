@@ -300,6 +300,7 @@ const MenuList = ({
                 width: '30px',
                 height: '30px',
                 borderRadius: '999px',
+                border: '1px solid var(--D4DEF3)',
                 objectFit: 'cover',
                 marginRight: '10px',
                 flexShrink: 0,

@@ -1,7 +1,7 @@
 'use client';
 
-import { useId } from 'react';
-import { RiInformationLine } from 'react-icons/ri';
+import { useId, useState, useEffect, useRef } from 'react';
+import { RiInformationLine, RiSparklingLine } from 'react-icons/ri';
 import './CheckoutOrderSummary.scss';
 import { UncontrolledTooltip } from 'reactstrap';
 
@@ -22,7 +22,41 @@ const formatInr = (value, options = {}) => {
   }).format(toSafeNumber(value));
 };
 
-const CheckoutOrderSummary = ({ summary = {} }) => {
+const CheckoutOrderSummary = ({
+  summary = {},
+  onNegotiateWithAi,
+  isNegotiating: controlledIsNegotiating,
+}) => {
+  const [localIsNegotiating, setLocalIsNegotiating] = useState(false);
+  const isNegotiating =
+    controlledIsNegotiating !== undefined
+      ? controlledIsNegotiating
+      : localIsNegotiating;
+  const timerRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
+
+  const handleNegotiateClick = () => {
+    if (isNegotiating) return;
+    if (typeof onNegotiateWithAi === 'function') {
+      onNegotiateWithAi();
+    } else {
+      setLocalIsNegotiating(true);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      timerRef.current = setTimeout(() => {
+        setLocalIsNegotiating(false);
+      }, 5000);
+    }
+  };
+
   const {
     itemTotal = 0,
     productDiscount = 0,
@@ -49,7 +83,30 @@ const CheckoutOrderSummary = ({ summary = {} }) => {
 
   return (
     <div className="order-summary-section">
-      <h4 className="summary-title">Bill Details</h4>
+      <div className="summary-header">
+        <h4 className="summary-title">Bill Details</h4>
+        <button
+          type="button"
+          className={`btn-negotiate-ai-mini ${isNegotiating ? 'is-negotiating' : ''}`}
+          onClick={handleNegotiateClick}
+          disabled={isNegotiating}
+          title={isNegotiating ? 'Negotiating with AI...' : 'Negotiate with AI'}
+        >
+          <span className="btn-negotiate-ai-mini-inner">
+            {isNegotiating ? (
+              <>
+                <span className="ai-btn-spinner mini" />
+                <span>Loading...</span> 
+              </>
+            ) : (
+              <>
+                <RiSparklingLine className="ai-mini-icon" />
+                <span>Negotiate with AI</span>
+              </>
+            )}
+          </span>
+        </button>
+      </div>
 
       <div className="summary-rows">
         <div className="summary-row">

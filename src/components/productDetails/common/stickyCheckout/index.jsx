@@ -2,19 +2,19 @@
 
 import ShowProduct from './ShowProduct';
 
-const StickyCheckout = ({ 
-  productState, 
-  setProductState, 
+const StickyCheckout = ({
+  productState,
+  setProductState,
   // --- Catch the new props ---
-  isDoctorProduct, 
-  isVerifiedDoctor 
+  isDoctorProduct,
+  isVerifiedDoctor
 }) => {
-  if (!productState?.product?.uid) return null;
+  if (!productState?.product?.uid && !productState?.product?.id) return null;
 
   return (
-    <ShowProduct 
-      productState={productState} 
-      setProductState={setProductState} 
+    <ShowProduct
+      productState={productState}
+      setProductState={setProductState}
       // --- Pass them down ---
       isDoctorProduct={isDoctorProduct}
       isVerifiedDoctor={isVerifiedDoctor}

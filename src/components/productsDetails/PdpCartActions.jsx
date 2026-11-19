@@ -251,7 +251,7 @@ const PdpCartActions = ({ productState, setProductState }) => {
 
   return (
     <>
-      <div className="add-to-cart-box d-none d-lg-flex">
+      <div id="pdp-cart-actions" className="add-to-cart-box d-flex scroll-button">
         {isRetailerProduct ? (
           <div className="fs-6 fst-italic text-content w-100">
             Available to purchase in retail store only,{' '}
@@ -264,11 +264,11 @@ const PdpCartActions = ({ productState, setProductState }) => {
             to find retail stores in your area.
           </div>
         ) : isOutOfStock ? (
-          <Btn className="btn-out-of-stock w-100" disabled>
+          <Btn className="btn-out-of-stock w-100 scroll-button" disabled>
             Unavailable
           </Btn>
         ) : (
-          <div className="dual-cart-buttons dynamic-checkout d-none d-lg-flex w-100">
+          <div className="dual-cart-buttons dynamic-checkout d-flex w-100">
             {/* <Btn
               className="btn-buy-now btn btn-md scroll-button"
               onClick={handleBuyNow}
@@ -280,7 +280,7 @@ const PdpCartActions = ({ productState, setProductState }) => {
 
             {isOpen && !isBook && productQty >= 1 ? (
               <div
-                className="qty-inline-box w-100"
+                className="qty-inline-box w-100 scroll-button"
                 style={{
                   opacity: isCartUpdating ? 0.6 : 1,
                   flex: '1 1 100%',
@@ -309,7 +309,7 @@ const PdpCartActions = ({ productState, setProductState }) => {
               !isBook && (
                 <Btn
                   color="primary"
-                  className="btn-add-cart addcart-button shimmer w-100"
+                  className="btn-add-cart addcart-button shimmer w-100 scroll-button"
                   style={{ flex: '1 1 100%', width: '100%' }}
                   onClick={handleAddToCart}
                   disabled={isCartUpdating || isBuyingNow}
