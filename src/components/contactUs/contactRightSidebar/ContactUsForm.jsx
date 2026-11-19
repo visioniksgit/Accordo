@@ -201,7 +201,7 @@ const ContactUsForm = () => {
               // },
               {
                 name: 'enquiryType',
-                toplabel: 'Send Message To',
+                toplabel: 'Send Message For',
                 require: 'true',
                 type: 'select',
                 className: 'input-common contact-us-form-input',
