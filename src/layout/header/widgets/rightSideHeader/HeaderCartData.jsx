@@ -560,7 +560,8 @@ const HeaderCartData = ({ cartStyle }) => {
                 aria-live="polite"
               >
                 <div
-                  className="spinner-border text-success"
+                  className="spinner-border"
+                  style={{ color: 'var(--theme-color)' }}
                   aria-hidden="true"
                 />
               </div>

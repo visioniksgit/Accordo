@@ -3636,6 +3636,10 @@
     font-size: 14px;
     font-weight: 600;
     pointer-events: all;
+
+    .spinner-border {
+      color: var(--theme-color);
+    }
   }
 
   .offcanvas-header {
