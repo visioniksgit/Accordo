@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useContext, useId } from 'react';
+import React, { useState, useEffect, useMemo, useContext, useId } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import CartContext from '@/helper/cartContext';
@@ -38,7 +38,98 @@ const ProductBox1 = ({
   // console.log("product box 1 ", productDetail);
   // console.log("UserData ", userData);
 
+  // Variants and color selection
+  const productVariants = useMemo(() => {
+    return Array.isArray(productDetail?.productVariants)
+      ? productDetail.productVariants
+      : [];
+  }, [productDetail?.productVariants]);
+
+  const [selectedVariantUid, setSelectedVariantUid] = useState(() => {
+    return productVariants[0]?.uid || null;
+  });
+
+  useEffect(() => {
+    if (productVariants.length > 0) {
+      if (!selectedVariantUid || !productVariants.some((v) => v.uid === selectedVariantUid)) {
+        setSelectedVariantUid(productVariants[0]?.uid || null);
+      }
+    } else {
+      setSelectedVariantUid(null);
+    }
+  }, [productVariants, selectedVariantUid]);
+
+  const selectedVariant = useMemo(() => {
+    return (
+      productVariants.find((v) => v.uid === selectedVariantUid) ||
+      productVariants[0] ||
+      null
+    );
+  }, [productVariants, selectedVariantUid]);
+
+  const colors = useMemo(() => {
+    if (Array.isArray(selectedVariant?.colors) && selectedVariant.colors.length > 0) {
+      return selectedVariant.colors;
+    }
+    if (Array.isArray(productVariants[0]?.colors) && productVariants[0].colors.length > 0) {
+      return productVariants[0].colors;
+    }
+    if (Array.isArray(productDetail?.colors) && productDetail.colors.length > 0) {
+      return productDetail.colors;
+    }
+    return [];
+  }, [selectedVariant?.colors, productVariants, productDetail?.colors]);
+
+  const [selectedColorUid, setSelectedColorUid] = useState(() => {
+    return colors[0]?.uid || null;
+  });
+
+  const selectedColor = useMemo(() => {
+    return colors.find((c) => c.uid === selectedColorUid) || colors[0] || null;
+  }, [colors, selectedColorUid]);
+
+  useEffect(() => {
+    if (colors.length > 0) {
+      if (!selectedColorUid || !colors.some((c) => c.uid === selectedColorUid)) {
+        setSelectedColorUid(colors[0]?.uid || null);
+      }
+    } else {
+      setSelectedColorUid(null);
+    }
+  }, [colors, selectedColorUid]);
+
+  const handleColorSelect = (color) => {
+    if (!color?.uid) return;
+    setSelectedColorUid(color.uid);
+
+    // If another variant in productVariants matches this color, switch selectedVariant
+    const matchingVariant = productVariants.find(
+      (v) =>
+        v.colors?.[0]?.uid === color.uid ||
+        (color.slug && (v.slug === color.slug || v.slug?.endsWith(`-${color.slug}`) || v.slug?.includes(`-${color.slug}-`))) ||
+        (color.name && v.name?.toLowerCase().includes(color.name.toLowerCase()))
+    );
+
+    if (matchingVariant && matchingVariant.uid !== selectedVariant?.uid) {
+      setSelectedVariantUid(matchingVariant.uid);
+    }
+  };
+
   const displayPrices = useMemo(() => {
+    if (selectedVariant) {
+      const mrp = Number(selectedVariant.mrp ?? productDetail?.price ?? 0);
+      const sale = Number(selectedVariant.disPrice ?? selectedVariant.sale_price ?? mrp);
+      const discount =
+        selectedVariant.discountPercent ??
+        selectedVariant.discount ??
+        (mrp > sale && mrp > 0 ? Math.round(((mrp - sale) / mrp) * 100) : 0);
+      return {
+        salePrice: sale,
+        price: mrp,
+        discount,
+      };
+    }
+
     const variations = productDetail?.variations;
     if (
       productDetail?.type === 'classified' &&
@@ -66,7 +157,7 @@ const ProductBox1 = ({
       price: productDetail?.price,
       discount: productDetail?.discount,
     };
-  }, [productDetail]);
+  }, [selectedVariant, productDetail]);
 
   const productCustomerType = productDetail?.customerType;
 
@@ -96,10 +187,12 @@ const ProductBox1 = ({
   }, [productDetail]);
 
   const productHref = useMemo(() => {
-    return productDetail?.slug
-      ? `/products/${productDetail.slug}?productVariant=${productDetail?.productVariants?.[0]?.slug || ''}`
+    const slug = productDetail?.slug;
+    const variantSlug = selectedVariant?.slug || productDetail?.productVariants?.[0]?.slug || '';
+    return slug
+      ? `/products/${slug}${variantSlug ? `?productVariant=${variantSlug}` : ''}`
       : '/collections';
-  }, [productDetail?.slug]);
+  }, [productDetail?.slug, selectedVariant?.slug, productDetail?.productVariants]);
 
   const companyName = useMemo(() => {
     return (
@@ -118,10 +211,11 @@ const ProductBox1 = ({
 
   const imageSource = useMemo(() => {
     const rawUrl =
+      selectedVariant?.coverImage ||
       getProductImageUrl(imgUrl) ||
       getProductImageUrl(productDetail?.product_thumbnail);
     return getOptimizedCdnImageUrl(rawUrl, 400, 400, 95);
-  }, [imgUrl, productDetail?.product_thumbnail]);
+  }, [selectedVariant?.coverImage, imgUrl, productDetail?.product_thumbnail]);
 
   const {
     resolvedSrc,
@@ -234,6 +328,52 @@ const ProductBox1 = ({
               )}
             </div>
 
+            {/* Colors Selection Row */}
+            {colors.length > 0 && (
+              <div className="product-card-colors mb-2">
+                <div className="d-flex align-items-center gap-1 flex-wrap">
+                  {colors.map((color, idx) => {
+                    const isSelected = selectedColorUid
+                      ? color.uid === selectedColorUid
+                      : idx === 0;
+                    const hex = color.hexcode || color.hex || '#ccc';
+                    return (
+                      <button
+                        key={color.uid || `${color.name}-${idx}`}
+                        type="button"
+                        className={`product-color-circle ${isSelected ? 'active' : ''}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleColorSelect(color);
+                        }}
+                        title={color.name || 'Color'}
+                        aria-label={`Select color ${color.name || ''}`}
+                        style={{
+                          width: '18px',
+                          height: '18px',
+                          borderRadius: '50%',
+                          backgroundColor: hex,
+                          border: isSelected
+                            ? '2px solid var(--theme-color, #0da487)'
+                            : '1px solid rgba(0, 0, 0, 0.18)',
+                          boxShadow: isSelected
+                            ? '0 0 0 1px #fff, 0 0 0 3px var(--theme-color, #0da487)'
+                            : 'none',
+                          padding: 0,
+                          cursor: 'pointer',
+                          display: 'inline-block',
+                          flexShrink: 0,
+                          transform: isSelected ? 'scale(1.1)' : 'scale(1)',
+                          transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             <div className="price-row">
               {displayPrices.salePrice === displayPrices.price ? (
                 // Sale price and MRP are the same -> Only show one price
@@ -274,6 +414,9 @@ const ProductBox1 = ({
             {addAction && (
               <ProductBox1Cart
                 productObj={productDetail}
+                selectedVariant={selectedVariant}
+                selectedColorUid={selectedColorUid}
+                selectedColor={selectedColor}
                 showBuyNow={showBuyNow}
                 shouldShowPricing={shouldShowPricing}
                 displayPrices={displayPrices}
