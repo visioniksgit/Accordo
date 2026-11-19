@@ -2,12 +2,7 @@ import React from 'react';
 
 const ProductBadge = ({ productDetail }) => {
   // const firstTagName = productDetail?.tags?.[0]?.name;
-
-  const deliveryBadge =
-    productDetail?.delivery_time ||
-    productDetail?.deliveryTime ||
-    productDetail?.badge ||
-    '60 min*';
+  const deliveryBadge = productDetail?.isDeliveredIn60Min ? "60 min" : "";
 
   return (
     <>
