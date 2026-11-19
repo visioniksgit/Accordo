@@ -354,9 +354,7 @@ const ProductBox1 = ({
                           height: '18px',
                           borderRadius: '50%',
                           backgroundColor: hex,
-                          border: isSelected
-                            ? '2px solid var(--theme-color, #0da487)'
-                            : '1px solid rgba(0, 0, 0, 0.18)',
+                          border: hex,
                           boxShadow: isSelected
                             ? '0 0 0 1px #fff, 0 0 0 3px var(--theme-color, #0da487)'
                             : 'none',
