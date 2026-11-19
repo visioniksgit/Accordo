@@ -67,7 +67,7 @@ const mapVariantToLegacy = (variant, productId, isNewShape = false) => {
     const salePrice = Number(variant.disPrice ?? mrp);
 
     // console.log(variant);
-    
+
     return {
       id: variant.uid,
       name: variant.name,
@@ -119,7 +119,6 @@ export const getFallbackProducts = (fallbackProductsData) => {
 
 export const normalizeProductForCard = (product) => {
   if (!product) return null;
-  // console.trace(product);
   const isNewShape = Boolean(product.uid || product.productVariants);
   const uidAsNumber = String(product.uid || '').match(/(\d+)/)?.[1];
   const parsedId = uidAsNumber ? Number(uidAsNumber) : null;
@@ -127,23 +126,24 @@ export const normalizeProductForCard = (product) => {
 
   const legacyVariations = isNewShape
     ? (Array.isArray(product.productVariants) ? product.productVariants : []).map((variant) =>
-        mapVariantToLegacy(variant, productId, true)
-      )
+      mapVariantToLegacy(variant, productId, true)
+    )
     : (Array.isArray(product.variations) ? product.variations : []).map((variant) =>
-        mapVariantToLegacy(variant, productId, false)
-      );
+      mapVariantToLegacy(variant, productId, false)
+    );
 
+  // console.log(legacyVariations);
   const selectedVariant = isNewShape
     ? getCheapestVariant(
-        product.productVariants || [],
-        (variant) => Boolean(variant?.inStockFlag),
-        (variant) => Number(variant?.disPrice ?? variant?.mrp ?? Number.MAX_SAFE_INTEGER)
-      )
+      product.productVariants || [],
+      (variant) => Boolean(variant?.inStockFlag),
+      (variant) => Number(variant?.disPrice ?? variant?.mrp ?? Number.MAX_SAFE_INTEGER)
+    )
     : getCheapestVariant(
-        legacyVariations,
-        (variant) => variant?.stock_status === 'in_stock',
-        (variant) => Number(variant?.sale_price ?? variant?.price ?? Number.MAX_SAFE_INTEGER)
-      );
+      legacyVariations,
+      (variant) => variant?.stock_status === 'in_stock',
+      (variant) => Number(variant?.sale_price ?? variant?.price ?? Number.MAX_SAFE_INTEGER)
+    );
 
   const price = isNewShape
     ? Number(selectedVariant?.mrp ?? product.price ?? 0)
@@ -171,9 +171,9 @@ export const normalizeProductForCard = (product) => {
   const weightFromVariantField = isNewShape
     ? parseWeightAndUnit(selectedVariant?.weight, '')
     : {
-        weight: product.weight ?? null,
-        unit: product.unit ?? null,
-      };
+      weight: product.weight ?? null,
+      unit: product.unit ?? null,
+    };
 
   const weightFromVariantName = parseWeightFromText(selectedVariant?.name, '');
   const weightFromProductName = parseWeightFromText(product?.name, '');
@@ -195,7 +195,7 @@ export const normalizeProductForCard = (product) => {
 
   const avgRating = Array.isArray(product.productReviews) && product.productReviews.length
     ? product.productReviews.reduce((sum, review) => sum + Number(review?.ratings ?? 0), 0) /
-      product.productReviews.length
+    product.productReviews.length
     : Number(product.rating ?? 0);
 
   return {

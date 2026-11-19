@@ -41,7 +41,6 @@ const BestSellerProducts = ({
   const { data, isLoading } = useBestSellers({ enabled: shouldFetchHome });
 
   const featuredProducts = data?.data?.featuredProducts || [];
-
   const externalProductList = useMemo(() => {
     if (!hasExternalProducts) return [];
 
@@ -61,6 +60,7 @@ const BestSellerProducts = ({
       .slice(0, maxItems);
   }, [featuredProducts, maxItems, shouldFetchHome]);
 
+  // console.log(homeFeaturedProductsList)
   const relatedProductList = hasExternalProducts
     ? externalProductList
     : homeFeaturedProductsList;

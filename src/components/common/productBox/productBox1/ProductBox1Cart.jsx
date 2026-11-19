@@ -11,6 +11,9 @@ import { trackMetaEvent } from '@/utils/metaPixel';
 
 const ProductBox1Cart = ({
   productObj,
+  selectedVariant: propSelectedVariant,
+  selectedColorUid: propSelectedColorUid,
+  selectedColor: propSelectedColor,
   showBuyNow = true,
   shouldShowPricing = false,
   displayPrices,
@@ -36,7 +39,7 @@ const ProductBox1Cart = ({
     Boolean(removeFromCartMutation?.isPending);
   const departmentName = productObj?.department?.name;
   const isBook = departmentName === "Books";
-  // console.log("productObj", { productObj })
+  // console.log("productObj", productObj?.name, { productObj })
   const getVariantUid = (v) =>
     v?.uid ?? v?.id ?? v?.variation_id ?? v?.variationId ?? v?._id ?? null;
 
@@ -162,12 +165,14 @@ const ProductBox1Cart = ({
 
   // 3. Build the cloneVariation so handleIncDec knows WHICH variant to target
   const targetVariant =
+    propSelectedVariant ||
     activeVariantObject ||
     singleVariant ||
     productObj?.productVariants?.[0] ||
     null;
 
   const activeColorUid = useMemo(() => {
+    if (propSelectedColorUid) return propSelectedColorUid;
     const v = targetVariant;
     return (
       cartItemsForProduct[0]?.color_id ||
@@ -190,7 +195,7 @@ const ProductBox1Cart = ({
       productObj?.colorUid ||
       null
     );
-  }, [targetVariant, cartItemsForProduct, productObj]);
+  }, [propSelectedColorUid, targetVariant, cartItemsForProduct, productObj]);
 
   const cloneVariation = targetVariant
     ? {
@@ -255,6 +260,25 @@ const ProductBox1Cart = ({
     hasStockQuantity(selectedOrDefaultVariant, productObj, ...variantList);
 
   useEffect(() => {
+    if (propSelectedVariant || propSelectedColorUid) {
+      const specificItem = cartItemsForProduct.find((elem) => {
+        const cartVariantUid = elem?.variantUid ?? elem?.variation_id;
+        const cartColorUid = elem?.color_id ?? elem?.colorUid;
+        if (targetVariant && String(cartVariantUid) !== String(getVariantUid(targetVariant))) {
+          return false;
+        }
+        if (activeColorUid && String(cartColorUid || '') !== String(activeColorUid)) {
+          return false;
+        }
+        return true;
+      });
+
+      const qty = Number(specificItem?.qty ?? specificItem?.quantity ?? 0);
+      setProductQty(qty);
+      setIsOpen(qty > 0);
+      return;
+    }
+
     if (cartItemsForProduct.length > 0) {
       // Sum the total quantity of this product across all selected variants
       const totalQty = cartItemsForProduct.reduce(
@@ -267,26 +291,11 @@ const ProductBox1Cart = ({
       setProductQty(0);
       setIsOpen(false);
     }
-  }, [cartItemsForProduct]);
-
-  // useEffect(() => {
-  //   if (getSelectedVariant) {
-  //     const qty = Number(
-  //       getSelectedVariant?.qty ?? getSelectedVariant?.quantity ?? 0
-  //     );
-
-  //     setProductQty(qty);
-  //     setIsOpen(qty > 0);
-  //     return;
-  //   }
-
-  //   setProductQty(0);
-  //   setIsOpen(false);
-  // }, [getSelectedVariant]);
+  }, [cartItemsForProduct, propSelectedVariant, propSelectedColorUid, targetVariant, activeColorUid]);
 
   const handleAddToCart = () => {
     if (isProductInStock) {
-      if (shouldUseVariationModal) {
+      if (shouldUseVariationModal && !propSelectedColorUid && !propSelectedVariant) {
         setVariationModal(productObj?.uid);
       } else {
         handleIncDec(
@@ -303,12 +312,12 @@ const ProductBox1Cart = ({
 
   const handleBuyNow = () => {
     if (isProductInStock) {
-      if (shouldUseVariationModal) {
+      if (shouldUseVariationModal && !propSelectedColorUid && !propSelectedVariant) {
         setVariationModal(productObj?.uid);
       } else {
         const checkoutPayload = {
           productUid: productObj?.uid,
-          variantUid: getVariantUid(selectedOrDefaultVariant),
+          variantUid: getVariantUid(targetVariant || selectedOrDefaultVariant),
           ...(activeColorUid ? { colorUid: activeColorUid } : {}),
           quantity: 1,
         };
@@ -382,8 +391,8 @@ const ProductBox1Cart = ({
   };
 
   const handleIncrease = () => {
-    // Safety check: If multiple different variants are in the cart, open the modal
-    if (shouldUseVariationModal && cartItemsForProduct.length > 1) {
+    // Safety check: If multiple different variants are in the cart and no specific variant/color is selected, open the modal
+    if (shouldUseVariationModal && !propSelectedColorUid && !propSelectedVariant && cartItemsForProduct.length > 1) {
       setVariationModal(productObj?.uid);
       return;
     }
@@ -409,8 +418,8 @@ const ProductBox1Cart = ({
   };
 
   const handleDecrease = () => {
-    // Safety check: If multiple different variants are in the cart, open the modal
-    if (shouldUseVariationModal && cartItemsForProduct.length > 1) {
+    // Safety check: If multiple different variants are in the cart and no specific variant/color is selected, open the modal
+    if (shouldUseVariationModal && !propSelectedColorUid && !propSelectedVariant && cartItemsForProduct.length > 1) {
       setVariationModal(productObj?.uid);
       return;
     }
