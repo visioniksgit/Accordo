@@ -42,43 +42,32 @@ const ProductBox1 = ({
   const productVariants = useMemo(() => {
     return Array.isArray(productDetail?.productVariants)
       ? productDetail.productVariants
-      : [];
-  }, [productDetail?.productVariants]);
-
-  const [selectedVariantUid, setSelectedVariantUid] = useState(() => {
-    return productVariants[0]?.uid || null;
-  });
-
-  useEffect(() => {
-    if (productVariants.length > 0) {
-      if (!selectedVariantUid || !productVariants.some((v) => v.uid === selectedVariantUid)) {
-        setSelectedVariantUid(productVariants[0]?.uid || null);
-      }
-    } else {
-      setSelectedVariantUid(null);
-    }
-  }, [productVariants, selectedVariantUid]);
-
-  const selectedVariant = useMemo(() => {
-    return (
-      productVariants.find((v) => v.uid === selectedVariantUid) ||
-      productVariants[0] ||
-      null
-    );
-  }, [productVariants, selectedVariantUid]);
+      : Array.isArray(productDetail?.variations)
+        ? productDetail.variations
+        : [];
+  }, [productDetail]);
 
   const colors = useMemo(() => {
-    if (Array.isArray(selectedVariant?.colors) && selectedVariant.colors.length > 0) {
-      return selectedVariant.colors;
+    if (Array.isArray(productDetail?.colors) && productDetail.colors.length > 0) {
+      return productDetail.colors;
     }
     if (Array.isArray(productVariants[0]?.colors) && productVariants[0].colors.length > 0) {
       return productVariants[0].colors;
     }
-    if (Array.isArray(productDetail?.colors) && productDetail.colors.length > 0) {
-      return productDetail.colors;
-    }
-    return [];
-  }, [selectedVariant?.colors, productVariants, productDetail?.colors]);
+    const allColors = [];
+    const seenUids = new Set();
+    productVariants.forEach((v) => {
+      if (Array.isArray(v?.colors)) {
+        v.colors.forEach((c) => {
+          if (c?.uid && !seenUids.has(c.uid)) {
+            seenUids.add(c.uid);
+            allColors.push(c);
+          }
+        });
+      }
+    });
+    return allColors;
+  }, [productDetail?.colors, productVariants]);
 
   const [selectedColorUid, setSelectedColorUid] = useState(() => {
     return colors[0]?.uid || null;
@@ -101,35 +90,9 @@ const ProductBox1 = ({
   const handleColorSelect = (color) => {
     if (!color?.uid) return;
     setSelectedColorUid(color.uid);
-
-    // If another variant in productVariants matches this color, switch selectedVariant
-    const matchingVariant = productVariants.find(
-      (v) =>
-        v.colors?.[0]?.uid === color.uid ||
-        (color.slug && (v.slug === color.slug || v.slug?.endsWith(`-${color.slug}`) || v.slug?.includes(`-${color.slug}-`))) ||
-        (color.name && v.name?.toLowerCase().includes(color.name.toLowerCase()))
-    );
-
-    if (matchingVariant && matchingVariant.uid !== selectedVariant?.uid) {
-      setSelectedVariantUid(matchingVariant.uid);
-    }
   };
 
   const displayPrices = useMemo(() => {
-    if (selectedVariant) {
-      const mrp = Number(selectedVariant.mrp ?? productDetail?.price ?? 0);
-      const sale = Number(selectedVariant.disPrice ?? selectedVariant.sale_price ?? mrp);
-      const discount =
-        selectedVariant.discountPercent ??
-        selectedVariant.discount ??
-        (mrp > sale && mrp > 0 ? Math.round(((mrp - sale) / mrp) * 100) : 0);
-      return {
-        salePrice: sale,
-        price: mrp,
-        discount,
-      };
-    }
-
     const variations = productDetail?.variations;
     if (
       productDetail?.type === 'classified' &&
@@ -150,14 +113,46 @@ const ProductBox1 = ({
       };
     }
 
-    // console.log(productDetail?.discount);
+    if (
+      productDetail?.disPrice !== undefined ||
+      productDetail?.mrp !== undefined ||
+      productDetail?.sale_price !== undefined ||
+      productDetail?.price !== undefined
+    ) {
+      const mrp = Number(productDetail?.mrp ?? productDetail?.price ?? 0);
+      const sale = Number(productDetail?.disPrice ?? productDetail?.sale_price ?? mrp);
+      const discount =
+        productDetail?.discountPercent ??
+        productDetail?.discount ??
+        (mrp > sale && mrp > 0 ? Math.round(((mrp - sale) / mrp) * 100) : 0);
+      return {
+        salePrice: sale,
+        price: mrp,
+        discount,
+      };
+    }
+
+    const firstVariant = productVariants[0];
+    if (firstVariant) {
+      const mrp = Number(firstVariant.mrp ?? firstVariant.price ?? 0);
+      const sale = Number(firstVariant.disPrice ?? firstVariant.sale_price ?? mrp);
+      const discount =
+        firstVariant.discountPercent ??
+        firstVariant.discount ??
+        (mrp > sale && mrp > 0 ? Math.round(((mrp - sale) / mrp) * 100) : 0);
+      return {
+        salePrice: sale,
+        price: mrp,
+        discount,
+      };
+    }
 
     return {
-      salePrice: productDetail?.sale_price,
-      price: productDetail?.price,
-      discount: productDetail?.discount,
+      salePrice: 0,
+      price: 0,
+      discount: 0,
     };
-  }, [selectedVariant, productDetail]);
+  }, [productDetail, productVariants]);
 
   const productCustomerType = productDetail?.customerType;
 
@@ -188,11 +183,11 @@ const ProductBox1 = ({
 
   const productHref = useMemo(() => {
     const slug = productDetail?.slug;
-    const variantSlug = selectedVariant?.slug || productDetail?.productVariants?.[0]?.slug || '';
+    const variantSlug = productVariants[0]?.slug || '';
     return slug
       ? `/products/${slug}${variantSlug ? `?productVariant=${variantSlug}` : ''}`
       : '/collections';
-  }, [productDetail?.slug, selectedVariant?.slug, productDetail?.productVariants]);
+  }, [productDetail?.slug, productVariants]);
 
   const companyName = useMemo(() => {
     return (
@@ -211,11 +206,12 @@ const ProductBox1 = ({
 
   const imageSource = useMemo(() => {
     const rawUrl =
-      selectedVariant?.coverImage ||
+      productDetail?.coverImage ||
+      productVariants[0]?.coverImage ||
       getProductImageUrl(imgUrl) ||
       getProductImageUrl(productDetail?.product_thumbnail);
     return getOptimizedCdnImageUrl(rawUrl, 400, 400, 95);
-  }, [selectedVariant?.coverImage, imgUrl, productDetail?.product_thumbnail]);
+  }, [imgUrl, productDetail?.coverImage, productDetail?.product_thumbnail, productVariants]);
 
   const {
     resolvedSrc,
@@ -411,7 +407,6 @@ const ProductBox1 = ({
             {addAction && (
               <ProductBox1Cart
                 productObj={productDetail}
-                selectedVariant={selectedVariant}
                 selectedColorUid={selectedColorUid}
                 selectedColor={selectedColor}
                 showBuyNow={showBuyNow}

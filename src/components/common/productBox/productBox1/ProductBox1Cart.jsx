@@ -11,7 +11,6 @@ import { trackMetaEvent } from '@/utils/metaPixel';
 
 const ProductBox1Cart = ({
   productObj,
-  selectedVariant: propSelectedVariant,
   selectedColorUid: propSelectedColorUid,
   selectedColor: propSelectedColor,
   showBuyNow = true,
@@ -90,6 +89,11 @@ const ProductBox1Cart = ({
       return true;
     }
 
+    // If product specifies it has variants, open modal (even if variant list isn't populated yet)
+    if (productObj?.hasVariants) {
+      return (variantList?.length ?? 0) > 1 || variantList?.length === 0;
+    }
+
     // For normal variable products: open modal only when there are multiple variants.
     return (variantList?.length ?? 0) > 1;
   }, [productObj, variantList]);
@@ -165,7 +169,6 @@ const ProductBox1Cart = ({
 
   // 3. Build the cloneVariation so handleIncDec knows WHICH variant to target
   const targetVariant =
-    propSelectedVariant ||
     activeVariantObject ||
     singleVariant ||
     productObj?.productVariants?.[0] ||
@@ -203,8 +206,17 @@ const ProductBox1Cart = ({
       variation_id: getVariantUid(targetVariant),
       colorUid: activeColorUid,
       selectedColorUid: activeColorUid,
+      selectedColor: propSelectedColor,
     }
-    : null;
+    : activeColorUid
+      ? {
+        selectedVariation: null,
+        variation_id: null,
+        colorUid: activeColorUid,
+        selectedColorUid: activeColorUid,
+        selectedColor: propSelectedColor,
+      }
+      : null;
 
   // 4. Update maxAvailableQty to check the active variant
   const maxAvailableQty = useMemo(() => {
@@ -260,25 +272,6 @@ const ProductBox1Cart = ({
     hasStockQuantity(selectedOrDefaultVariant, productObj, ...variantList);
 
   useEffect(() => {
-    if (propSelectedVariant || propSelectedColorUid) {
-      const specificItem = cartItemsForProduct.find((elem) => {
-        const cartVariantUid = elem?.variantUid ?? elem?.variation_id;
-        const cartColorUid = elem?.color_id ?? elem?.colorUid;
-        if (targetVariant && String(cartVariantUid) !== String(getVariantUid(targetVariant))) {
-          return false;
-        }
-        if (activeColorUid && String(cartColorUid || '') !== String(activeColorUid)) {
-          return false;
-        }
-        return true;
-      });
-
-      const qty = Number(specificItem?.qty ?? specificItem?.quantity ?? 0);
-      setProductQty(qty);
-      setIsOpen(qty > 0);
-      return;
-    }
-
     if (cartItemsForProduct.length > 0) {
       // Sum the total quantity of this product across all selected variants
       const totalQty = cartItemsForProduct.reduce(
@@ -291,11 +284,11 @@ const ProductBox1Cart = ({
       setProductQty(0);
       setIsOpen(false);
     }
-  }, [cartItemsForProduct, propSelectedVariant, propSelectedColorUid, targetVariant, activeColorUid]);
+  }, [cartItemsForProduct]);
 
   const handleAddToCart = () => {
     if (isProductInStock) {
-      if (shouldUseVariationModal && !propSelectedColorUid && !propSelectedVariant) {
+      if (shouldUseVariationModal) {
         setVariationModal(productObj?.uid);
       } else {
         handleIncDec(
@@ -312,7 +305,7 @@ const ProductBox1Cart = ({
 
   const handleBuyNow = () => {
     if (isProductInStock) {
-      if (shouldUseVariationModal && !propSelectedColorUid && !propSelectedVariant) {
+      if (shouldUseVariationModal) {
         setVariationModal(productObj?.uid);
       } else {
         const checkoutPayload = {
@@ -391,8 +384,8 @@ const ProductBox1Cart = ({
   };
 
   const handleIncrease = () => {
-    // Safety check: If multiple different variants are in the cart and no specific variant/color is selected, open the modal
-    if (shouldUseVariationModal && !propSelectedColorUid && !propSelectedVariant && cartItemsForProduct.length > 1) {
+    // Safety check: If multiple different variants are in the cart, open the modal
+    if (shouldUseVariationModal && cartItemsForProduct.length > 1) {
       setVariationModal(productObj?.uid);
       return;
     }
@@ -418,8 +411,8 @@ const ProductBox1Cart = ({
   };
 
   const handleDecrease = () => {
-    // Safety check: If multiple different variants are in the cart and no specific variant/color is selected, open the modal
-    if (shouldUseVariationModal && !propSelectedColorUid && !propSelectedVariant && cartItemsForProduct.length > 1) {
+    // Safety check: If multiple different variants are in the cart, open the modal
+    if (shouldUseVariationModal && cartItemsForProduct.length > 1) {
       setVariationModal(productObj?.uid);
       return;
     }
@@ -571,6 +564,8 @@ const ProductBox1Cart = ({
         setVariationModal={setVariationModal}
         variationModal={variationModal}
         productObj={productObj}
+        selectedColorUid={activeColorUid}
+        selectedColor={propSelectedColor}
         shouldShowPricing={shouldShowPricing}
         displayPrices={displayPrices}
         isDoctorProduct={isDoctorProduct}
