@@ -610,6 +610,7 @@ const HeaderCartData = ({ cartStyle, onNegotiateWithAi }) => {
                       </span>
                     </button>
 
+
                     <button
                       className="btn-primary btn-payment shimmer"
                       onClick={() => {
