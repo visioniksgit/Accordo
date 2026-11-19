@@ -506,14 +506,30 @@ const ProductsDetailPage = ({ slug }) => {
   // 6. Sticky cart scroll listener.
   useEffect(() => {
     const handleScroll = () => {
-      const button = document.querySelector('.scroll-button');
-      if (!button) return;
-      const { bottom } = button.getBoundingClientRect();
-      document.body.classList.toggle('stickyCart', bottom < window.innerHeight && bottom < 0);
+      const target =
+        document.querySelector('.scroll-button') ||
+        document.querySelector('#pdp-cart-actions') ||
+        document.querySelector('.add-to-cart-box') ||
+        document.querySelector('.btn-add-cart') ||
+        document.querySelector('.product-detail-bottom');
+
+      if (!target) {
+        const fallbackShow = typeof window !== 'undefined' && window.scrollY > 400;
+        document.body.classList.toggle('stickyCart', fallbackShow);
+        return;
+      }
+
+      const { bottom } = target.getBoundingClientRect();
+      document.body.classList.toggle('stickyCart', bottom < 0);
     };
-    window.addEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    handleScroll();
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
       document.body.classList.remove('stickyCart');
     };
   }, []);
@@ -735,7 +751,7 @@ const ProductsDetailPage = ({ slug }) => {
         <KeywordsSection keywords={productState.product.metaKeywords} />
       )} */}
 
-      {productState.product?.uid && (
+      {(productState.product?.uid || productState.product?.id) && (
         <StickyCheckout
           productState={productState}
           setProductState={setProductState}

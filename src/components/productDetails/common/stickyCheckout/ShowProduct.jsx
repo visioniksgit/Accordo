@@ -44,17 +44,32 @@ const ShowProduct = ({
       : '';
   const variantName = variationFromAttributes || variationFromName;
   const productName = baseProductName || selectedVariation?.name || '';
-  const productImage = selectedVariation?.coverImage ?? baseProduct?.coverImage;
+  const productImage =
+    selectedVariation?.coverImage ??
+    selectedVariation?.variation_image ??
+    baseProduct?.coverImage ??
+    baseProduct?.product_thumbnail ??
+    baseProduct?.productVariants?.[0]?.coverImage;
 
   const departmentName = productState?.product?.department?.name;
   const isBook = departmentName === 'Books';
 
   const rawSalePrice =
     selectedVariation?.disPrice ??
+    selectedVariation?.sale_price ??
     baseProduct?.productVariants?.[0]?.disPrice ??
+    baseProduct?.productVariants?.[0]?.sale_price ??
+    baseProduct?.disPrice ??
+    baseProduct?.sale_price ??
     0;
   const rawMrp =
-    selectedVariation?.mrp ?? baseProduct?.productVariants?.[0]?.mrp ?? 0;
+    selectedVariation?.mrp ??
+    selectedVariation?.price ??
+    baseProduct?.productVariants?.[0]?.mrp ??
+    baseProduct?.productVariants?.[0]?.price ??
+    baseProduct?.mrp ??
+    baseProduct?.price ??
+    rawSalePrice;
 
   const salePrice = convertCurrency(rawSalePrice);
   const originalPrice = convertCurrency(rawMrp);
@@ -99,12 +114,31 @@ const ShowProduct = ({
       (Array.isArray(selectedVariation?.colorUids)
         ? selectedVariation.colorUids[0]
         : typeof selectedVariation?.colorUids === 'string'
-        ? selectedVariation.colorUids.split(',')[0]?.trim()
-        : null) ||
+          ? selectedVariation.colorUids.split(',')[0]?.trim()
+          : null) ||
       selectedVariation?.colors?.[0]?.uid ||
       null
     );
   }, [productState, selectedVariation]);
+
+  const activeColor = useMemo(() => {
+    if (productState?.selectedColor) return productState.selectedColor;
+    if (Array.isArray(selectedVariation?.colors) && selectedVariation.colors.length > 0) {
+      if (activeColorUid) {
+        const found = selectedVariation.colors.find((c) => c?.uid === activeColorUid);
+        if (found) return found;
+      }
+      return selectedVariation.colors[0];
+    }
+    if (Array.isArray(baseProduct?.colors) && baseProduct.colors.length > 0) {
+      if (activeColorUid) {
+        const found = baseProduct.colors.find((c) => c?.uid === activeColorUid);
+        if (found) return found;
+      }
+      return baseProduct.colors[0];
+    }
+    return null;
+  }, [productState?.selectedColor, selectedVariation?.colors, baseProduct?.colors, activeColorUid]);
 
   // Build cart-compatible state for CartContext calls
   const cartCompatibleState = useMemo(() => {
@@ -227,7 +261,7 @@ const ShowProduct = ({
   };
 
   return (
-    <div className="sticky-bottom-cart">
+    <div className="sticky-bottom-cart d-none d-lg-block">
       <div className="container-fluid-lg">
         <Row>
           <Col xs={12}>
@@ -242,8 +276,29 @@ const ShowProduct = ({
                 />
                 <div className="content">
                   <h5 className="sticky-product-name">{productName}</h5>
-                  {variantName && (
-                    <p className="sticky-variant-name">{variantName}</p>
+                  {(variantName || (activeColor && (activeColor.name || activeColor.hexcode))) && (
+                    <div className="sticky-variant-name d-flex align-items-center flex-wrap gap-1">
+                      {variantName && <span>{variantName}</span>}
+                      {activeColor && (activeColor.name || activeColor.hexcode) && (
+                        <span className="d-inline-flex align-items-center gap-1">
+                          {variantName && <span style={{ color: '#bbb', margin: '0 2px' }}>•</span>}
+                          {activeColor.hexcode && (
+                            <span
+                              style={{
+                                width: '12px',
+                                height: '12px',
+                                borderRadius: '50%',
+                                backgroundColor: activeColor.hexcode,
+                                display: 'inline-block',
+                                border: '1px solid rgba(0, 0, 0, 0.2)',
+                                flexShrink: 0,
+                              }}
+                            />
+                          )}
+                          <span>{activeColor.name || activeColor.hexcode}</span>
+                        </span>
+                      )}
+                    </div>
                   )}
 
                   {/* --- Updated Pricing Logic Block --- */}

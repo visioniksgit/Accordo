@@ -40,7 +40,7 @@ import { formatPlacedAt } from '@/utils/orders/orderTransformers';
 import { useProductRedirectByVariant } from '@/utils/hooks/useProduct';
 import CartContext from '@/helper/cartContext';
 import { CART_QUERY_KEY } from '@/utils/hooks/useCart';
-import emptyImage from '../../../../public/assets/svg/empty-items.svg';
+import emptyImage from '../../../../public/assets/images/product/no-orders.png';
 import {
   canCancelOrder,
   canReturnOrder,

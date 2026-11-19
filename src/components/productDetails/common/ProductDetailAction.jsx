@@ -77,8 +77,8 @@ const ProductDetailAction = ({
       (Array.isArray(selectedVariation?.colorUids)
         ? selectedVariation.colorUids[0]
         : typeof selectedVariation?.colorUids === 'string'
-        ? selectedVariation.colorUids.split(',')[0]?.trim()
-        : null) ||
+          ? selectedVariation.colorUids.split(',')[0]?.trim()
+          : null) ||
       selectedVariation?.colors?.[0]?.uid ||
       null
     );
@@ -603,7 +603,7 @@ const ProductDetailAction = ({
           <div className="mobile-product-action-buttons dynamic-checkout d-lg-none">
             <div className="add-to-cart-box">
               <div className="dual-cart-buttons">
-                <button
+                {/* <button
                   type="button"
                   className="btn-buy-now"
                   onClick={handleBuyNow}
@@ -620,7 +620,7 @@ const ProductDetailAction = ({
                       'Buy'
                     )}
                   </span>
-                </button>
+                </button> */}
                 {isOpen && !isBook && productQty >= 1 ? (
                   <div
                     className="qty-inline-box"
