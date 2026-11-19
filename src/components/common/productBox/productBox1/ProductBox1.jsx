@@ -285,12 +285,11 @@ const ProductBox1 = ({
       </div>
       <div className="product-detail">
         <div className="product-detail--wrapper">
-          {/* {companyName && ( */}
-          <span className="product-company-name">
-            {/* {companyName} */}
-            polycab
-          </span>
-          {/* )} */}
+          {companyName && (
+            <span className="product-company-name">
+              {companyName}
+            </span>
+          )}
           <h3 style={{ fontSize: 'inherit' }}>
             <Link title={productDetail?.name} href={productHref} prefetch={false} className="name">
               {productDetail?.name}
