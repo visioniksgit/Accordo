@@ -326,7 +326,7 @@ const ProductBox1 = ({
             {/* Colors Selection Row */}
             {colors.length > 0 && (
               <div className="product-card-colors mb-2">
-                <div className="d-flex align-items-center gap-1 flex-wrap">
+                <div className="d-flex align-items-center gap-2 flex-wrap">
                   {colors.map((color, idx) => {
                     const isSelected = selectedColorUid
                       ? color.uid === selectedColorUid
