@@ -9,13 +9,15 @@ import { parseGooglePlace, useGooglePlaces, useGoogleMapsStatus, MapsStatus } fr
 import { GoogleMapsProvider } from '@/helper/mapsContext/googleMapsProvider';
 
 const AddressSearch = ({
+  id = 'search-address',
   value,
+  label = 'Search Address',
   placeholder = 'Search address',
   variant = 'outlined',
   size = 'md',
   country = 'IN',
   disabled,
-  className,
+  className = '',
   onSelect,
 }) => {
   const wrapperRef = useRef(null);
@@ -92,7 +94,14 @@ const AddressSearch = ({
   return (
     <div
       ref={wrapperRef}
-      className={`${styles.addressSearch} ${styles[`variant-${variant}`]} ${styles[`size-${size}`]} ${className}`}
+      className={[
+        styles.addressSearch,
+        variant && styles[`variant-${variant}`],
+        size && styles[`size-${size}`],
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       {mapsUnavailable ? (
         <small className="text-danger fs-6 d-block mb-2">
@@ -101,13 +110,18 @@ const AddressSearch = ({
         </small>
       ) : (
         <>
-          <label className={styles.label}>Search Address</label>
+          {label && (
+            <label htmlFor={id} className={`form-label ${styles.label}`}>
+              {label}
+            </label>
+          )}
           <input
+            id={id}
             ref={inputRef}
             value={query}
             placeholder={placeholder}
             disabled={disabled}
-            className={`input-common ${styles.input}`}
+            className={`form-control input-common ${styles.input || ''}`.trim()}
             onFocus={() => setShowDropdown(true)}
             onBlur={() => {
               setTimeout(() => setShowDropdown(false), 120);
