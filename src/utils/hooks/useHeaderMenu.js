@@ -37,7 +37,7 @@ const STATIC_TRAILING_MENUS = [
     id: 'ai-negotiations',
     title: 'AI Negotiations',
     customClass: 'nav-item',
-    path: '/ai-negotiations',
+    path: '/',
   },
 ];
 

@@ -6,6 +6,7 @@ import {
   RiCloseFill,
   RiArrowDownSLine,
   RiBuildingLine,
+  RiSparklingLine,
 } from 'react-icons/ri';
 import { Offcanvas, OffcanvasBody, OffcanvasHeader } from 'reactstrap';
 import { useRouter } from 'next/navigation';
@@ -43,7 +44,7 @@ const DEFAULT_PRESCRIPTION_STATE = {
   isHydrating: false,
 };
 
-const HeaderCartData = ({ cartStyle }) => {
+const HeaderCartData = ({ cartStyle, onNegotiateWithAi }) => {
   const { setCartCanvas, cartCanvas } = useContext(ThemeOptionContext);
   const [shippingCal, setShippingCal] = useState(0);
   const [modal, setModal] = useState(false);
@@ -65,6 +66,16 @@ const HeaderCartData = ({ cartStyle }) => {
   const [showAddressDropdown, setShowAddressDropdown] = useState(false);
   const [showAddressLimitModal, setShowAddressLimitModal] = useState(false);
   const [isProceedingToCheckout, setIsProceedingToCheckout] = useState(false);
+  const [isNegotiating, setIsNegotiating] = useState(false);
+  const negotiateTimerRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (negotiateTimerRef.current) {
+        clearTimeout(negotiateTimerRef.current);
+      }
+    };
+  }, []);
   const [checkoutState, setCheckoutState] = useState({
     appliedCoupon: '',
     appliedCouponUid: '',
@@ -369,6 +380,23 @@ const HeaderCartData = ({ cartStyle }) => {
     }
   };
 
+  const handleNegotiateWithAi = () => {
+    if (isNegotiating) return;
+    setIsNegotiating(true);
+
+    if (typeof onNegotiateWithAi === 'function') {
+      onNegotiateWithAi();
+    }
+
+    if (negotiateTimerRef.current) {
+      clearTimeout(negotiateTimerRef.current);
+    }
+
+    negotiateTimerRef.current = setTimeout(() => {
+      setIsNegotiating(false);
+    }, 5000);
+  };
+
   return (
     <>
       {cartStyle == 'cart_sidebar' ? (
@@ -409,6 +437,8 @@ const HeaderCartData = ({ cartStyle }) => {
                 shippingFreeAmt={shippingFreeAmt}
                 onCheckoutDataChange={setCheckoutState}
                 selectedAddress={selectedAddress}
+                isNegotiating={isNegotiating}
+                onNegotiateWithAi={handleNegotiateWithAi}
               />
             </OffcanvasBody>
             {totalCartQuantity > 0 && (
@@ -515,41 +545,89 @@ const HeaderCartData = ({ cartStyle }) => {
                       )}
                     </div>
 
-                    {/* Payment Button */}
-                    <button
-                      className="btn-payment"
-                      onClick={handleProceedToCheckout}
-                      disabled={
-                        isProceedingToCheckout ||
-                        isAddingAddress ||
-                        !hasEligibleCartProducts
-                      }
-                    >
-                      {isProceedingToCheckout
-                        ? 'Processing...'
-                        : !hasEligibleCartProducts
-                          ? noEligibleItemsLabel
-                          : `Click to Pay`}
-                    </button>
+                    {/* Action Buttons */}
+                    <div className="cart-footer-actions">
+                      <button
+                        type="button"
+                        className={`btn-negotiate-ai ${isNegotiating ? 'is-negotiating' : ''}`}
+                        onClick={handleNegotiateWithAi}
+                        disabled={isNegotiating}
+                        title={isNegotiating ? 'Negotiating with AI...' : 'Negotiate with AI'}
+                      >
+                        <span className="btn-negotiate-ai-inner">
+                          {isNegotiating ? (
+                            <>
+                              <span className="ai-btn-spinner" />
+                              <span>Loading...</span>
+                            </>
+                          ) : (
+                            <>
+                              <RiSparklingLine className="ai-sparkle-icon" />
+                              <span>Negotiate with AI</span>
+                            </>
+                          )}
+                        </span>
+                      </button>
+
+                      <button
+                        className="btn-payment"
+                        onClick={handleProceedToCheckout}
+                        disabled={
+                          isProceedingToCheckout ||
+                          isAddingAddress ||
+                          !hasEligibleCartProducts
+                        }
+                      >
+                        {isProceedingToCheckout
+                          ? 'Processing...'
+                          : !hasEligibleCartProducts
+                            ? noEligibleItemsLabel
+                            : `Click to Pay`}
+                      </button>
+                    </div>
                   </>
                 ) : (
-                  <button
-                    className="btn-primary btn-payment shimmer"
-                    onClick={() => {
-                      if (!isAuthenticated) {
-                        setOtpModal(true);
-                      } else {
-                        handleAddAddressClick();
-                      }
-                    }}
-                    disabled={isAddingAddress || !hasEligibleCartProducts}
-                  >
-                    {!hasEligibleCartProducts
-                      ? noEligibleItemsLabel
-                      : !isAuthenticated
-                        ? 'Please Login'
-                        : 'Add Address to proceed'}
-                  </button>
+                  <div className="cart-footer-actions">
+                    <button
+                      type="button"
+                      className={`btn-negotiate-ai ${isNegotiating ? 'is-negotiating' : ''}`}
+                      onClick={handleNegotiateWithAi}
+                      disabled={isNegotiating}
+                      title={isNegotiating ? 'Negotiating with AI...' : 'Negotiate with AI'}
+                    >
+                      <span className="btn-negotiate-ai-inner">
+                        {isNegotiating ? (
+                          <>
+                            <span className="ai-btn-spinner" />
+                            <span>Loading...</span>
+                          </>
+                        ) : (
+                          <>
+                            <RiSparklingLine className="ai-sparkle-icon" />
+                            <span>Negotiate with AI</span>
+                          </>
+                        )}
+                      </span>
+                    </button>
+
+                    <button
+                      className="btn-primary btn-payment shimmer"
+                      onClick={() => {
+                        if (!isAuthenticated) {
+                          setOtpModal(true);
+                        } else {
+                          handleAddAddressClick();
+                        }
+                      }}
+                      disabled={isAddingAddress || !hasEligibleCartProducts}
+                    >
+                      {!hasEligibleCartProducts
+                        ? noEligibleItemsLabel
+                        : !isAuthenticated
+                          ? 'Please Login'
+                          : 'Add Address to proceed'}
+                    </button>
+                  </div>
                 )}
               </div>
             )}
@@ -560,7 +638,8 @@ const HeaderCartData = ({ cartStyle }) => {
                 aria-live="polite"
               >
                 <div
-                  className="spinner-border text-success"
+                  className="spinner-border"
+                  style={{ color: 'var(--theme-color)' }}
                   aria-hidden="true"
                 />
               </div>
