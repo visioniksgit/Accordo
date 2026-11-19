@@ -71,6 +71,8 @@ const VariationModal = ({
   productObj,
   variationModal,
   setVariationModal,
+  selectedColorUid: initialColorUid,
+  selectedColor: initialColor,
   shouldShowPricing,
   displayPrices,
   isDoctorProduct,
@@ -86,14 +88,18 @@ const VariationModal = ({
     productQty: 1,
     selectedVariation: '',
     variantIds: [],
+    selectedColorUid: initialColorUid || null,
+    selectedColor: initialColor || null,
   });
 
   useEffect(() => {
     setCloneVariation((prev) => ({
       ...prev,
       product: productObj,
+      selectedColorUid: initialColorUid || prev.selectedColorUid || null,
+      selectedColor: initialColor || prev.selectedColor || null,
     }));
-  }, [productObj]);
+  }, [productObj, initialColorUid, initialColor]);
 
   // useEffect(() => {
   //   console.log(cloneVariation);
@@ -137,6 +143,21 @@ const VariationModal = ({
           ? nextSelected.colors[0]
           : null;
 
+      const resolvedColorUid =
+        initialColorUid ||
+        prev.selectedColorUid ||
+        defaultColor?.uid ||
+        null;
+
+      const resolvedColor =
+        (Array.isArray(nextSelected?.colors)
+          ? nextSelected.colors.find((c) => c?.uid === resolvedColorUid)
+          : null) ||
+        initialColor ||
+        prev.selectedColor ||
+        defaultColor ||
+        null;
+
       return {
         ...prev,
         product: {
@@ -145,11 +166,11 @@ const VariationModal = ({
           productVariants: modalProduct.productVariants ?? prev.product?.productVariants,
         },
         selectedVariation: nextSelected,
-        selectedColorUid: prev.selectedColorUid || defaultColor?.uid || null,
-        selectedColor: prev.selectedColor || defaultColor || null,
+        selectedColorUid: resolvedColorUid,
+        selectedColor: resolvedColor,
       };
     });
-  }, [modalData]);
+  }, [modalData, initialColorUid, initialColor]);
 
   const selectedVariationId = getSelectedVariationId(
     cloneVariation?.selectedVariation
