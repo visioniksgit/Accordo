@@ -63,12 +63,12 @@ const menuItems = [
     icon: <RiHeart3Line />,
     path: '/wishlist',
   },
-  {
-    id: 'bookmarks',
-    title: 'My Bookmarks',
-    icon: <RiBookmarkLine />,
-    path: '/bookmarks',
-  },
+  // {
+  //   id: 'bookmarks',
+  //   title: 'My Bookmarks',
+  //   icon: <RiBookmarkLine />,
+  //   path: '/bookmarks',
+  // },
 ];
 
 const MobileProfileOffcanvas = ({ isOpen, onClose }) => {

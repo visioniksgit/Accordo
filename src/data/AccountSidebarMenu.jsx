@@ -37,10 +37,10 @@ export const sidebarMenu = [
     icon: <RiHeart3Line />,
     path: '/wishlist',
   },
-  {
-    id: 'bookmarks',
-    title: 'My Bookmarks',
-    icon: <RiBookmarkLine />,
-    path: '/bookmarks',
-  },
+  // {
+  //   id: 'bookmarks',
+  //   title: 'My Bookmarks',
+  //   icon: <RiBookmarkLine />,
+  //   path: '/bookmarks',
+  // },
 ];

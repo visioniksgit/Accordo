@@ -16,17 +16,16 @@ const RHFInputFieldBase = ({ name, ...props }) => {
     formState: { errors },
   } = useFormContext();
 
-  const fieldError = errors?.[name];
-  const invalid = Boolean(fieldError);
-
   const { t } = useTranslation('common');
 
   return (
     <Controller
       name={name}
       control={control}
-      render={({ field }) => {
+      render={({ field, fieldState }) => {
         const safeValue = field.value ?? '';
+        const fieldError = fieldState?.error || errors?.[name];
+        const invalid = Boolean(fieldError);
 
         if (props.label) {
           return (
@@ -40,8 +39,8 @@ const RHFInputFieldBase = ({ name, ...props }) => {
                 
               />
               <Label htmlFor={props.id || name}>{t(props.label)}</Label>
-              {invalid ? (
-                <FormFeedback className="message-error">
+              {invalid && fieldError?.message ? (
+                <FormFeedback className="message-error d-block">
                   {t(fieldError.message)}
                 </FormFeedback>
               ) : (
@@ -80,8 +79,8 @@ const RHFInputFieldBase = ({ name, ...props }) => {
               {props.postprefix && (
                 <InputGroupText>{props.postprefix}</InputGroupText>
               )}
-              {invalid ? (
-                <FormFeedback className="message-error">
+              {invalid && fieldError?.message ? (
+                <FormFeedback className="message-error d-block">
                   {t(fieldError.message)}
                 </FormFeedback>
               ) : (
@@ -102,8 +101,8 @@ const RHFInputFieldBase = ({ name, ...props }) => {
                 invalid={invalid}
                 autoComplete="off"
               />
-              {invalid ? (
-                <FormFeedback className="message-error">
+              {invalid && fieldError?.message ? (
+                <FormFeedback className="message-error d-block">
                   {t(fieldError.message)}
                 </FormFeedback>
               ) : (
@@ -124,8 +123,10 @@ const RHFInputFieldBase = ({ name, ...props }) => {
               invalid={invalid}
               autoComplete="off"
             />
-            {invalid ? (
-              <FormFeedback className="message-error">{t(fieldError.message)}</FormFeedback>
+            {invalid && fieldError?.message ? (
+              <FormFeedback className="message-error d-block">
+                {t(fieldError.message)}
+              </FormFeedback>
             ) : (
               ''
             )}

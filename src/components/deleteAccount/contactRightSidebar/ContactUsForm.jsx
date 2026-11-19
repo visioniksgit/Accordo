@@ -17,22 +17,25 @@ const contactSchema = z.object({
   firstName: z
     .string()
     .trim()
+    .min(1, 'First name is required')
     .min(2, 'Enter a valid first name')
     .regex(lettersAndSpaces, 'First name can contain only letters'),
   lastName: z
     .string()
     .trim()
+    .min(1, 'Last name is required')
     .min(2, 'Enter a valid last name')
     .regex(lettersAndSpaces, 'Last name can contain only letters'),
   email: z
     .string()
     .trim()
-    .email('Enter a valid email address')
-    .min(1, 'Email is required'),
+    .min(1, 'Email is required')
+    .email('Enter a valid email address'),
   phone: z
     .string()
     .trim()
-    .regex(/^\d{10}$/, 'Enter a valid phone number'),
+    .min(1, 'Phone number is required')
+    .regex(/^\d{10}$/, 'Enter a valid 10-digit phone number'),
   // pincode: z
   //   .string()
   //   .trim()
@@ -42,10 +45,11 @@ const contactSchema = z.object({
   //   .trim()
   //   .min(2, 'Subject must be at least 2 characters')
   //   .regex(lettersAndSpaces, 'Subject can contain only letters'),
-  enquiryType: z.string().trim().min(1, 'Enquiry type is required'),
+  enquiryType: z.string().trim().min(1, 'Please select an option'),
   message: z
     .string()
     .trim()
+    .min(1, 'Message is required')
     .min(10, 'Message must be at least 10 characters')
     .max(1000, 'Message must be less than 1000 characters'),
 });
@@ -127,9 +131,23 @@ const ContactUsForm = () => {
     setSuccessModal(false);
   };
 
+  const onError = (errors) => {
+    const firstErrorField = Object.keys(errors)[0];
+    if (firstErrorField) {
+      const element = document.querySelector(`[name="${firstErrorField}"]`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.focus();
+      }
+    }
+  };
+
   return (
     <FormProvider {...methods}>
-      <ReactstrapForm onSubmit={methods.handleSubmit(onSubmit)}>
+      <ReactstrapForm
+        noValidate
+        onSubmit={methods.handleSubmit(onSubmit, onError)}
+      >
         <Row>
           <RHFSimpleInputField
             nameList={[
