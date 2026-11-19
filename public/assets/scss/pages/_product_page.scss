@@ -465,8 +465,10 @@
     @include common.line;
 
     &.sale-tag {
-      background-color: var(--product-card-sale-bg);
-      color: var(--product-card-sale-text);
+      // background-color: var(--product-card-sale-bg);
+      // color: var(--product-card-sale-text);
+      background-color: var(--highlight);
+      color: #07112c;
     }
 
     &.featured-tag {

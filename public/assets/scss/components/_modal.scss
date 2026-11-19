@@ -4248,8 +4248,9 @@
           }
 
           &.sale-tag {
-            background-color: var(--product-card-sale-bg);
-            color: var(--product-card-sale-text);
+            background-color: var(--highlight);
+            color: #07112c;
+            // color: var(--product-card-sale-text);
           }
 
           &.featured-tag {
@@ -5742,6 +5743,8 @@
               font-weight: 600;
               color: var(--product-card-disc-percent);
               background: var(--product-card-disc-percent-bg);
+              color: var(--white);
+              background: var(--red);
               padding: 2px 6px;
               border-radius: 6px;
               white-space: nowrap;

@@ -681,8 +681,10 @@
     }
 
     &.sale-tag {
-      background-color: var(--product-card-sale-bg);
-      color: var(--product-card-sale-text);
+      // background-color: var(--product-card-sale-bg);
+      // color: var(--product-card-sale-text);
+      background-color: var(--highlight);
+      color: #07112c;
     }
 
     &.featured-tag {
@@ -1101,6 +1103,8 @@
             font-size: 10px;
             font-weight: 600;
             color: #ffffff;
+            background: var(--red);
+            color: var(--white);
             background: var(--red);
             padding: 2px 4px;
             border-radius: 6px;
@@ -1628,8 +1632,10 @@
             .discount-badge {
               font-size: 0.75em;
               font-weight: 600;
-              color: var(--product-card-disc-percent);
-              background: var(--product-card-disc-percent-bg);
+              // color: var(--product-card-disc-percent);
+              // background: var(--product-card-disc-percent-bg);
+              background-color: var(--highlight);
+              color: #07112c;
               padding: 4px 8px;
               border-radius: 6px;
             }
