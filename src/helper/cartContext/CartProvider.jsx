@@ -173,7 +173,10 @@ const CartProvider = ({ children }) => {
       cloneVariation?.selectedColorUid ||
       cloneVariation?.selectedColor?.uid ||
       cloneVariation?.colorUid ||
+      cloneVariation?.color_id ||
+      cloneVariation?.color?.uid ||
       cloneVariation?.selectedVariation?.colorUid ||
+      cloneVariation?.selectedVariation?.color?.uid ||
       productObj?.selectedColorUid ||
       productObj?.colorUid ||
       null;
@@ -196,7 +199,7 @@ const CartProvider = ({ children }) => {
         String(item?.product_id ?? item?.productUid) === String(productUid) &&
         String(item?.variation_id ?? item?.variantUid ?? null) ===
         String(variantUid ?? null) &&
-        (!colorUid || String(item?.color_id ?? item?.colorUid ?? '') === String(colorUid))
+        (!colorUid || String(item?.color_id ?? item?.colorUid ?? item?.color?.uid ?? '') === String(colorUid))
     );
 
     const actualCartQty = existingCartItem
@@ -347,21 +350,44 @@ const CartProvider = ({ children }) => {
 
     if (!item) return;
 
+    const resolvedColorUid =
+      item?.color_id ||
+      item?.colorUid ||
+      item?.color?.uid ||
+      null;
+
     removeFromCartMutation.mutate({
       productUid: item.product_id,
       variantUid: item.variation_id ?? null,
+      ...(resolvedColorUid ? { colorUid: resolvedColorUid } : {}),
       count: Number(item.quantity ?? 1),
     });
   };
 
-  const updateCartQty = (productId, variationId, delta) => {
-    const item = rawCartProducts.find(
-      (entry) =>
-        String(entry?.product_id) === String(productId) &&
-        String(entry?.variation_id ?? '') === String(variationId ?? '')
-    );
+  const updateCartQty = (productId, variationId, delta, colorUid) => {
+    const item = rawCartProducts.find((entry) => {
+      const matchProduct =
+        String(entry?.product_id ?? entry?.productUid) === String(productId);
+      const matchVariant =
+        String(entry?.variation_id ?? entry?.variantUid ?? '') ===
+        String(variationId ?? '');
+      if (!matchProduct || !matchVariant) return false;
+      if (colorUid) {
+        const itemColor =
+          entry?.color_id ?? entry?.colorUid ?? entry?.color?.uid ?? '';
+        return String(itemColor) === String(colorUid);
+      }
+      return true;
+    });
 
     if (!item) return;
+
+    const resolvedColorUid =
+      colorUid ||
+      item?.color_id ||
+      item?.colorUid ||
+      item?.color?.uid ||
+      null;
 
     if (Number(delta) > 0) {
       const availableQuantity = getCartItemAvailableQuantity(item);
@@ -377,6 +403,7 @@ const CartProvider = ({ children }) => {
       addToCartMutation.mutate({
         productUid: item.product_id,
         variantUid: item.variation_id ?? null,
+        ...(resolvedColorUid ? { colorUid: resolvedColorUid } : {}),
         count: Number(delta),
       });
       return;
@@ -385,6 +412,7 @@ const CartProvider = ({ children }) => {
     removeFromCartMutation.mutate({
       productUid: item.product_id,
       variantUid: item.variation_id ?? null,
+      ...(resolvedColorUid ? { colorUid: resolvedColorUid } : {}),
       count: Math.abs(Number(delta)),
     });
   };
@@ -398,10 +426,16 @@ const CartProvider = ({ children }) => {
   const updateCheckoutItemQuantity = (item, delta) => {
     const productId = item?.product_id || item?.product?.id;
     const variationId = item?.variation_id || item?.variation?.id || null;
+    const colorId =
+      item?.color_id ||
+      item?.colorUid ||
+      item?.color?.uid ||
+      item?.variation?.color?.uid ||
+      null;
 
     if (!productId || !delta) return;
 
-    updateCartQty(productId, variationId, delta);
+    updateCartQty(productId, variationId, delta, colorId);
   };
 
   const setCartProducts = (nextItems) => {

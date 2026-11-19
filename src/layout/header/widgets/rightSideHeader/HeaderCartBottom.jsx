@@ -73,6 +73,12 @@ const getItemIdentifiers = (item) => ({
     item?.variant?.id ||
     item?.variant?.uid ||
     null,
+  colorUid:
+    item?.color_id ||
+    item?.colorUid ||
+    item?.color?.uid ||
+    item?.variation?.color?.uid ||
+    null,
 });
 
 const getStockLimitMessage = (availableQuantity) => {
@@ -538,7 +544,13 @@ const HeaderCartBottom = ({
       item?.variant?.id ||
       item?.variant?.uid ||
       null;
-    updateCartQty(productId, variationId, -1);
+    const colorId =
+      item?.color_id ||
+      item?.colorUid ||
+      item?.color?.uid ||
+      item?.variation?.color?.uid ||
+      null;
+    updateCartQty(productId, variationId, -1, colorId);
   };
 
   const handleIncrease = (item) => {
@@ -558,7 +570,13 @@ const HeaderCartBottom = ({
       item?.variant?.id ||
       item?.variant?.uid ||
       null;
-    updateCartQty(productId, variationId, 1);
+    const colorId =
+      item?.color_id ||
+      item?.colorUid ||
+      item?.color?.uid ||
+      item?.variation?.color?.uid ||
+      null;
+    updateCartQty(productId, variationId, 1, colorId);
   };
 
   const handleRemoveWithWishlistOption = async (addToWishlist) => {
@@ -567,7 +585,7 @@ const HeaderCartBottom = ({
     }
 
     const currentItem = pendingRemovalItem;
-    const { productUid, variantUid } = getItemIdentifiers(currentItem);
+    const { productUid, variantUid, colorUid } = getItemIdentifiers(currentItem);
 
     if (!productUid || !variantUid) {
       ToastNotification('error', 'Unable to update this cart item.');
@@ -579,6 +597,7 @@ const HeaderCartBottom = ({
       await removeFromCartMutation.mutateAsync({
         productUid,
         variantUid,
+        ...(colorUid ? { colorUid } : {}),
         count: Number(currentItem?.qty ?? currentItem?.quantity ?? 1),
       });
 
@@ -647,8 +666,14 @@ const HeaderCartBottom = ({
 
     try {
       await Promise.all(
-        outOfStockCartProducts.map((item) =>
-          removeFromCartMutation.mutateAsync({
+        outOfStockCartProducts.map((item) => {
+          const colorUid =
+            item?.color_id ||
+            item?.colorUid ||
+            item?.color?.uid ||
+            item?.variation?.color?.uid ||
+            null;
+          return removeFromCartMutation.mutateAsync({
             productUid:
               item?.product_id || item?.product?.id || item?.product?.uid,
             variantUid:
@@ -657,9 +682,10 @@ const HeaderCartBottom = ({
               item?.variant?.id ||
               item?.variant?.uid ||
               null,
+            ...(colorUid ? { colorUid } : {}),
             count: Number(item?.qty ?? item?.quantity ?? 1),
-          })
-        )
+          });
+        })
       );
     } catch (error) {
       ToastNotification(
