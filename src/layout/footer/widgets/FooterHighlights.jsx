@@ -37,7 +37,7 @@ const FooterHighlights = () => {
         id: 4,
         label: 'Address',
         // value: themeOption?.footer?.about_address || '',
-        value: `701, Haware Infotech Park, Sector 30A, Near Inorbit Mall, Vashi, Navi Mumbai, Maharashtra 400703
+        value: `2439+Q56, D Mart Rd, Sector 5, New Panvel East, Panvel, Maharashtra 410206
 `,
         icon: <FiMapPin />,
       },

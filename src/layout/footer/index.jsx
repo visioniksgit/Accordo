@@ -1,4 +1,7 @@
+'use client';
+
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Row } from 'reactstrap';
 import FooterCategory from './widgets/FooterCategory';
 import FooterUseFul from './widgets/FooterUseFul';
@@ -13,15 +16,18 @@ import { useKeywords } from '@/utils/hooks/useHome';
 
 const MainFooter = () => {
   const [footerMenu, setFooterMenu] = useState('');
+  const pathname = usePathname();
   const { data } = useKeywords();
   const keywords = data?.data?.metaKeywords || [];
+
+  const isProductPage = pathname?.includes('/product');
+  const isShopPage = pathname?.includes('/collection') || pathname?.includes('/shop');
 
   return (
     <>
       <footer
         translate="no"
-        //  footer-section-2 footer-color-2
-        className={`section-t-space`}
+        className={`section-t-space ${isProductPage ? 'footer-product-page' : ''} ${isShopPage ? 'footer-shop-page' : ''}`}
       >
         <div className="container-fluid-lg">
           <div className="main-footer ">
@@ -45,11 +51,6 @@ const MainFooter = () => {
           <SubFooter2 />
           <SubFooter />
         </div>
-        {/* <div className="home-bottom-footer-space" style={{
-          backgroundColor: '#f5f5f4',
-        }}>
-          <KeywordsSection keywords={keywords} />
-        </div> */}
       </footer>
     </>
   );

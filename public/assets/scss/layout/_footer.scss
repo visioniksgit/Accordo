@@ -11,6 +11,23 @@ footer {
   position: relative;
   z-index: unset;
 
+  // Mobile bottom clearance for sticky menus / floating bars
+  @include breakpoints.mq-max(lg) {
+    padding-bottom: calc(50px + env(safe-area-inset-bottom, 0px));
+  }
+
+  &.footer-product-page {
+    @include breakpoints.mq-max(lg) {
+      padding-bottom: calc(55px + env(safe-area-inset-bottom, 0px));
+    }
+  }
+
+  &.footer-shop-page {
+    @include breakpoints.mq-max(lg) {
+      padding-bottom: calc(50px + env(safe-area-inset-bottom, 0px));
+    }
+  }
+
   .main-footer {
     @include breakpoints.mq-max(md) {
       border: none;
@@ -830,15 +847,20 @@ footer {
     }
 
     .payment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+
       @include breakpoints.mq-max(lg) {
-        margin: 8px 0;
+        margin: 10px 0 6px;
       }
 
       img {
-        // width: calc(296px + (302 - 296) * ((100vw - 320px) / (1920 - 320)));
-        // height: auto;
         width: 207px;
-        // height: 24px;
+        max-width: 100%;
+        height: auto;
       }
     }
 
@@ -892,18 +914,6 @@ footer {
       }
     }
 
-    .payment {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: calc(12px + 8 * (100vw - 320px) / 1600);
-
-      h5 {
-        color: #4a4a4a;
-        font-size: 14px;
-        font-weight: 600;
-      }
-    }
 
     .social-link {
       display: flex;

@@ -94,7 +94,7 @@ const OrderSuccessPage = () => {
     // Otherwise, tick down every 1 second
     const timer = setTimeout(() => {
       setRedirectIn((prev) => prev - 1);
-    }, 1000);
+    }, 10000);
 
     // Cleanup the timeout on unmount or re-render
     return () => clearTimeout(timer);

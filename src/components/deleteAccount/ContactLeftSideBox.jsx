@@ -67,7 +67,7 @@ const ContactLeftSideBox = () => {
                     </div>
 
                     <div className="contact-detail-contain">
-                      <p>701, Haware Infotech Park, Sector 30A, Near Inorbit Mall, Vashi, Navi Mumbai, Maharashtra 400703
+                      <p>2439+Q56, D Mart Rd, Sector 5, New Panvel East, Panvel, Maharashtra 410206
                       </p>
                     </div>
                   </div>
@@ -132,7 +132,7 @@ const ContactLeftSideBox = () => {
                     </div>
 
                     <div className="contact-detail-contain">
-                      <p>701, Haware Infotech Park, Sector 30A, Near Inorbit Mall, Vashi, Navi Mumbai, Maharashtra 400703
+                      <p>2439+Q56, D Mart Rd, Sector 5, New Panvel East, Panvel, Maharashtra 410206
                       </p>
                     </div>
                   </div>
