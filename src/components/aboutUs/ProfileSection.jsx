@@ -5,8 +5,6 @@ import WrapperComponent from '../common/WrapperComponent';
 import styles from './ProfileSection.module.scss';
 import CustomHeading from '../common/CustomHeading';
 import { LeafSVG } from '../common/CommonSVG';
-import CsrActivities from './CsrActivities';
-import AwardsRecognition from './AwardsRecognition';
 
 const ProfileSection = () => {
   return (
@@ -58,28 +56,10 @@ const ProfileSection = () => {
               physicians on its board than any comparable company in the field.
               Every medicine it makes is shaped by that authority.
             </p>
-            {/* <div className={styles['profile-quote']}>
-              <p>
-                "We see Ayurved as a medical system being accepted the world
-                over. We foresee becoming one of the first classical Ayurved
-                multinationals."
-              </p>
-              
-            </div> */}
-            {/* </div> */}
           </Col>
           <Col lg={6} xs={12} className="d-flex">
             <div className={styles['profile-video-wrapper']}>
               <div className={styles['profile-video']}>
-                {/* YouTube Video */}
-
-                {/* <iframe
-                  src={`https://www.youtube.com/embed/0dzvJQjJYMY?rel=0`}
-                  title="About Shree Dhootapapeshwar Limited"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  loading="lazy"
-                /> */}
                 <video
                   controls
                   playsInline
@@ -104,92 +84,7 @@ const ProfileSection = () => {
             </div>
           </Col>
         </Row>
-
-        {/* <CsrActivities />
-        <AwardsRecognition /> */}
       </WrapperComponent>
-      {/* <WrapperComponent
-        classes={{
-          sectionClass: `${styles['profile-section']} section-b-space`,
-        }}
-        noRowCol={true}
-      >
-        <Row className="">
-          <Col xs={12}>
-          
-
-            <CustomHeading
-              customClass="mb-0"
-              title="Standing & Address"
-           
-            />
-          </Col>
-        </Row>
-
-        <Row>
-          <Col xs={12}>
-            <div className={styles['info-row']}>
-              <div className={styles['info-label']}>Legal Structure</div>
-              <div className={styles['info-value']}>
-                Public Limited Company, registered under the Companies Act of
-                1956.
-              </div>
-            </div>
-
-            <div className={styles['info-row']}>
-              <div className={styles['info-label']}>Manufacturing</div>
-              <div className={styles['info-value']}>
-                The main manufacturing facility for the traditional range of
-                medicines is located in <strong>Panvel</strong>, with a second
-                site in <strong>Bangalore</strong>, managed by a dedicated
-                technology-licensed vendor.
-              </div>
-            </div>
-
-            <div className={styles['info-row']}>
-              <div className={styles['info-label']}>Registered Office</div>
-              <div className={styles['info-value']}>
-                135, Nanubhai Desai Rd., Khetwadi, Mumbai – 400 004.
-              </div>
-            </div>
-
-            <div className={styles['info-row']}>
-              <div className={styles['info-label']}>Contact</div>
-              <div className={styles['info-value']}>
-                <div className={styles['contact-item']}>
-                  Phone:{' '}
-                  <a
-                    href="tel:+912223829874"
-                    className={styles['contact-link']}
-                  >
-                    +91 22 2382 9874
-                  </a>
-                </div>
-                <div className={styles['contact-item']}>
-                  Helpline:{' '}
-                  <a
-                    href="tel:+911800229874"
-                    className={styles['contact-link']}
-                  >
-                    +91 1800 22 9874
-                  </a>
-                </div>
-                <div className={styles['contact-item']}>
-                  Email:{' '}
-                  <a
-                    href="mailto:healthcare@sdlindia.com"
-                    className={styles['contact-link']}
-                  >
-                    healthcare@sdlindia.com
-                  </a>
-                </div>
-              </div>
-            </div>
-          </Col>
-        </Row>
-
-       
-      </WrapperComponent> */}
     </>
   );
 };

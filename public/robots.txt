@@ -1,4 +1,4 @@
-# Website: https://www.sdlindia.com
+# Website: https://accordo-liart.vercel.app
 # Updated: 2026-10-14
 
 
@@ -148,6 +148,6 @@ Allow: /
 # 12. SITEMAP DISCOVERY
 
 
-Sitemap: https://www.sdlindia.com/sitemap.xml
+Sitemap: https://accordo-liart.vercel.app/sitemap.xml
 
 
