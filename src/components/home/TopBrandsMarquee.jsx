@@ -8,6 +8,50 @@ import CustomHeading from '@/components/common/CustomHeading';
 import { useSection3Brands } from '@/utils/hooks/useHome';
 import styles from './TopBrandsMarquee.module.scss';
 
+// ── Static brand list matching design ─────────────────────────────────────────
+const DEFAULT_BRANDS = [
+  {
+    id: 'havells',
+    name: 'Havells',
+    image: '/assets/images/brands/havells.png',
+    link: '/collections?brand=havells',
+    width: 91,
+    height: 63,
+  },
+  {
+    id: 'kei',
+    name: 'KEI Wires & Cables',
+    image: '/assets/images/brands/kei.png',
+    link: '/collections?brand=kei',
+    width: 130,
+    height: 62,
+  },
+  {
+    id: 'crompton',
+    name: 'Crompton',
+    image: '/assets/images/brands/crompton.png',
+    link: '/collections?brand=crompton',
+    width: 199,
+    height: 50,
+  },
+  {
+    id: 'legrand',
+    name: 'Legrand',
+    image: '/assets/images/brands/legrand.png',
+    link: '/collections?brand=legrand',
+    width: 129,
+    height: 41,
+  },
+  {
+    id: 'philips',
+    name: 'Philips',
+    image: '/assets/images/brands/philips.png',
+    link: '/collections?brand=philips',
+    width: 144,
+    height: 37,
+  },
+];
+
 // Ensure items array is sufficiently wide to avoid gaps on wide displays
 const ensureSufficientItems = (list, minCount = 10) => {
   if (!list || list.length === 0) return [];
@@ -22,19 +66,19 @@ const ensureSufficientItems = (list, minCount = 10) => {
 const BrandNamePill = ({ name }) => (
   <div
     style={{
-      height: '120px',
+      height: '48px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '0 24px',
-      borderRadius: '10px',
+      padding: '0 20px',
+      borderRadius: '8px',
       backgroundColor: '#f0f4ff',
       border: '1px solid #dde5ff',
     }}
   >
     <span
       style={{
-        fontSize: '15px',
+        fontSize: '13px',
         fontWeight: 700,
         color: '#234BF3',
         whiteSpace: 'nowrap',
@@ -50,13 +94,17 @@ const TopBrandsMarquee = ({
   subTitle = 'Quality products from most trusted names',
   viewAllText = 'View All',
   viewAllLink = '/collections',
+  brands: customBrands,
   speed = 28,
 }) => {
-  const { data, isLoading } = useSection3Brands();
+  // ── Dynamic brands API hook (commented for now to show static images) ──
+  // const { data, isLoading } = useSection3Brands();
+  // const dynamicBrands = useMemo(() => {
+  //   return data?.data?.brands || [];
+  // }, [data]);
 
-  const brands = useMemo(() => {
-    return data?.data?.brands || [];
-  }, [data]);
+  // ── Static brands ──
+  const brands = customBrands || DEFAULT_BRANDS;
 
   const displayItems = useMemo(() => ensureSufficientItems(brands, 10), [brands]);
 
@@ -64,17 +112,29 @@ const TopBrandsMarquee = ({
     const brandName = brand.name || '';
     const brandSlug = brandName.toLowerCase().replace(/\s+/g, '-');
     const brandAlt = brand.imageAlt || brandName || 'Brand Logo';
-    const href = `/collections?brand=${encodeURIComponent(brandSlug)}`;
+    const href = brand.link || `/collections?brand=${encodeURIComponent(brandSlug)}`;
 
     return (
       <div
-        key={`${keyPrefix}-${brand.uid}`}
-        href={href}
+        key={`${keyPrefix}-${brand.id || brand.uid || brandName}`}
+        // href={href}
         className={styles.brandCard}
-        aria-label={`Shop ${brandName}`}
-        prefetch={false}
+      // aria-label={`Shop ${brandName}`}
+      // prefetch={false}
       >
-        {brand.logo ? (
+        {/* ── Static Image ── */}
+        <img
+          src={brand.image || brand.logo}
+          alt={brandAlt}
+          width={brand.width || 140}
+          height={brand.height || 48}
+          className={styles.brandImage}
+          loading="lazy"
+          decoding="async"
+        />
+
+        {/* ── Dynamic Image with fallback (commented for now) ── */}
+        {/* {brand.logo ? (
           <img
             src={brand.logo}
             alt={brandAlt}
@@ -98,12 +158,13 @@ const TopBrandsMarquee = ({
           />
         ) : (
           <BrandNamePill name={brandName} />
-        )}
+        )} */}
       </div>
     );
   };
 
-  // Skeleton while loading
+  // ── Skeleton while loading (commented for static mode) ──
+  /*
   if (isLoading) {
     return (
       <WrapperComponent
@@ -130,6 +191,7 @@ const TopBrandsMarquee = ({
 
   // Don't render if no brands returned
   if (!brands.length) return null;
+  */
 
   return (
     <WrapperComponent
