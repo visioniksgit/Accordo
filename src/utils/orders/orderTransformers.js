@@ -220,6 +220,8 @@ export const mapApiOrderToCardModel = (apiOrder) => {
       isFreeGift: Boolean(item?.isFreeGift),
       returnable: Boolean(item?.snapReturnable ?? item?.variant?.product?.returnable),
       currentStatus: item?.currentStatus || '',
+      snapColorName: item?.snapColorName ?? item?.colorName ?? item?.color?.name ?? null,
+      snapColorHexCode: item?.snapColorHexCode ?? item?.colorHexCode ?? item?.color?.hexcode ?? item?.color?.hex ?? null,
     })),
     // Attach the unified summary object to list items natively
     summary: {
@@ -298,6 +300,8 @@ export const mapOrderDetailToOrderModel = (apiOrder) => {
     isFreeGift: Boolean(item?.isFreeGift),
     returnable: Boolean(item?.snapReturnable ?? item?.variant?.product?.returnable),
     currentStatus: item?.currentStatus || '',
+    snapColorName: item?.snapColorName ?? item?.colorName ?? item?.color?.name ?? null,
+    snapColorHexCode: item?.snapColorHexCode ?? item?.colorHexCode ?? item?.color?.hexcode ?? item?.color?.hex ?? null,
   }));
 
   return {

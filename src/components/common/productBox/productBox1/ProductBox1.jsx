@@ -197,11 +197,17 @@ const ProductBox1 = ({
 
   const productHref = useMemo(() => {
     const slug = productDetail?.slug;
-    const variantSlug = productVariants[0]?.slug || '';
-    return slug
-      ? `/products/${slug}${variantSlug ? `?productVariant=${variantSlug}` : ''}`
-      : '/collections';
-  }, [productDetail?.slug, productVariants]);
+    const variantSlug = selectedVariant?.slug || productVariants[0]?.slug || '';
+    const colorSlug =
+      selectedColor?.slug ||
+      (selectedColor?.name ? selectedColor.name.toLowerCase().replace(/\s+/g, '-') : '');
+    if (!slug) return '/collections';
+    const params = new URLSearchParams();
+    if (variantSlug) params.set('productVariant', variantSlug);
+    if (colorSlug) params.set('color', colorSlug);
+    const queryString = params.toString();
+    return `/products/${slug}${queryString ? `?${queryString}` : ''}`;
+  }, [productDetail?.slug, selectedVariant, productVariants, selectedColor]);
 
   const companyName = useMemo(() => {
     return (

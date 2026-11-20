@@ -804,6 +804,24 @@ const ReturnOrderDetails = ({ isOpen, returnUid, onClose }) => {
                               {item.snapVariantName}
                             </span>
                           )}
+                          {(item.snapColorName || item.snapColorHexCode) && (
+                            <span className="d-inline-flex align-items-center gap-1" style={{ fontSize: '12px', color: 'var(--content-color)' }}>
+                              {item.snapColorHexCode && (
+                                <span
+                                  style={{
+                                    width: '10px',
+                                    height: '10px',
+                                    borderRadius: '50%',
+                                    backgroundColor: item.snapColorHexCode.startsWith('#') ? item.snapColorHexCode : `#${item.snapColorHexCode}`,
+                                    display: 'inline-block',
+                                    border: '1px solid rgba(0, 0, 0, 0.2)',
+                                    flexShrink: 0,
+                                  }}
+                                />
+                              )}
+                              <span>{item.snapColorName || item.snapColorHexCode}</span>
+                            </span>
+                          )}
                           <div className={styles.itemQtyRow}>
                             <span className={styles.itemQtyBadge}>
                               Return Qty: {item.returnQty}

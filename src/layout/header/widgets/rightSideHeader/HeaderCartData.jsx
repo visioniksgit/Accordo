@@ -356,6 +356,7 @@ const HeaderCartData = ({ cartStyle, onNegotiateWithAi }) => {
         getGstInvoice: Boolean(checkoutState?.isGstInvoiceSelected),
         prescriptions,
         items: buyableCartItems.map((item) => ({
+          colorUid: item?.colorUid || '',
           variantUid: item?.variation_id || '',
           quantity: Number(item?.quantity || 1),
         })),

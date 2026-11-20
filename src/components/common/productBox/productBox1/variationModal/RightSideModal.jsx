@@ -264,6 +264,37 @@ const RightVariationModal = ({
   const productUrl = buildProductUrl(productSlug);
   const shareLinks = getShareLinks(productUrl, productName);
 
+  const fullProductDetailsHref = useMemo(() => {
+    if (!productSlug) return '/collections';
+    const params = new URLSearchParams();
+    const variant = cloneVariation?.selectedVariation;
+    const variantSlug =
+      variant?.slug ||
+      (selectedVariantLabel ? selectedVariantLabel.replace(/\s+/g, '-') : '');
+    if (variantSlug) {
+      params.set('productVariant', variantSlug);
+    }
+    const color =
+      cloneVariation?.selectedColor ||
+      (Array.isArray(variant?.colors)
+        ? variant.colors.find((c) => c?.uid === cloneVariation?.selectedColorUid)
+        : null);
+    const colorSlug =
+      color?.slug ||
+      (color?.name ? color.name.toLowerCase().replace(/\s+/g, '-') : '');
+    if (colorSlug) {
+      params.set('color', colorSlug);
+    }
+    const queryString = params.toString();
+    return `/products/${productSlug}${queryString ? `?${queryString}` : ''}`;
+  }, [
+    productSlug,
+    cloneVariation?.selectedVariation,
+    selectedVariantLabel,
+    cloneVariation?.selectedColor,
+    cloneVariation?.selectedColorUid,
+  ]);
+
   const handleShare = async () => {
     const sharePayload = {
       title: productName,
@@ -434,6 +465,7 @@ const RightVariationModal = ({
             key={selectedVariationId || currentVariant?.uid || currentVariant?.id || 'default'}
             selectedVariant={currentVariant?.colors ? currentVariant : (cloneVariation?.product?.colors ? { ...currentVariant, colors: cloneVariation.product.colors } : currentVariant)}
             selectedColorUid={cloneVariation?.selectedColorUid}
+            syncWithUrl={false}
             onSelectColor={(color) => {
               setCloneVariation((prev) => ({
                 ...prev,
@@ -543,11 +575,7 @@ const RightVariationModal = ({
       {/* 8. Full product page link for more details */}
       <div className="variation-more-details">
         <a
-          href={
-            selectedVariantLabel
-              ? `/products/${productSlug}?productVariant=${encodeURIComponent(selectedVariantLabel.replace(/\s+/g, '-'))}`
-              : `/products/${productSlug}`
-          }
+          href={fullProductDetailsHref}
           // target="_blank"
           rel="noopener noreferrer"
           className="variation-more-details-link"
