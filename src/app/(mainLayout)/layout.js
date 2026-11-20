@@ -5,8 +5,8 @@ import Script from 'next/script';
 
 export const metadata = {
   title: {
-    default: 'SDL India',
-    template: '%s | SDL India',
+    default: 'Accordo',
+    template: '%s | Accordo',
   },
 };
 

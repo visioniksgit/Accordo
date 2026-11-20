@@ -307,7 +307,7 @@ function createProductSchema(productData, productSlug, imagesData) {
   const brandNode = {
     '@type': 'Brand',
     '@id': brandId,
-    name: product.brand?.name || 'Shree Dhootapapeshwar Limited | SDL India',
+    name: product.brand?.name || 'Accordo',
     url: siteUrl,
   };
 
