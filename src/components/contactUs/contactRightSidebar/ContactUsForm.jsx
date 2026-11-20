@@ -30,8 +30,11 @@ const contactSchema = z.object({
   email: z
     .string()
     .trim()
-    .min(1, 'Email is required')
-    .email('Enter a valid email address'),
+    .refine(
+      (val) => !val || z.string().email().safeParse(val).success,
+      'Enter a valid email address'
+    )
+    .optional(),
   phone: z
     .string()
     .trim()
@@ -99,7 +102,7 @@ const ContactUsForm = () => {
       const payload = {
         firstName: formData.firstName,
         lastName: formData.lastName,
-        email: formData.email,
+        email: formData.email?.trim() || null,
         phone: formData.phone,
         pincode: formData.pincode,
         subject: formData.subject || null,
@@ -170,7 +173,7 @@ const ContactUsForm = () => {
                 name: 'email',
                 placeholder: t('Enter your email'),
                 toplabel: 'Email Address',
-                require: 'true',
+                require: 'false',
                 className: 'input-common contact-us-form-input',
                 colprops: { xxl: 6, sm: 6 },
               },
