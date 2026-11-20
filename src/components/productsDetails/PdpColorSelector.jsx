@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import styles from './PdpColorSelector.module.scss';
 
 const isLightColor = (hex) => {
@@ -24,47 +25,90 @@ const isLightColor = (hex) => {
 /**
  * PdpColorSelector
  * Renders the color list completely new from selectedVariant?.colors.
- * By default, selects the first color in the list.
- * Clicking a color updates the held color UID in local state without reloading the page.
+ * By default, selects the color matching the URL `color` query parameter (if syncWithUrl is true)
+ * or the first color in the list.
+ * Clicking a color updates the held color in state without reloading the page.
  */
 const PdpColorSelector = ({
   selectedVariant,
   selectedColorUid,
   onSelectColor,
   className = '',
+  syncWithUrl = true,
 }) => {
+  const searchParams = useSearchParams();
+  const colorParam = syncWithUrl ? searchParams?.get('color') || '' : '';
+
   // Derive colors strictly from selectedVariant?.colors
   const colors = useMemo(() => {
     return Array.isArray(selectedVariant?.colors) ? selectedVariant.colors : [];
   }, [selectedVariant?.colors]);
 
-  // The first color is the default
-  const firstColor = colors[0] || null;
-  const firstColorUid = firstColor?.uid || null;
+  // If URL has ?color=..., find matching color by slug, name, or uid
+  const colorFromUrl = useMemo(() => {
+    if (!colorParam || !colors.length) return null;
+    const cleanParam = decodeURIComponent(colorParam).trim().toLowerCase();
+    return (
+      colors.find(
+        (c) =>
+          (c?.slug && c.slug.toLowerCase() === cleanParam) ||
+          (c?.name && c.name.toLowerCase() === cleanParam) ||
+          (c?.uid && c.uid.toLowerCase() === cleanParam)
+      ) || null
+    );
+  }, [colorParam, colors]);
 
-  // Active color UID: user-selected color (if present in the current colors list) or the first color
+  // The first color is the default fallback
+  const firstColor = colors[0] || null;
+  const preferredColor = colorFromUrl || firstColor;
+  const preferredColorUid = preferredColor?.uid || null;
+
+  // Active color UID: user-selected color (if present in current colors list) or preferred color
   const activeColorUid = useMemo(() => {
     if (selectedColorUid && colors.some((c) => c?.uid === selectedColorUid)) {
       return selectedColorUid;
     }
-    return firstColorUid;
-  }, [selectedColorUid, colors, firstColorUid]);
+    return preferredColorUid;
+  }, [selectedColorUid, colors, preferredColorUid]);
 
-  // By default, select and hold the first color in parent state
+  // By default, select and hold the preferred color in parent state if not already selected
   useEffect(() => {
-    if (
-      firstColor &&
-      (!selectedColorUid || !colors.some((c) => c?.uid === selectedColorUid))
-    ) {
+    const isCurrentValid =
+      selectedColorUid && colors.some((c) => c?.uid === selectedColorUid);
+    if (!isCurrentValid && preferredColor) {
       if (onSelectColor) {
-        onSelectColor(firstColor);
+        onSelectColor(preferredColor);
       }
     }
-  }, [firstColor, selectedColorUid, colors, onSelectColor]);
+  }, [preferredColor, selectedColorUid, colors, onSelectColor]);
+
+  // Listen to browser Back/Forward navigation (popstate) to sync color from URL
+  useEffect(() => {
+    if (!syncWithUrl) return;
+
+    const handlePopState = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const currentColorParam = urlParams.get('color');
+      if (!currentColorParam || !colors.length) return;
+      const clean = decodeURIComponent(currentColorParam).trim().toLowerCase();
+      const match = colors.find(
+        (c) =>
+          (c?.slug && c.slug.toLowerCase() === clean) ||
+          (c?.name && c.name.toLowerCase() === clean) ||
+          (c?.uid && c.uid.toLowerCase() === clean)
+      );
+      if (match && match.uid !== selectedColorUid) {
+        onSelectColor?.(match);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [syncWithUrl, colors, selectedColorUid, onSelectColor]);
 
   const activeColor = useMemo(() => {
-    return colors.find((c) => c?.uid === activeColorUid) || firstColor;
-  }, [colors, activeColorUid, firstColor]);
+    return colors.find((c) => c?.uid === activeColorUid) || preferredColor;
+  }, [colors, activeColorUid, preferredColor]);
 
   const handleColorClick = (color) => {
     if (!color?.uid) return;

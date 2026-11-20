@@ -105,6 +105,23 @@ const RefundItemRow = ({ item }) => {
         <p className={styles.itemName}>{item?.snapProductName || '—'}</p>
         <p className={styles.itemMeta}>
           {item?.snapVariantName ? `${item.snapVariantName} · ` : ''}
+          {(item?.snapColorName || item?.snapColorHexCode) ? (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', verticalAlign: 'middle', marginRight: '4px' }}>
+              {item?.snapColorHexCode && (
+                <span
+                  style={{
+                    width: '9px',
+                    height: '9px',
+                    borderRadius: '50%',
+                    backgroundColor: item.snapColorHexCode.startsWith('#') ? item.snapColorHexCode : `#${item.snapColorHexCode}`,
+                    display: 'inline-block',
+                    border: '1px solid rgba(0, 0, 0, 0.2)',
+                  }}
+                />
+              )}
+              <span>{item?.snapColorName || item?.snapColorHexCode} · </span>
+            </span>
+          ) : null}
           Qty: {quantity}
         </p>
       </div>

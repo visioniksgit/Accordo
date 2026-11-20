@@ -89,6 +89,18 @@ const OrderDetailsItemsList = ({
         const isCancelledItem =
           currentStatus === 'cancelled' || currentStatus === 'canceled';
 
+        const rawHex =
+          item?.snapColorHexCode || '';
+        const colorHexCode = rawHex
+          ? (/^([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(rawHex)
+            ? `#${rawHex}`
+            : rawHex)
+          : null;
+        const colorName =
+          item?.snapColorName ||
+          (colorHexCode ? colorHexCode : null);
+        const hasColor = Boolean(colorName || colorHexCode);
+
         return (
           <li
             className={`order-item ${isCancelledItem ? 'disabled' : ''}`}
@@ -122,9 +134,31 @@ const OrderDetailsItemsList = ({
               ) : (
                 <span className="name">{itemName || '-'}</span>
               )}
-              <span className="meta">
-                {item?.variant}
-                {` • Qty ${item?.quantity}`}
+              <span className="meta d-flex align-items-center flex-wrap gap-1">
+                {item?.variant && <span>{item.variant}</span>}
+                {hasColor && (
+                  <span className="d-inline-flex align-items-center gap-1">
+                    {item?.variant && <span style={{ color: '#bbb', margin: '0 2px' }}>•</span>}
+                    {colorHexCode && (
+                      <span
+                        style={{
+                          width: '10px',
+                          height: '10px',
+                          borderRadius: '50%',
+                          backgroundColor: colorHexCode,
+                          display: 'inline-block',
+                          border: '1px solid rgba(0, 0, 0, 0.2)',
+                          flexShrink: 0,
+                        }}
+                      />
+                    )}
+                    <span>{colorName || colorHexCode}</span>
+                  </span>
+                )}
+                <span>
+                  {(item?.variant || hasColor) ? ' • ' : ''}
+                  Qty {item?.quantity}
+                </span>
               </span>
               {isCancelledItem && (
                 <span className="meta current-status">Cancelled</span>

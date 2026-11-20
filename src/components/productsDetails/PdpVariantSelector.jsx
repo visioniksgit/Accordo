@@ -31,7 +31,6 @@ const PdpVariantSelector = ({
 
   const handleVariantSelect = (variant) => {
     const routeVariant = getVariantRouteValue(variant);
-    const currentVariant = searchParams?.get('productVariant') || '';
     const nextParams = new URLSearchParams(searchParams?.toString());
 
     if (routeVariant) {
@@ -40,16 +39,65 @@ const PdpVariantSelector = ({
       nextParams.delete('productVariant');
     }
 
+    // Preserve color if present in the new variant, otherwise pick the first color of the new variant
+    const currentColorUid = productState?.selectedColorUid;
+    const currentColor = productState?.selectedColor;
+    const variantColors = Array.isArray(variant?.colors) ? variant.colors : [];
+
+    const matchingColor = variantColors.find(
+      (c) =>
+        c?.uid === currentColorUid ||
+        (currentColor?.slug && c?.slug === currentColor?.slug) ||
+        (currentColor?.name && c?.name?.toLowerCase() === currentColor?.name?.toLowerCase())
+    );
+    const resolvedColor = matchingColor || variantColors[0] || null;
+
+    if (resolvedColor?.slug) {
+      nextParams.set('color', resolvedColor.slug);
+    } else if (resolvedColor?.name) {
+      nextParams.set('color', resolvedColor.name.toLowerCase().replace(/\s+/g, '-'));
+    } else {
+      nextParams.delete('color');
+    }
+
     const nextUrl = `${pathname}${nextParams.toString() ? `?${nextParams.toString()}` : ''}`;
 
     setProductState((prev) => ({
       ...prev,
       selectedVariation: variant,
+      selectedColorUid: resolvedColor?.uid || null,
+      selectedColor: resolvedColor || null,
       variantImageRequestedAt: Date.now(),
     }));
 
-    if (routeVariant !== currentVariant) {
-      router.push(nextUrl, { scroll: false });
+    router.push(nextUrl, { scroll: false });
+  };
+
+  const handleColorSelect = (color) => {
+    setProductState((prev) => ({
+      ...prev,
+      selectedColorUid: color?.uid || null,
+      selectedColor: color || null,
+    }));
+
+    const colorSlug =
+      color?.slug ||
+      (color?.name ? color.name.toLowerCase().replace(/\s+/g, '-') : '');
+
+    if (typeof window !== 'undefined') {
+      const currentParams = new URLSearchParams(window.location.search);
+      const currentColorParam = currentParams.get('color') || '';
+
+      if (colorSlug !== currentColorParam) {
+        if (colorSlug) {
+          currentParams.set('color', colorSlug);
+        } else {
+          currentParams.delete('color');
+        }
+        const queryString = currentParams.toString();
+        const nextUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ''}`;
+        window.history.replaceState(window.history.state, '', nextUrl);
+      }
     }
   };
 
@@ -63,13 +111,8 @@ const PdpVariantSelector = ({
           key={selectedVariation?.uid}
           selectedVariant={selectedVariation}
           selectedColorUid={productState?.selectedColorUid}
-          onSelectColor={(color) => {
-            setProductState((prev) => ({
-              ...prev,
-              selectedColorUid: color?.uid || null,
-              selectedColor: color || null,
-            }));
-          }}
+          onSelectColor={handleColorSelect}
+          syncWithUrl={true}
         />
 
         <fieldset className="variation-fieldset">

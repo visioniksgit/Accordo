@@ -281,9 +281,10 @@ export const fetchProducts = async (params = {}) => {
  * @param {string} productVariant - Product variant identifier (optional) to fetch specific variant details on PDP
  * @param {boolean} isServer - If true, fetches public cacheable data without auth headers.
  */
-export const fetchProductDetailRaw = async ({ slug, productVariant, isServer = false, platform = 'web' }) => {
+export const fetchProductDetailRaw = async ({ slug, productVariant, colorSlug = '', isServer = false, platform = 'web' }) => {
   const query = new URLSearchParams();
   if (productVariant) query.set('productVariant', productVariant);
+  if (colorSlug) query.set('color', colorSlug);
   if (platform) query.set('platform', platform);
   query.set('section', '1'); // 2, 3 for
   const queryString = query.toString();
@@ -344,10 +345,11 @@ export const fetchProductDetailRaw = async ({ slug, productVariant, isServer = f
  * @param {string} productVariant - Product variant identifier (optional)
  * @param {boolean} isServer - If true, fetches public cacheable data without auth headers.
  */
-export const fetchProductDetailSection = async ({ slug, section, productVariant, isServer = false, platform = 'web' }) => {
+export const fetchProductDetailSection = async ({ slug, section, productVariant, colorSlug = '', isServer = false, platform = 'web' }) => {
   const query = new URLSearchParams();
   if (productVariant) query.set('productVariant', productVariant);
   if (platform) query.set('platform', platform);
+  if (colorSlug) query.set('color', colorSlug);
   query.set('section', String(section));
 
   const queryString = query.toString();
