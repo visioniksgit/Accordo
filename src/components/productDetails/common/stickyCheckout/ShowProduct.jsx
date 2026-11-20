@@ -17,6 +17,22 @@ const ShowProduct = ({
   isDoctorProduct,
   isVerifiedDoctor,
 }) => {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 992px)');
+    setIsDesktop(mediaQuery.matches);
+
+    const handler = (e) => setIsDesktop(e.matches);
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', handler);
+      return () => mediaQuery.removeEventListener('change', handler);
+    } else if (typeof mediaQuery.addListener === 'function') {
+      mediaQuery.addListener(handler);
+      return () => mediaQuery.removeListener(handler);
+    }
+  }, []);
+
   const { convertCurrency } = useContext(SettingContext);
   const {
     cartProducts,
@@ -259,6 +275,8 @@ const ShowProduct = ({
       false
     );
   };
+
+  if (!isDesktop) return null;
 
   return (
     <div className="sticky-bottom-cart d-none d-lg-block">

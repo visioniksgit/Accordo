@@ -261,13 +261,15 @@
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  border: 1px solid #ffe0b2;
-  background: #fff4e5;
-  color: #f57c00;
+  border: 1px solid color-mix(in srgb, var(--theme-color) 35%, #F7F9FE 65%);
+  background: color-mix(in srgb, var(--theme-color) 12%, #F7F9FE 88%);
+  color: var(--theme-color);
   position: relative;
   flex-shrink: 0;
   transition:
     background 0.15s,
+    color 0.15s,
+    border-color 0.15s,
     transform 0.1s;
 
   &:disabled {
@@ -277,9 +279,9 @@
   }
 
   &:hover {
-    background: #e6f7f1;
-    color: #166a4c;
-    border: 1px solid #a6e3cd;
+    background: var(--theme-color);
+    color: #ffffff;
+    border-color: var(--theme-color);
   }
 
   &:active {

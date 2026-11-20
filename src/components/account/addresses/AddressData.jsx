@@ -14,7 +14,7 @@ import { Col, Row } from 'reactstrap';
 import { ToastNotification } from '@/utils/customFunctions/ToastNotification';
 import { useDeleteCustomerAddress } from '@/utils/hooks/useCustomerAddress';
 import { useQueryClient } from '@tanstack/react-query';
-import emptyImage from '../../../../public/assets/svg/empty-items.svg';
+import emptyImage from '../../../../public/assets/images/product/no-orders.png';
 import { formatAddress } from '@/utils/helpers';
 import { capitalizeWords } from '@/utils/customFunctions/Capitalize';
 

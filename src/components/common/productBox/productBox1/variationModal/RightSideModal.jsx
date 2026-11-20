@@ -187,16 +187,24 @@ const RightVariationModal = ({
         ? variation.colors[0]
         : null;
 
-    setCloneVariation((prev) => ({
-      ...prev,
-      attributeValues: attributeIds,
-      variantIds: attributeIds,
-      selectedVariation: variation,
-      variation: variation,
-      variation_id: nextVariationId,
-      selectedColorUid: defaultColor?.uid || null,
-      selectedColor: defaultColor || null,
-    }));
+    setCloneVariation((prev) => {
+      const currentColorUid = prev?.selectedColorUid;
+      const matchingColor = Array.isArray(variation?.colors)
+        ? variation.colors.find((c) => c?.uid === currentColorUid)
+        : null;
+      const resolvedColor = matchingColor || defaultColor;
+
+      return {
+        ...prev,
+        attributeValues: attributeIds,
+        variantIds: attributeIds,
+        selectedVariation: variation,
+        variation: variation,
+        variation_id: nextVariationId,
+        selectedColorUid: resolvedColor?.uid || null,
+        selectedColor: resolvedColor || null,
+      };
+    });
   };
 
   // Auto-select the first available variation to avoid empty state and duplicate selections elsewhwere

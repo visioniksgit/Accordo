@@ -2872,6 +2872,9 @@
   box-shadow: 0 0 3px 1px rgba(variables.$title-color, 0.06);
   transition: all 0.3s ease;
 
+  @media (max-width: 991px) {
+    display: none !important;
+  }
   @include breakpoints.mq-max(lg) {
     display: none !important;
   }
@@ -2880,6 +2883,9 @@
     display: block !important;
     bottom: 0 !important;
 
+    @media (max-width: 991px) {
+      display: none !important;
+    }
     @include breakpoints.mq-max(lg) {
       display: none !important;
     }
@@ -3864,6 +3870,9 @@
     bottom: 0;
     transition: all 0.3s ease;
 
+    @media (max-width: 991px) {
+      display: none !important;
+    }
     @include breakpoints.mq-max(lg) {
       display: none !important;
     }

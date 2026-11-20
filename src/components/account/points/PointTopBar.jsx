@@ -2,7 +2,7 @@ import { useSearchParams } from 'next/navigation';
 import { useCoins } from '@/utils/hooks/useCoins';
 import Loader from '@/layout/loader';
 import NoDataFound from '@/components/common/NoDataFound';
-import emptyImage from '../../../../public/assets/svg/empty-items.svg';
+import emptyImage from '../../../../public/assets/images/product/no-orders.png';
 import PointTable from './PointTable';
 import AccountHeading from '@/components/common/AccountHeading';
 

@@ -179,7 +179,8 @@ const VariationModal = ({
   const isBook = departmentName === 'Books';
 
   const selectedCartItem = useMemo(() => {
-    const byProduct = (item) => String(item?.product_id) === String(productUid);
+    const byProduct = (item) =>
+      String(item?.product_id ?? item?.productUid) === String(productUid);
 
     if (!productUid) {
       return null;
@@ -191,16 +192,32 @@ const VariationModal = ({
       cloneVariation?.selectedVariation?.colors?.[0]?.uid ||
       null;
 
+    const hasAnyColors =
+      (Array.isArray(cloneVariation?.selectedVariation?.colors) &&
+        cloneVariation.selectedVariation.colors.length > 0) ||
+      (Array.isArray(productObj?.colors) && productObj.colors.length > 0);
+
     const matchesColor = (item) => {
-      if (!activeColorUid) return true;
-      const itemColor = item?.color_id ?? item?.colorUid ?? null;
-      return !itemColor || String(itemColor) === String(activeColorUid);
+      if (!hasAnyColors) return true;
+      const itemColor =
+        item?.color_id ??
+        item?.colorUid ??
+        item?.color?.uid ??
+        item?.variation?.color?.uid ??
+        null;
+      if (activeColorUid) {
+        return String(itemColor ?? '') === String(activeColorUid);
+      }
+      return true;
     };
 
     if (!selectedVariationId) {
       return (
         cartProducts.find(
-          (item) => byProduct(item) && !item?.variation_id && matchesColor(item)
+          (item) =>
+            byProduct(item) &&
+            !(item?.variation_id ?? item?.variantUid) &&
+            matchesColor(item)
         ) ?? null
       );
     }
@@ -209,7 +226,8 @@ const VariationModal = ({
       cartProducts.find(
         (item) =>
           byProduct(item) &&
-          String(item?.variation_id) === String(selectedVariationId) &&
+          String(item?.variation_id ?? item?.variantUid) ===
+          String(selectedVariationId) &&
           matchesColor(item)
       ) ?? null
     );
@@ -220,9 +238,10 @@ const VariationModal = ({
     cloneVariation?.selectedColorUid,
     cloneVariation?.selectedColor?.uid,
     cloneVariation?.selectedVariation?.colors,
+    productObj?.colors,
   ]);
 
-  const productQty = selectedCartItem?.quantity ?? 0;
+  const productQty = selectedCartItem?.quantity ?? selectedCartItem?.qty ?? 0;
   const maxAvailableQty = getAvailableQuantity(
     selectedCartItem,
     cloneVariation?.selectedVariation,
@@ -381,14 +400,15 @@ const VariationModal = ({
     const activeColorUid =
       selectedCartItem.color_id ??
       selectedCartItem.colorUid ??
+      selectedCartItem?.color?.uid ??
       cloneVariation?.selectedColorUid ??
       cloneVariation?.selectedColor?.uid ??
       null;
 
     setPendingAction('inc');
     addToCartMutation.mutate({
-      productUid: selectedCartItem.product_id,
-      variantUid: selectedCartItem.variation_id ?? null,
+      productUid: selectedCartItem.product_id ?? selectedCartItem.productUid ?? productUid,
+      variantUid: selectedCartItem.variation_id ?? selectedCartItem.variantUid ?? selectedVariationId ?? null,
       ...(activeColorUid ? { colorUid: activeColorUid } : {}),
     });
   };
@@ -401,14 +421,15 @@ const VariationModal = ({
     const activeColorUid =
       selectedCartItem.color_id ??
       selectedCartItem.colorUid ??
+      selectedCartItem?.color?.uid ??
       cloneVariation?.selectedColorUid ??
       cloneVariation?.selectedColor?.uid ??
       null;
 
     setPendingAction('dec');
     removeFromCartMutation.mutate({
-      productUid: selectedCartItem.product_id,
-      variantUid: selectedCartItem.variation_id ?? null,
+      productUid: selectedCartItem.product_id ?? selectedCartItem.productUid ?? productUid,
+      variantUid: selectedCartItem.variation_id ?? selectedCartItem.variantUid ?? selectedVariationId ?? null,
       ...(activeColorUid ? { colorUid: activeColorUid } : {}),
     });
   };

@@ -92,6 +92,20 @@ const ProductBox1 = ({
     setSelectedColorUid(color.uid);
   };
 
+  const selectedVariant = useMemo(() => {
+    if (!productVariants.length) return null;
+    if (selectedColorUid) {
+      const match = productVariants.find(
+        (v) =>
+          v?.colors?.some((c) => c?.uid === selectedColorUid) ||
+          v?.colorUid === selectedColorUid ||
+          (Array.isArray(v?.colorUids) && v.colorUids.includes(selectedColorUid))
+      );
+      if (match) return match;
+    }
+    return productVariants[0];
+  }, [productVariants, selectedColorUid]);
+
   const displayPrices = useMemo(() => {
     const variations = productDetail?.variations;
     if (
@@ -407,6 +421,7 @@ const ProductBox1 = ({
             {addAction && (
               <ProductBox1Cart
                 productObj={productDetail}
+                selectedVariant={selectedVariant}
                 selectedColorUid={selectedColorUid}
                 selectedColor={selectedColor}
                 showBuyNow={showBuyNow}
