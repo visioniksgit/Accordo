@@ -36,9 +36,9 @@ const TYPE_CONFIG_MAP = {
     bgVar: '--search-icon-healthinterest-bg',
     colorVar: '--search-icon-healthinterest-color',
   },
-  herb: {
-    subtext: 'Herb detail',
-    badge: 'Herb',
+  brand: {
+    subtext: 'Brand name',
+    badge: 'brand',
     bgVar: '--search-icon-herb-bg',
     colorVar: '--search-icon-herb-color',
   },
