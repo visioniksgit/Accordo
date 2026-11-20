@@ -143,8 +143,8 @@ const ShopByHealthConcerns = () => {
         <Col xs={9} sm={10}>
           <CustomHeading
             customClass="mb-0"
-            title="TOP BRANDS WE WORK WITH"
-            subTitle="Quality products from most trusted names in the industry."
+            title="SHOP BY BRAND"
+            subTitle="Explore quality products from leading and trusted brands, all in one place."
           />
         </Col>
         <Col xs={3} sm={2} className="text-end">

@@ -67,7 +67,7 @@ const TopBrandsMarquee = ({
     const href = `/collections?brand=${encodeURIComponent(brandSlug)}`;
 
     return (
-      <Link
+      <div
         key={`${keyPrefix}-${brand.uid}`}
         href={href}
         className={styles.brandCard}
@@ -99,7 +99,7 @@ const TopBrandsMarquee = ({
         ) : (
           <BrandNamePill name={brandName} />
         )}
-      </Link>
+      </div>
     );
   };
 
@@ -111,7 +111,7 @@ const TopBrandsMarquee = ({
         noRowCol={true}
       >
         <Row className="align-items-center mb-2">
-          <Col xs={8} sm={9} md={10}>
+          <Col xs={12}>
             <CustomHeading customClass="mb-0" title={title} subTitle={subTitle} />
           </Col>
         </Row>
@@ -138,10 +138,10 @@ const TopBrandsMarquee = ({
     >
       {/* ── Section Header ── */}
       <Row className="align-items-center mb-2">
-        <Col xs={8} sm={9} md={10}>
+        <Col xs={12}>
           <CustomHeading customClass="mb-0" title={title} subTitle={subTitle} />
         </Col>
-        <Col xs={4} sm={3} md={2} className="text-end">
+        {/* <Col xs={4} sm={3} md={2} className="text-end">
           <Link
             prefetch={false}
             href={viewAllLink}
@@ -149,7 +149,7 @@ const TopBrandsMarquee = ({
           >
             {viewAllText}
           </Link>
-        </Col>
+        </Col> */}
       </Row>
 
       {/* ── Infinite Scrolling Marquee Track ── */}
