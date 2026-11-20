@@ -4,13 +4,21 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { RiCheckboxCircleFill, RiMapPinLine, RiCoinsLine } from 'react-icons/ri';
+import { RiMapPinLine, RiCoinsLine } from 'react-icons/ri';
 import { useOrderDetail } from '@/utils/hooks/useMyOrders';
 import styles from './OrderSuccessPage.module.scss';
 import { trackMetaEvent } from '@/utils/metaPixel';
 import { playOrderSuccessSound } from '@/utils/orderSuccessSound';
+import accordoSuccessCheck from '../../../public/assets/images/accordo-motion/accordo-success-check.json';
 
 const Confetti = dynamic(() => import('react-confetti-boom'), { ssr: false });
+const Lottie = dynamic(
+  () => import('lottie-react').then((mod) => mod.default),
+  {
+    ssr: false,
+    loading: () => <div style={{ width: 90, height: 90 }} />,
+  }
+);
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -94,7 +102,7 @@ const OrderSuccessPage = () => {
     // Otherwise, tick down every 1 second
     const timer = setTimeout(() => {
       setRedirectIn((prev) => prev - 1);
-    }, 10000);
+    }, 1000);
 
     // Cleanup the timeout on unmount or re-render
     return () => clearTimeout(timer);
@@ -230,7 +238,15 @@ const OrderSuccessPage = () => {
           {/* ── Hero ── */}
           <div className={styles.hero}>
             <div className={styles.icon}>
-              <RiCheckboxCircleFill />
+              <Lottie
+                animationData={accordoSuccessCheck}
+                loop={false}
+                autoplay
+                style={{
+                  width: 90,
+                  height: 90,
+                }}
+              />
             </div>
             <h1 className={styles.title}>Order Placed Successfully!</h1>
             {displayOrderId && (

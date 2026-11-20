@@ -27,10 +27,12 @@
 }
 
 .icon {
-  font-size: 72px;
-  color: #22c55e;
-  line-height: 1;
-  margin-bottom: 12px;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .title {
