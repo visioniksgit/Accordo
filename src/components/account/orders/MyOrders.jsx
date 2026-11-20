@@ -926,7 +926,7 @@ const MyOrders = () => {
                             }}
                           >
                             Track Order{' '}
-                            <CgTrack className="stroke-w-1" color="#f5c518" />
+                            <CgTrack className="stroke-w-1" color="var(--theme-color)" />
                           </button>
 
                           {/* Optional: Add your alternative primary button here for non-delivered states */}

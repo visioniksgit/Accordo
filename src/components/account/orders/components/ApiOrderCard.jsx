@@ -146,7 +146,7 @@ const ApiOrderCard = ({
               }, 500);
             }}
           >
-            Track Order <CgTrack color="#f5c518" />
+            Track Order <CgTrack color="var(--theme-color)" />
           </button>
           <button
             type="button"

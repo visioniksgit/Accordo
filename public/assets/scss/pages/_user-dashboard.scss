@@ -3169,7 +3169,7 @@
       overflow-y: auto;
       overflow-x: hidden;
       padding: 16px;
-      background-color: var(--page-bg-color);
+      background-color: var(--ffffff);
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -3315,7 +3315,7 @@
       }
 
       .btn-tracking {
-        color: var(--theme-color-dark);
+        color: var(--theme-color);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -3330,7 +3330,7 @@
         font-size: 12px;
         font-weight: 600;
         text-decoration: none;
-        border: 1px solid var(--EDF2FF);
+        border: 1px solid var(--theme-color);
         background: var(--EDF2FF);
 
         svg {
@@ -3340,15 +3340,15 @@
       }
 
       .btn-tracking-danger {
-        color: #dc2626;
-        border-color: rgba(220, 38, 38, 0.25);
-        background: rgba(220, 38, 38, 0.1);
+        color: var(--red);
+        border-color: var(--red);
+        background: var(--red-bg-light);
 
-        &:hover {
-          color: #b91c1c;
-          border-color: rgba(220, 38, 38, 0.4);
-          background: rgba(220, 38, 38, 0.16);
-        }
+        // &:hover {
+        //   color: #b91c1c;
+        //   border-color: rgba(220, 38, 38, 0.4);
+        //   background: rgba(220, 38, 38, 0.16);
+        // }
       }
 
       .order-count {
@@ -4198,8 +4198,8 @@
 
   .order-card {
     font-family: system-ui, sans-serif;
-    background: #fff;
-    border: 1px solid variables.$order-border;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
     border-radius: 14px;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 10px -2px;
   }
@@ -4379,7 +4379,7 @@
 
   .order-footer {
     display: flex;
-    border-top: 1px solid variables.$order-border;
+    border-top: 1px solid var(--border-color);
 
     .btn {
       flex: 1;

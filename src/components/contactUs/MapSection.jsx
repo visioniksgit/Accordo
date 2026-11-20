@@ -9,14 +9,14 @@ const MapSection = () => {
     >
       <div className="map-box">
         <iframe
-          src="https://www.google.com/maps?q=HYPLAP+IT+SOLUTION+PVT+LTD,+701+Haware+Infotech+Park,+Vashi,+Navi+Mumbai,+Maharashtra+400703&output=embed"
+          src="https://www.google.com/maps?q=2439%2BQ56,+D+Mart+Rd,+Sector+5,+New+Panvel+East,+Panvel,+Maharashtra+410206&output=embed"
           style={{ border: 0 }}
           width="100%"
           height="450"
           allowFullScreen
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
-          title="HYPLAP IT SOLUTION PVT LTD Location"
+          title="Accordo"
         />
       </div>
     </WrapperComponent>
