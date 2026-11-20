@@ -955,6 +955,10 @@
         @include common.line(1);
       }
 
+      h3.has-variant a.name {
+        margin-bottom: 4px;
+      }
+
       a.name {
         @include common.line(2);
         color: var(--product-card-name);
@@ -968,6 +972,33 @@
           font-size: clamp(0.8rem, 0.7rem + 0.5vw, 1.1rem);
           line-height: 1.2;
           margin-bottom: 8px;
+        }
+      }
+
+      .product-variant-name {
+        font-size: 12px;
+        font-weight: 500;
+        color: #535E75;
+        line-height: 1.3;
+        margin-bottom: 0.75em;
+        @include common.line(1);
+
+        a,
+        .variant-link {
+          color: inherit;
+          text-decoration: none;
+          display: inline-block;
+          max-width: 100%;
+          @include common.line(1);
+
+          &:hover {
+            color: var(--theme-color);
+          }
+        }
+
+        @include breakpoints.mq-max(xs) {
+          font-size: 11px;
+          margin-bottom: 6px;
         }
       }
 

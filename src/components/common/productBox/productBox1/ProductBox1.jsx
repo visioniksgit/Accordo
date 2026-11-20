@@ -224,6 +224,36 @@ const ProductBox1 = ({
     );
   }, [productDetail]);
 
+  const variantName = useMemo(() => {
+    const rawVariantName =
+      selectedVariant?.name ||
+      selectedVariant?.variation_name ||
+      '';
+
+    if (rawVariantName && rawVariantName.trim() !== productDetail?.name?.trim()) {
+      return rawVariantName.trim();
+    }
+
+    if (Array.isArray(selectedVariant?.attribute_values) && selectedVariant.attribute_values.length > 0) {
+      const attrString = selectedVariant.attribute_values
+        .map((item) => item?.value)
+        .filter(Boolean)
+        .join(' / ');
+      if (attrString && attrString.trim() !== productDetail?.name?.trim()) {
+        return attrString.trim();
+      }
+    }
+
+    if (selectedVariant?.weight || selectedVariant?.unit) {
+      const weightStr = `${selectedVariant.weight || ''}${selectedVariant.unit ? ` ${selectedVariant.unit}` : ''}`.trim();
+      if (weightStr && weightStr !== productDetail?.name?.trim()) {
+        return weightStr;
+      }
+    }
+
+    return '';
+  }, [selectedVariant, productDetail?.name]);
+
   const imageSource = useMemo(() => {
     const rawUrl =
       productDetail?.coverImage ||
@@ -275,7 +305,9 @@ const ProductBox1 = ({
               <img
                 src={resolvedSrc}
                 alt={
-                  productDetail?.name || 'Product image'
+                  variantName
+                    ? `${productDetail?.name || ''} - ${variantName}`
+                    : productDetail?.name || 'Product image'
                 }
                 className="img-fluid h-100 product-image-preloaded"
                 draggable={false}
@@ -306,11 +338,18 @@ const ProductBox1 = ({
               {companyName}
             </span>
           )}
-          <h3 style={{ fontSize: 'inherit' }}>
+          <h3 style={{ fontSize: 'inherit' }} className={variantName ? 'has-variant' : ''}>
             <Link title={productDetail?.name} href={productHref} prefetch={false} className="name">
               {productDetail?.name}
             </Link>
           </h3>
+          {variantName && (
+            <div className="product-variant-name" title={variantName}>
+              <Link href={productHref} prefetch={false} className="variant-link">
+                {variantName}
+              </Link>
+            </div>
+          )}
           <div className="product-detail-bottom">
             <div className="meta-1">
               <div className="">
