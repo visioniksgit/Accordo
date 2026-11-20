@@ -13,7 +13,10 @@ import accordoSuccessCheck from '../../../public/assets/images/accordo-motion/ac
 
 const Confetti = dynamic(() => import('react-confetti-boom'), { ssr: false });
 const Lottie = dynamic(
-  () => import('lottie-react').then((mod) => mod.default),
+  () =>
+    import('lottie-react').then(
+      (mod) => mod.Lottie || mod.default?.Lottie || mod.default
+    ),
   {
     ssr: false,
     loading: () => <div style={{ width: 90, height: 90 }} />,
@@ -239,9 +242,10 @@ const OrderSuccessPage = () => {
           <div className={styles.hero}>
             <div className={styles.icon}>
               <Lottie
-                animationData={accordoSuccessCheck}
+                src={accordoSuccessCheck}
+                animationdata={accordoSuccessCheck}
                 loop={false}
-                autoplay
+                autoplay={true}
                 style={{
                   width: 90,
                   height: 90,
