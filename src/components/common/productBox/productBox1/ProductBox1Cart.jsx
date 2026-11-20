@@ -11,6 +11,7 @@ import { trackMetaEvent } from '@/utils/metaPixel';
 
 const ProductBox1Cart = ({
   productObj,
+  selectedVariant: propSelectedVariant,
   selectedColorUid: propSelectedColorUid,
   selectedColor: propSelectedColor,
   showBuyNow = true,
@@ -169,6 +170,7 @@ const ProductBox1Cart = ({
 
   // 3. Build the cloneVariation so handleIncDec knows WHICH variant to target
   const targetVariant =
+    propSelectedVariant ||
     activeVariantObject ||
     singleVariant ||
     productObj?.productVariants?.[0] ||
@@ -178,8 +180,6 @@ const ProductBox1Cart = ({
     if (propSelectedColorUid) return propSelectedColorUid;
     const v = targetVariant;
     return (
-      cartItemsForProduct[0]?.color_id ||
-      cartItemsForProduct[0]?.colorUid ||
       v?.selectedColorUid ||
       v?.selectedColor?.uid ||
       v?.colorUid ||
@@ -198,7 +198,30 @@ const ProductBox1Cart = ({
       productObj?.colorUid ||
       null
     );
-  }, [propSelectedColorUid, targetVariant, cartItemsForProduct, productObj]);
+  }, [propSelectedColorUid, targetVariant, productObj]);
+
+  const matchedCartItem = useMemo(() => {
+    if (!productUid || !cartItemsForProduct.length) return null;
+    const targetVarUid = getVariantUid(targetVariant);
+
+    return (
+      cartItemsForProduct.find((item) => {
+        const itemVarUid = item?.variantUid ?? item?.variation_id ?? null;
+        const itemColorUid =
+          item?.color_id ?? item?.colorUid ?? item?.color?.uid ?? null;
+
+        const varMatches = targetVarUid
+          ? String(itemVarUid ?? '') === String(targetVarUid)
+          : !itemVarUid;
+
+        const colorMatches = activeColorUid
+          ? String(itemColorUid ?? '') === String(activeColorUid)
+          : true;
+
+        return varMatches && colorMatches;
+      }) || null
+    );
+  }, [productUid, cartItemsForProduct, targetVariant, activeColorUid]);
 
   const cloneVariation = targetVariant
     ? {
@@ -221,7 +244,13 @@ const ProductBox1Cart = ({
   // 4. Update maxAvailableQty to check the active variant
   const maxAvailableQty = useMemo(() => {
     const rawQuantity =
-      cartItemsForProduct[0]?.variant?.stockQty ??
+      matchedCartItem?.variant?.stockQty ??
+      matchedCartItem?.variation?.quantity ??
+      targetVariant?.stockQty ??
+      targetVariant?.quantity ??
+      productObj?.stockQty ??
+      productObj?.quantity ??
+      null;
       cartItemsForProduct[0]?.variation?.quantity ??
       singleVariant?.stockQty ??
       singleVariant?.quantity ??
@@ -272,19 +301,15 @@ const ProductBox1Cart = ({
     hasStockQuantity(selectedOrDefaultVariant, productObj, ...variantList);
 
   useEffect(() => {
-    if (cartItemsForProduct.length > 0) {
-      // Sum the total quantity of this product across all selected variants
-      const totalQty = cartItemsForProduct.reduce(
-        (sum, item) => sum + Number(item?.qty ?? item?.quantity ?? 0),
-        0
-      );
-      setProductQty(totalQty);
-      setIsOpen(totalQty > 0);
+    if (matchedCartItem) {
+      const qty = Number(matchedCartItem?.qty ?? matchedCartItem?.quantity ?? 1);
+      setProductQty(qty);
+      setIsOpen(qty > 0);
     } else {
       setProductQty(0);
       setIsOpen(false);
     }
-  }, [cartItemsForProduct]);
+  }, [matchedCartItem]);
 
   const handleAddToCart = () => {
     if (isProductInStock) {
@@ -384,8 +409,8 @@ const ProductBox1Cart = ({
   };
 
   const handleIncrease = () => {
-    // Safety check: If multiple different variants are in the cart, open the modal
-    if (shouldUseVariationModal && cartItemsForProduct.length > 1) {
+    // Safety check: If multiple different variants are in the cart and we have no matched item, open modal
+    if (shouldUseVariationModal && !matchedCartItem && cartItemsForProduct.length > 1) {
       setVariationModal(productObj?.uid);
       return;
     }
@@ -411,8 +436,8 @@ const ProductBox1Cart = ({
   };
 
   const handleDecrease = () => {
-    // Safety check: If multiple different variants are in the cart, open the modal
-    if (shouldUseVariationModal && cartItemsForProduct.length > 1) {
+    // Safety check: If multiple different variants are in the cart and we have no matched item, open modal
+    if (shouldUseVariationModal && !matchedCartItem && cartItemsForProduct.length > 1) {
       setVariationModal(productObj?.uid);
       return;
     }

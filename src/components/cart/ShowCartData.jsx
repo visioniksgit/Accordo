@@ -4,7 +4,7 @@ import { Col, Table } from 'reactstrap';
 import CartData from './CartData';
 import CartContext from '@/helper/cartContext';
 import NoDataFound from '../common/NoDataFound';
-import emptyImage from '../../../public/assets/svg/empty-items.svg';
+import emptyImage from '../../../public/assets/images/product/no-orders.png';
 
 const ShowCartData = () => {
   const { cartProducts } = useContext(CartContext);

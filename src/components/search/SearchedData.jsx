@@ -2,7 +2,7 @@ import WrapperComponent from '../common/WrapperComponent';
 import { Col, Row } from 'reactstrap';
 import ProductBox1 from '../common/productBox/productBox1/ProductBox1';
 import NoDataFound from '../common/NoDataFound';
-import emptyImage from '../../../..../..//public/assets/svg/empty-items.svg';
+import emptyImage from '../../../../../public/assets/images/product/no-orders.png';
 
 const SearchedData = ({ data }) => {
   return (

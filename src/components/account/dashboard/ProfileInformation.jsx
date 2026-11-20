@@ -227,7 +227,16 @@ const ProfileInformation = () => {
       {/* ── CARD 1: PERSONAL INFORMATION ────────────────────────── */}
       <div className="profile-wireframe-card dashboard-bg-box mb-4">
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h4 className="m-0 fw-bold">Personal Information</h4>
+          <div className="">
+            <div className="greeting-left">
+              <h3 className="greeting-user text-capitalize fw-bold">
+                Hello, {userData?.firstName} 👋
+              </h3>
+              <span className="greeting-subtext">
+                Manage your profile and preferences
+              </span>
+            </div>
+          </div>
           <Btn
             type="button"
             className="btn btn-sm outline-theme d-inline-flex align-items-center gap-2"

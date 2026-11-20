@@ -33,7 +33,7 @@ const DashboardContent = () => {
   return (
     <div className="dashboard-home">
       <Row className="g-4 dashboard-wireframe-layout">
-        <Col lg={12}>
+        {/* <Col lg={12}>
           <div className="dashboard-top-card profile-wireframe-card">
             <div className="greeting-left">
               <h3 className="greeting-user text-capitalize">
@@ -42,56 +42,8 @@ const DashboardContent = () => {
               <span className="greeting-subtext">
                 Manage your profile and preferences
               </span>
-
-              <div className="d-flex align-items-center gap-3 mt-1">
-                {userData?.isDoctor && (
-                  <div className="d-flex align-items-start gap-2 flex-column w-100">
-                    {/* Badge Section */}
-                    <div className="d-flex flex-column gap-2">
-                      <div
-                        className={`role-badge inner-kyc-badge ${currentKycStatus}`}
-                      >
-                        <span className="role-text">Vaidya</span>
-                        {showKycStatus && (
-                          <span className="ms-2">(KYC {currentKycStatus})</span>
-                        )}
-                      </div>
-
-                      {/* Rejection Reason Inline */}
-                      {showKycStatus && currentKycStatus === 'rejected' && (
-                        <div className="rejection-note-inline">
-                          <div className="note-text">
-                            <span className="note-label">Reason:</span>{' '}
-                            {rejectionReason}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Reapply Wizard Action Link - Forced Single Line */}
-                    {showKycStatus && currentKycStatus === 'rejected' && (
-                      <div className="kyc-support-text">
-                        <span className="text-secondary">Please </span>
-                        <button
-                          type="button"
-                          onClick={() => setShowReapplyModal(true)}
-                          className="support-mail-link btn-link-styled"
-                        >
-                          reapply here
-                        </button>
-                        <span className="text-secondary">
-                          {' '}
-                          to upload corrected documents.
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
             </div>
 
-            {/* {(Number(userData?.walletBalance) > 0 ||
-              Number(userData?.orderCount) > 0) && ( */}
             {Number(userData?.walletBalance) > 0 && (
               <div className="stats-right">
                 {Number(userData?.walletBalance) > 0 && (
@@ -100,17 +52,10 @@ const DashboardContent = () => {
                     <h4 className="stat-value">{userData?.walletBalance}</h4>
                   </div>
                 )}
-
-                {/* {Number(userData?.orderCount) > 0 && (
-                  <div className="stat-box">
-                    <span className="stat-label">Orders</span>
-                    <h4 className="stat-value">{userData?.orderCount}</h4>
-                  </div>
-                )} */}
               </div>
             )}
           </div>
-        </Col>
+        </Col> */}
 
         <Col lg={12}>
           <ProfileInformation />
