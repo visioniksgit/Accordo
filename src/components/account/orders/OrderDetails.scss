@@ -56,7 +56,8 @@ $bg-light: var(--light-gray);
       transition: all 0.2s ease;
 
       &:hover {
-        background: $bg-light;
+        // border: 1px solid var(--border-color);
+        background: var(--ffffff);
         color: $primary-green;
       }
 
