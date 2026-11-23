@@ -21,7 +21,7 @@ export default async function RootLayout({ children }) {
     <>
       {/* Meta Pixel Code */}
       {/* <Script id="meta-pixel" strategy="afterInteractive"> */}
-      <Script id="meta-pixel" strategy="lazyOnload">
+      {/* <Script id="meta-pixel" strategy="lazyOnload">
         {`
           !function(f,b,e,v,n,t,s)
           {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -43,7 +43,7 @@ export default async function RootLayout({ children }) {
           src="https://www.facebook.com/tr?id=348446167114642&ev=PageView&noscript=1"
           alt=""
         />
-      </noscript>
+      </noscript> */}
       {/* End Meta Pixel Code */}
       <MainLayout dehydratedState={dehydratedState}>{children}</MainLayout>
     </>
