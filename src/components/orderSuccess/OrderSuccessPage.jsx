@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic';
 import { RiMapPinLine, RiCoinsLine } from 'react-icons/ri';
 import { useOrderDetail } from '@/utils/hooks/useMyOrders';
 import styles from './OrderSuccessPage.module.scss';
-import { trackMetaEvent } from '@/utils/metaPixel';
+// import { trackMetaEvent } from '@/utils/metaPixel';
 import { playOrderSuccessSound } from '@/utils/orderSuccessSound';
 import accordoSuccessCheck from '../../../public/assets/images/accordo-motion/accordo-success-check.json';
 
@@ -175,20 +175,20 @@ const OrderSuccessPage = () => {
       0
     );
 
-    trackMetaEvent('Purchase', {
-      content_ids: orderItems
-        .map((item) => String(item?.variantUid || item?.variantId || item?.id))
-        .filter(Boolean),
-      content_type: 'product',
-      value: orderTotal,
-      currency: 'INR',
-      num_items: totalQuantity || 1,
-      contents: orderItems.map((item) => ({
-        id: String(item?.variantUid || item?.variantId || item?.id),
-        quantity: Number(item?.quantity) || 1,
-        item_price: Number(item?.price || 0),
-      })),
-    });
+    // trackMetaEvent('Purchase', {
+    //   content_ids: orderItems
+    //     .map((item) => String(item?.variantUid || item?.variantId || item?.id))
+    //     .filter(Boolean),
+    //   content_type: 'product',
+    //   value: orderTotal,
+    //   currency: 'INR',
+    //   num_items: totalQuantity || 1,
+    //   contents: orderItems.map((item) => ({
+    //     id: String(item?.variantUid || item?.variantId || item?.id),
+    //     quantity: Number(item?.quantity) || 1,
+    //     item_price: Number(item?.price || 0),
+    //   })),
+    // });
 
     if (typeof window !== 'undefined') {
       sessionStorage.setItem(purchaseStorageKey, 'true');

@@ -21,7 +21,7 @@ import { useUser } from '@/utils/hooks/useUser';
 import OtpLoginModal from '@/components/auth/login/OtpLoginModal';
 import { ToastNotification } from '@/utils/customFunctions/ToastNotification';
 import ProductDetailSkeleton from './ProductDetailSkeleton';
-import { trackMetaEvent } from '@/utils/metaPixel';
+// import { trackMetaEvent } from '@/utils/metaPixel';
 import KeywordsSection from '../common/KeywordsSection';
 import CartContext from '@/helper/cartContext';
 import ProductSpecificationsTable from './ProductSpecificationsTable';
@@ -368,21 +368,21 @@ const ProductsDetailPage = ({ slug }) => {
       product.department?.name ||
       '';
 
-    trackMetaEvent('ViewContent', {
-      content_ids: [String(variantId)],
-      content_type: 'product',
-      content_name: product.name,
-      content_category: categoryName || undefined,
-      value: unitPrice,
-      currency: 'INR',
-      contents: [
-        {
-          id: String(variantId),
-          quantity: 1,
-          item_price: unitPrice,
-        },
-      ],
-    });
+    // trackMetaEvent('ViewContent', {
+    //   content_ids: [String(variantId)],
+    //   content_type: 'product',
+    //   content_name: product.name,
+    //   content_category: categoryName || undefined,
+    //   value: unitPrice,
+    //   currency: 'INR',
+    //   contents: [
+    //     {
+    //       id: String(variantId),
+    //       quantity: 1,
+    //       item_price: unitPrice,
+    //     },
+    //   ],
+    // });
 
     viewContentTrackedRef.current = variantId;
   }, [productState.product, productState.selectedVariation]);

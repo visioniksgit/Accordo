@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import UserContext from '.';
 import { getUserProfile } from '@/api/auth.api';
 import { useRouter } from 'next/navigation';
-import { updateMetaUserData } from '@/utils/metaPixel';
+// import { updateMetaUserData } from '@/utils/metaPixel';
 
 const UserProvider = ({ children, ...props }) => {
   const [userData, setUserData] = useState(null);
@@ -87,15 +87,15 @@ const UserProvider = ({ children, ...props }) => {
       setUserData(user);
       setIsAuthenticated(true);
 
-      if (user) {
-        updateMetaUserData({
-          email: user.email,
-          phone: user.phone,
-          firstName: user.firstName || undefined,
-          lastName: user.lastName || undefined,
-          externalId: user.uid || user.id,
-        });
-      }
+      // if (user) {
+      //   updateMetaUserData({
+      //     email: user.email,
+      //     phone: user.phone,
+      //     firstName: user.firstName || undefined,
+      //     lastName: user.lastName || undefined,
+      //     externalId: user.uid || user.id,
+      //   });
+      // }
       return;
     }
 

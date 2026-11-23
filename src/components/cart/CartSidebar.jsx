@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Cookies from 'js-cookie';
 import { RiArrowLeftLine } from 'react-icons/ri';
 import SettingContext from '@/helper/settingContext';
-import { trackMetaEvent } from '@/utils/metaPixel';
+// import { trackMetaEvent } from '@/utils/metaPixel';
 
 const CartSidebar = () => {
   const { cartProducts, getTotal } = useContext(CartContext);
@@ -23,20 +23,20 @@ const CartSidebar = () => {
       0
     );
 
-    trackMetaEvent('InitiateCheckout', {
-      content_ids: cartProducts
-        .map((item) => String(item?.variation_id || item?.product_id || item?.uid))
-        .filter(Boolean),
-      content_type: 'product',
-      value: totalValue,
-      currency: 'INR',
-      num_items: totalItems,
-      contents: cartProducts.map((item) => ({
-        id: String(item?.variation_id || item?.product_id || item?.uid),
-        quantity: Number(item?.quantity) || 1,
-        item_price: Number(item?.price || item?.unit_price || 0),
-      })),
-    });
+    // trackMetaEvent('InitiateCheckout', {
+    //   content_ids: cartProducts
+    //     .map((item) => String(item?.variation_id || item?.product_id || item?.uid))
+    //     .filter(Boolean),
+    //   content_type: 'product',
+    //   value: totalValue,
+    //   currency: 'INR',
+    //   num_items: totalItems,
+    //   contents: cartProducts.map((item) => ({
+    //     id: String(item?.variation_id || item?.product_id || item?.uid),
+    //     quantity: Number(item?.quantity) || 1,
+    //     item_price: Number(item?.price || item?.unit_price || 0),
+    //   })),
+    // });
   };
 
   return (

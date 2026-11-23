@@ -12,26 +12,26 @@ import {
   useCustomerAddresses,
 } from '@/utils/hooks/useCustomerAddress';
 import { useContext } from 'react';
-import { updateMetaUserData } from '@/utils/metaPixel';
+// import { updateMetaUserData } from '@/utils/metaPixel';
 
-function MetaAddressMatcher({ address, userData }) {
-  useEffect(() => {
-    if (!address) return;
-    updateMetaUserData({
-      email: userData?.email,
-      phone: address?.phone,
-      firstName: address?.firstName,
-      lastName: address?.lastName,
-      city: address?.city,
-      state: address?.state,
-      pincode: address?.pincode,
-      country: address?.countryCode || 'IN',
-      externalId: userData?.uid,
-    });
-  }, [address, userData]);
-
-  return null;
-}
+// function MetaAddressMatcher({ address, userData }) {
+//   useEffect(() => {
+//     if (!address) return;
+//     updateMetaUserData({
+//       email: userData?.email,
+//       phone: address?.phone,
+//       firstName: address?.firstName,
+//       lastName: address?.lastName,
+//       city: address?.city,
+//       state: address?.state,
+//       pincode: address?.pincode,
+//       country: address?.countryCode || 'IN',
+//       externalId: userData?.uid,
+//     });
+//   }, [address, userData]);
+// 
+//   return null;
+// }
 
 const CheckoutForm = () => {
   const [address, setAddress] = useState([]);
@@ -113,10 +113,10 @@ const CheckoutForm = () => {
 
         return (
           <Form>
-            <MetaAddressMatcher
+            {/* <MetaAddressMatcher
               address={selectedShippingAddress}
               userData={userData}
-            />
+            /> */}
             <div className="pb-4 checkout-section-2">
               <Row className="g-sm-4 g-3">
                 <Col xl="7">

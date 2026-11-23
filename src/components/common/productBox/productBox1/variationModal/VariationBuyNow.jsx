@@ -3,7 +3,7 @@ import CartContext from '@/helper/cartContext';
 import { useTranslation } from '@/utils/translations';
 import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
-import { trackMetaEvent } from '@/utils/metaPixel';
+// import { trackMetaEvent } from '@/utils/metaPixel';
 import { setCheckoutRequest } from '@/api/checkout.api';
 
 const VariationBuyNow = ({ cloneVariation, setVariationModal }) => {
@@ -35,13 +35,13 @@ const VariationBuyNow = ({ cloneVariation, setVariationModal }) => {
         0
       );
 
-      trackMetaEvent('InitiateCheckout', {
-        content_ids: [checkoutPayload.variantUid || checkoutPayload.productUid].filter(Boolean),
-        content_type: 'product',
-        value: itemPrice * checkoutPayload.quantity,
-        currency: 'INR',
-        num_items: checkoutPayload.quantity
-      });
+      // trackMetaEvent('InitiateCheckout', {
+      //   content_ids: [checkoutPayload.variantUid || checkoutPayload.productUid].filter(Boolean),
+      //   content_type: 'product',
+      //   value: itemPrice * checkoutPayload.quantity,
+      //   currency: 'INR',
+      //   num_items: checkoutPayload.quantity
+      // });
 
       setCheckoutRequest(checkoutPayload);
       setVariationModal(false);

@@ -21,7 +21,7 @@ import {
   partitionCartItemsByAccess,
 } from '@/utils/cart/cartUtils';
 import { usePathname } from 'next/navigation';
-import { trackMetaEvent } from '@/utils/metaPixel';
+// import { trackMetaEvent } from '@/utils/metaPixel';
 
 const showServerToast = (type, payload, fallbackMessage) => {
   const message = payload?.message || fallbackMessage;
@@ -289,28 +289,28 @@ const CartProvider = ({ children }) => {
               cloneVariation?.uid ||
               productUid;
 
-            trackMetaEvent('AddToCart', {
-              content_ids: [String(variantIdentifier)].filter(Boolean),
-              content_type: 'product',
-              content_name:
-                productObj?.product?.name ||
-                productObj?.name ||
-                '',
-              content_category:
-                productObj?.product?.category?.name ||
-                productObj?.category?.name ||
-                undefined,
-              value: unitPrice * itemQty,
-              currency: 'INR',
-              num_items: itemQty,
-              contents: [
-                {
-                  id: String(variantIdentifier),
-                  quantity: itemQty,
-                  item_price: unitPrice,
-                },
-              ],
-            });
+            // trackMetaEvent('AddToCart', {
+            //   content_ids: [String(variantIdentifier)].filter(Boolean),
+            //   content_type: 'product',
+            //   content_name:
+            //     productObj?.product?.name ||
+            //     productObj?.name ||
+            //     '',
+            //   content_category:
+            //     productObj?.product?.category?.name ||
+            //     productObj?.category?.name ||
+            //     undefined,
+            //   value: unitPrice * itemQty,
+            //   currency: 'INR',
+            //   num_items: itemQty,
+            //   contents: [
+            //     {
+            //       id: String(variantIdentifier),
+            //       quantity: itemQty,
+            //       item_price: unitPrice,
+            //     },
+            //   ],
+            // });
 
             if (shouldOpenCartCanvas) openCartCanvas();
           },

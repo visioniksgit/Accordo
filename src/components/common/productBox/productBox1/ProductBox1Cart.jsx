@@ -7,7 +7,7 @@ import { ToastNotification } from '@/utils/customFunctions/ToastNotification';
 import { CUSTOMER_TYPES, getProductCustomerType } from '@/utils/cart/cartUtils';
 import { setCheckoutRequest } from '@/api/checkout.api';
 import { notifyProductAvailability } from '@/api/orders.api';
-import { trackMetaEvent } from '@/utils/metaPixel';
+// import { trackMetaEvent } from '@/utils/metaPixel';
 
 const ProductBox1Cart = ({
   productObj,
@@ -359,13 +359,13 @@ const ProductBox1Cart = ({
         //   }
         // )
 
-        trackMetaEvent('InitiateCheckout', {
-          content_ids: [checkoutPayload.variantUid || checkoutPayload.productUid].filter(Boolean),
-          content_type: 'product',
-          value: itemPrice * checkoutPayload.quantity,
-          currency: 'INR',
-          num_items: checkoutPayload.quantity
-        });
+        // trackMetaEvent('InitiateCheckout', {
+        //   content_ids: [checkoutPayload.variantUid || checkoutPayload.productUid].filter(Boolean),
+        //   content_type: 'product',
+        //   value: itemPrice * checkoutPayload.quantity,
+        //   currency: 'INR',
+        //   num_items: checkoutPayload.quantity
+        // });
 
         setCheckoutRequest(checkoutPayload);
         router.push('/checkout');

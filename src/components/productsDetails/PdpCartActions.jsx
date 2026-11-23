@@ -9,7 +9,7 @@ import ResponsiveModal from '@/components/common/ResponsiveModal';
 import { setCheckoutRequest } from '@/api/checkout.api';
 import { ToastNotification } from '@/utils/customFunctions/ToastNotification';
 import { CUSTOMER_TYPES, getProductCustomerType } from '@/utils/cart/cartUtils';
-import { trackMetaEvent } from '@/utils/metaPixel';
+// import { trackMetaEvent } from '@/utils/metaPixel';
 
 /**
  * Cart actions panel for the new PDP (/products/[slug]).
@@ -210,13 +210,13 @@ const PdpCartActions = ({ productState, setProductState }) => {
       0
     );
 
-    trackMetaEvent('InitiateCheckout', {
-      content_ids: [checkoutPayload.variantUid || checkoutPayload.productUid].filter(Boolean),
-      content_type: 'product',
-      value: itemPrice * checkoutPayload.quantity,
-      currency: 'INR',
-      num_items: checkoutPayload.quantity
-    });
+    // trackMetaEvent('InitiateCheckout', {
+    //   content_ids: [checkoutPayload.variantUid || checkoutPayload.productUid].filter(Boolean),
+    //   content_type: 'product',
+    //   value: itemPrice * checkoutPayload.quantity,
+    //   currency: 'INR',
+    //   num_items: checkoutPayload.quantity
+    // });
 
     setCheckoutRequest(checkoutPayload);
     router.push('/checkout');

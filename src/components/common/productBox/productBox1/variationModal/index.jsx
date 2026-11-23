@@ -13,7 +13,7 @@ import {
   useRemoveFromCart,
 } from '@/utils/hooks/useCart';
 import { RiAddLine, RiSubtractLine } from 'react-icons/ri';
-import { trackMetaEvent } from '@/utils/metaPixel';
+// import { trackMetaEvent } from '@/utils/metaPixel';
 import { useProductModal } from '@/utils/hooks/useProduct';
 
 const getSelectedVariationId = (variation) =>
@@ -278,25 +278,25 @@ const VariationModal = ({
         cloneVariation?.selectedVariation?.uid ||
         productUid;
 
-      trackMetaEvent('AddToCart', {
-        content_ids: [String(targetId)].filter(Boolean),
-        content_type: 'product',
-        content_name:
-          productObj?.product?.name ||
-          productObj?.name ||
-          '',
-        content_category: departmentName || productObj?.category?.name || undefined,
-        value: unitPrice * addedQty,
-        currency: 'INR',
-        num_items: addedQty,
-        contents: [
-          {
-            id: String(targetId),
-            quantity: addedQty,
-            item_price: unitPrice,
-          },
-        ],
-      });
+      // trackMetaEvent('AddToCart', {
+      //   content_ids: [String(targetId)].filter(Boolean),
+      //   content_type: 'product',
+      //   content_name:
+      //     productObj?.product?.name ||
+      //     productObj?.name ||
+      //     '',
+      //   content_category: departmentName || productObj?.category?.name || undefined,
+      //   value: unitPrice * addedQty,
+      //   currency: 'INR',
+      //   num_items: addedQty,
+      //   contents: [
+      //     {
+      //       id: String(targetId),
+      //       quantity: addedQty,
+      //       item_price: unitPrice,
+      //     },
+      //   ],
+      // });
     },
     onError: (error) => {
       console.log(error);
