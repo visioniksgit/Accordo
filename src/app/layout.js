@@ -3,10 +3,10 @@ import '../../public/assets/scss/app.scss';
 import LenisProvider from '@/providers/LenisProvider';
 import { Montserrat } from "next/font/google"
 import Script from 'next/script'
-import {
-  // GoogleAnalytics,
-  GoogleTagManager
-} from '@next/third-parties/google'
+// import {
+//   GoogleAnalytics,
+//   GoogleTagManager
+// } from '@next/third-parties/google'
 import { Preconnect } from './preconnect';
 
 const montserrat = Montserrat({
@@ -74,8 +74,8 @@ export default async function RootLayout({ children }) {
           strategy="lazyOnload"
           src="https://news.google.com/swg/js/v1/publisher.js"
         />
-        <GoogleTagManager gtmId="GTM-NBJ9WC2P" />
-        {/* <GoogleAnalytics gaId="G-LXVFSMSSPW" /> */}
+        {/* <GoogleTagManager gtmId="GTM-NBJ9WC2Q" /> */}
+        {/* <GoogleAnalytics gaId="G-LXVFSMSSPX" /> */}
       </body>
     </html>
   );
