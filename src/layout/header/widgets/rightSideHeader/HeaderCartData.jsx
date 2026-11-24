@@ -564,7 +564,7 @@ const HeaderCartData = ({ cartStyle, onNegotiateWithAi }) => {
                           ) : (
                             <>
                               <RiSparklingLine className="ai-sparkle-icon" />
-                              <span>Negotiate with AI</span>
+                              <span>Credit Request</span>
                             </>
                           )}
                         </span>

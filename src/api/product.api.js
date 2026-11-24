@@ -58,6 +58,7 @@ const RESERVED_PRODUCT_QUERY_KEYS = new Set([
   'page',
   'limit',
   'search',
+  'vertical',
   'department',
   'minPrice',
   'maxPrice',
@@ -195,7 +196,7 @@ export const fetchProducts = async (params = {}) => {
   const page = Number(params.page) > 0 ? Number(params.page) : 1;
   const limit = Number(params.limit) > 0 ? Number(params.limit) : 40;
   const search = String(params.search || '').trim();
-  const department = String(params.department || '').trim();
+  const vertical = String(params.vertical || params.department || '').trim();
   const minPrice = Number(params.minPrice);
   const maxPrice = Number(params.maxPrice);
   const sort = String(params.sort || '').trim();
@@ -206,7 +207,7 @@ export const fetchProducts = async (params = {}) => {
   });
 
   if (search) query.set('search', search);
-  if (department) query.set('department', department);
+  if (vertical) query.set('vertical', vertical);
   appendDynamicFilterParams(query, params);
   if (Number.isFinite(minPrice)) query.set('minPrice', String(minPrice));
   if (Number.isFinite(maxPrice)) query.set('maxPrice', String(maxPrice));

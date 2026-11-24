@@ -67,7 +67,7 @@ const AddAddressForm = ({
       phone: '',
       alternate_phone: '',
       email: '',
-      addressType: 'Home',
+      addressType: 'Site',
       otherAddressType: '',
       address1: '',
       address2: '',
@@ -99,10 +99,12 @@ const AddAddressForm = ({
     if (modal !== 'edit' || !editAddress) return;
 
     const incomingAddressType = editAddress?.addressType || '';
-    const normalizedAddressType = ['Home', 'Office'].includes(
+    const normalizedAddressType = ['Site', 'Office'].includes(
       incomingAddressType
     )
       ? incomingAddressType
+      : incomingAddressType === 'Home'
+      ? 'Site'
       : 'Other';
     const initialOtherAddressType =
       normalizedAddressType === 'Other' ? incomingAddressType : '';
@@ -404,7 +406,7 @@ const AddAddressForm = ({
                     control={control}
                     render={({ field }) => (
                       <div className="d-flex flex-wrap gap-3">
-                        {['Home', 'Office', 'Other'].map((option) => (
+                        {['Site', 'Office', 'Other'].map((option) => (
                           <div
                             key={option}
                             className="form-check d-flex align-items-center gap-2 mb-0"

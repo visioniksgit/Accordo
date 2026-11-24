@@ -65,8 +65,8 @@ export const useKeywords = (options = {}) => {
     ...options,
   });
 };
-// Brands from section 3 (shares same cache key as useKeywords)
-export const useSection3Brands = (options = {}) => {
+// Clients from section 3
+export const useHomeClients = (options = {}) => {
   return useQuery({
     queryKey: ['home', 3],
     queryFn: () => fetchHomeSection(3),
@@ -76,6 +76,8 @@ export const useSection3Brands = (options = {}) => {
     ...options,
   });
 };
+// Brands from section 3 (kept for compatibility)
+export const useSection3Brands = useHomeClients;
 
 // TODO: confirm section for these two
 export const useDepartments = (options) => useHomeSectionQuery(3, options);

@@ -6,7 +6,7 @@ const STATIC_TOP_LEVEL_TITLES = ['Home'];
 const API_TOP_LEVEL_TITLES = [
   'Shop by Category',
   'Shop by Herbs',
-  'For Business',
+  'Shop by Vertical',
   'About Us',
   // 'Blogs',
 ];
@@ -75,13 +75,13 @@ const STATIC_NEW_MENUS = [
 ];
 
 const DYNAMIC_MENU_TITLES = {
-  'shop by category': 'For Business',
+  'shop by category': 'Shop by Vertical',
   'shop by herbs': 'Shop by Herbs',
   'shop by health concern': 'Shop by Category',
   'shop by health concerns': 'Shop by Category',
   'shop by health interest': 'Shop by Category',
   'shop by health interests': 'Shop by Category',
-  'for business': 'Shop by Category',
+  'Shop by Vertical': 'Shop by Category',
   'about us': 'About Us',
   blog: 'Blogs',
   blogs: 'Blogs',
@@ -224,7 +224,7 @@ const buildHeaderMenu = (baseMenu = [], apiMenu = []) => {
     'Best Sellers',
     'Deals',
     'AI Negotiations',
-    'For Business',
+    'Shop by Vertical',
     'About Us',
     // 'Blogs',
     // 'Media',

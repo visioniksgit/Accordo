@@ -5,52 +5,8 @@ import Link from 'next/link';
 import { Row, Col } from 'reactstrap';
 import WrapperComponent from '@/components/common/WrapperComponent';
 import CustomHeading from '@/components/common/CustomHeading';
-import { useSection3Brands } from '@/utils/hooks/useHome';
+import { useHomeClients } from '@/utils/hooks/useHome';
 import styles from './TopBrandsMarquee.module.scss';
-
-// ── Static brand list matching design ─────────────────────────────────────────
-const DEFAULT_BRANDS = [
-  {
-    id: 'havells',
-    name: 'Havells',
-    image: '/assets/images/brands/havells.png',
-    link: '/collections?brand=havells',
-    width: 91,
-    height: 63,
-  },
-  {
-    id: 'kei',
-    name: 'KEI Wires & Cables',
-    image: '/assets/images/brands/kei.png',
-    link: '/collections?brand=kei',
-    width: 130,
-    height: 62,
-  },
-  {
-    id: 'crompton',
-    name: 'Crompton',
-    image: '/assets/images/brands/crompton.png',
-    link: '/collections?brand=crompton',
-    width: 199,
-    height: 50,
-  },
-  {
-    id: 'legrand',
-    name: 'Legrand',
-    image: '/assets/images/brands/legrand.png',
-    link: '/collections?brand=legrand',
-    width: 129,
-    height: 41,
-  },
-  {
-    id: 'philips',
-    name: 'Philips',
-    image: '/assets/images/brands/philips.png',
-    link: '/collections?brand=philips',
-    width: 144,
-    height: 37,
-  },
-];
 
 // Ensure items array is sufficiently wide to avoid gaps on wide displays
 const ensureSufficientItems = (list, minCount = 10) => {
@@ -62,7 +18,7 @@ const ensureSufficientItems = (list, minCount = 10) => {
   return result;
 };
 
-// Fallback pill for brands without a logo
+// Fallback pill for clients without a logo
 const BrandNamePill = ({ name }) => (
   <div
     style={{
@@ -90,56 +46,39 @@ const BrandNamePill = ({ name }) => (
 );
 
 const TopBrandsMarquee = ({
-  title = 'TOP BRANDS WE WORK WITH',
-  subTitle = 'Quality products from most trusted names',
-  viewAllText = 'View All',
-  viewAllLink = '/collections',
+  title = 'CLIENTS WE WORK WITH',
+  subTitle = 'Trusted by leading companies and businesses',
+  clients: customClients,
   brands: customBrands,
   speed = 28,
 }) => {
-  // ── Dynamic brands API hook (commented for now to show static images) ──
-  // const { data, isLoading } = useSection3Brands();
-  // const dynamicBrands = useMemo(() => {
-  //   return data?.data?.brands || [];
-  // }, [data]);
+  // ── Dynamic clients from section 3 API ──
+  const { data, isLoading: isClientsLoading } = useHomeClients();
 
-  // ── Static brands ──
-  const brands = customBrands || DEFAULT_BRANDS;
+  const clients = useMemo(() => {
+    if (customClients && customClients.length > 0) return customClients;
+    if (customBrands && customBrands.length > 0) return customBrands;
+    return data?.data?.clients || [];
+  }, [customClients, customBrands, data]);
 
-  const displayItems = useMemo(() => ensureSufficientItems(brands, 10), [brands]);
+  const isLoading = !customClients && !customBrands && isClientsLoading && !clients.length;
 
-  const renderBrand = (brand, keyPrefix) => {
-    const brandName = brand.name || '';
-    const brandSlug = brandName.toLowerCase().replace(/\s+/g, '-');
-    const brandAlt = brand.imageAlt || brandName || 'Brand Logo';
-    const href = brand.link || `/collections?brand=${encodeURIComponent(brandSlug)}`;
+  const displayItems = useMemo(() => ensureSufficientItems(clients, 10), [clients]);
 
-    return (
-      <div
-        key={`${keyPrefix}-${brand.id || brand.uid || brandName}`}
-        // href={href}
-        className={styles.brandCard}
-      // aria-label={`Shop ${brandName}`}
-      // prefetch={false}
-      >
-        {/* ── Static Image ── */}
-        <img
-          src={brand.image || brand.logo}
-          alt={brandAlt}
-          width={brand.width || 140}
-          height={brand.height || 48}
-          className={styles.brandImage}
-          loading="lazy"
-          decoding="async"
-        />
+  const renderClient = (client, keyPrefix) => {
+    const clientName = client.name || '';
+    const clientAlt = client.imageAlt || clientName || 'Client Logo';
+    const imageSrc = client.logo || client.image;
+    const href = client.link || null;
 
-        {/* ── Dynamic Image with fallback (commented for now) ── */}
-        {/* {brand.logo ? (
+    const content = (
+      <>
+        {imageSrc ? (
           <img
-            src={brand.logo}
-            alt={brandAlt}
+            src={imageSrc}
+            alt={clientAlt}
             width={240}
-            height={120}
+            height={110}
             className={styles.brandImage}
             loading="lazy"
             decoding="async"
@@ -150,21 +89,44 @@ const TopBrandsMarquee = ({
                 e.currentTarget.style.display = 'none';
                 const pill = document.createElement('div');
                 pill.style.cssText =
-                  'height:48px;display:flex;align-items:center;justify-content:center;padding:0 16px;border-radius:8px;background:#f0f4ff;border:1px solid #dde5ff';
-                pill.innerHTML = `<span style="font-size:13px;font-weight:700;color:#234BF3;white-space:nowrap">${brandName}</span>`;
+                  'height:60px;display:flex;align-items:center;justify-content:center;padding:0 24px;border-radius:8px;background:#f0f4ff;border:1px solid #dde5ff';
+                pill.innerHTML = `<span style="font-size:15px;font-weight:700;color:#234BF3;white-space:nowrap">${clientName}</span>`;
                 parent.appendChild(pill);
               }
             }}
           />
         ) : (
-          <BrandNamePill name={brandName} />
-        )} */}
+          <BrandNamePill name={clientName} />
+        )}
+      </>
+    );
+
+    if (href) {
+      return (
+        <Link
+          key={`${keyPrefix}-${client.id || client.uid || clientName}`}
+          href={href}
+          className={styles.brandCard}
+          aria-label={clientName}
+          prefetch={false}
+        >
+          {content}
+        </Link>
+      );
+    }
+
+    return (
+      <div
+        key={`${keyPrefix}-${client.id || client.uid || clientName}`}
+        className={styles.brandCard}
+        aria-label={clientName}
+      >
+        {content}
       </div>
     );
   };
 
-  // ── Skeleton while loading (commented for static mode) ──
-  /*
+  // ── Skeleton while loading ──
   if (isLoading) {
     return (
       <WrapperComponent
@@ -176,12 +138,12 @@ const TopBrandsMarquee = ({
             <CustomHeading customClass="mb-0" title={title} subTitle={subTitle} />
           </Col>
         </Row>
-        <div style={{ display: 'flex', gap: '48px', padding: '16px 0', overflow: 'hidden' }}>
-          {Array.from({ length: 7 }).map((_, i) => (
+        <div style={{ display: 'flex', gap: '60px', padding: '24px 0', overflow: 'hidden', alignItems: 'center' }}>
+          {Array.from({ length: 8 }).map((_, i) => (
             <div
               key={i}
               className="skeleton-shimmer"
-              style={{ width: 160, height: 90, borderRadius: 8, flexShrink: 0 }}
+              style={{ width: 110, height: 110, borderRadius: 12, flexShrink: 0 }}
             />
           ))}
         </div>
@@ -189,9 +151,8 @@ const TopBrandsMarquee = ({
     );
   }
 
-  // Don't render if no brands returned
-  if (!brands.length) return null;
-  */
+  // Don't render if no clients returned
+  if (!clients.length) return null;
 
   return (
     <WrapperComponent
@@ -203,15 +164,6 @@ const TopBrandsMarquee = ({
         <Col xs={12}>
           <CustomHeading customClass="mb-0" title={title} subTitle={subTitle} />
         </Col>
-        {/* <Col xs={4} sm={3} md={2} className="text-end">
-          <Link
-            prefetch={false}
-            href={viewAllLink}
-            className={styles['view-all-link']}
-          >
-            {viewAllText}
-          </Link>
-        </Col> */}
       </Row>
 
       {/* ── Infinite Scrolling Marquee Track ── */}
@@ -219,17 +171,17 @@ const TopBrandsMarquee = ({
         className={styles.marqueeWrapper}
         style={{ '--marquee-speed': `${speed}s` }}
         role="region"
-        aria-label="Top Brands Marquee"
+        aria-label="Clients Marquee"
       >
         <div className={styles.marqueeTrack}>
           <div className={styles.marqueeGroup}>
-            {displayItems.map((brand, index) =>
-              renderBrand(brand, `primary-${index}`)
+            {displayItems.map((client, index) =>
+              renderClient(client, `primary-${index}`)
             )}
           </div>
           <div className={styles.marqueeGroup} aria-hidden="true">
-            {displayItems.map((brand, index) =>
-              renderBrand(brand, `clone-${index}`)
+            {displayItems.map((client, index) =>
+              renderClient(client, `clone-${index}`)
             )}
           </div>
         </div>

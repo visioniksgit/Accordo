@@ -1,6 +1,11 @@
+.gstCardContainer {
+  position: relative;
+  width: 100%;
+}
+
 .gstCard {
   width: 100%;
-  background: var(--white);
+  background: var(--white, #fff);
   border: 1px solid #e3e7ec;
   border-radius: 8px;
   padding: 12px 16px;
@@ -13,26 +18,26 @@
   user-select: none;
 
   &:hover {
-    border-color: #234BF3;
+    border-color: #234bf3;
   }
 }
 
 .gstCardSaved {
-  cursor: default;
-  background: var(--ffffff);
-  border: 1px solid var(--D4DEF3);
+  background: var(--white, #fff);
+  border: 1px solid #d4def3;
   border-radius: 8px;
-  padding: 14px 16px;
+  padding: 12px 14px;
 
-  // &:hover {
-  //   border-color: var(--234BF3);
-  // }
+  &.selected {
+    border-color: var(--theme-color, #234bf3);
+    background: #f7f9fe;
+  }
 }
 
 .leftContent {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  align-items: flex-start;
+  gap: 12px;
   min-width: 0;
   flex: 1;
 }
@@ -50,69 +55,104 @@
 }
 
 .checkboxBox {
-  // width: 24px;
-  // height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: 4px;
-  // overflow: hidden;
+  margin-top: 3px;
+  cursor: pointer;
 }
 
 .checkboxInput {
   width: 18px;
   height: 18px;
-  accent-color: var(--theme-color);
+  accent-color: var(--theme-color, #234bf3);
   cursor: pointer;
 }
 
 .icon {
   font-size: 20px;
-  color: var(--theme-color);
+  color: var(--theme-color, #234bf3);
 }
 
 .textContent {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 5px;
+  gap: 3px;
   text-align: left;
   min-width: 0;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .meta {
   font-size: 12px;
   line-height: 1.2;
-  font-weight: 500;
-  color: var(--234BF3);
+  font-weight: 600;
+  color: var(--theme-color, #234bf3);
+}
+
+.dropdownIcon {
+  font-size: 16px;
+  color: var(--theme-color, #234bf3);
+  transition: transform 0.2s ease;
+
+  &.open {
+    transform: rotate(180deg);
+  }
 }
 
 .title {
-  font-size: 12px;
-  line-height: 1.2;
-  font-weight: 400;
-  color: var(--subtle-text);
+  font-size: 13px;
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--title-color, #1f2937);
+  word-break: break-word;
 }
 
 .gstNumber {
   font-size: 12px;
   line-height: 1.25;
-  font-weight: 500;
-  color: var(--title-color);
+  font-weight: 600;
+  color: var(--theme-color, #234bf3);
+}
+
+.locationAddress {
+  font-size: 12px;
+  color: var(--content-color, #535e75);
+  line-height: 1.35;
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .subtitle {
   font-size: 12px;
   line-height: 1.4;
   font-weight: 400;
-  color: var(--content-color);
+  color: var(--content-color, #535e75);
 }
 
 .arrow {
   font-size: 20px;
   flex-shrink: 0;
   align-self: center;
+  color: #718096;
+}
+
+.actionsBox {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
 .editButton {
@@ -125,23 +165,132 @@
   border-radius: 999px;
   background: transparent;
   flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(var(--theme-color-rgb), 0.1);
-    color: var(--theme-color);
+    background: rgba(35, 75, 243, 0.1);
+    color: var(--theme-color, #234bf3);
   }
 }
 
 .editIcon {
-  color: var(--9e9e9e);
-  font-size: 12px;
+  color: #718096;
+  font-size: 15px;
+}
+
+/* Address Dropdown - identical to shipping address dropdown UI */
+.addressDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--D4DEF3, #d4def3);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  z-index: 20;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.addressOption {
+  padding: 12px 16px;
+  cursor: pointer;
+  background-color: var(--ffffff, #ffffff);
+  border-radius: 12px;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+  border: 1px solid var(--D4DEF3, #d4def3);
+  margin-bottom: 8px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    background: var(--EDF2FF, #edf2ff);
+    border: 1px solid var(--234BF3, #234bf3);
+  }
+
+  &.active {
+    background: var(--EDF2FF, #edf2ff);
+    border: 1px solid var(--234BF3, #234bf3);
+  }
+}
+
+.addressOptionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.addressOptionTitle {
+  color: var(--07112C, #07112c);
+  font-size: 14px;
+  font-weight: 700;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deleteOptionBtn {
+  border: 0;
+  background: transparent;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #718096;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    color: #e53e3e;
+    background: rgba(229, 62, 62, 0.1);
+  }
+}
+
+.deleteIcon {
+  font-size: 16px;
+}
+
+.addressOptionDetails {
+  color: var(--4a4a4a, #4a4a4a);
+  font-size: 13px;
   font-weight: 400;
+  line-height: 1.6;
+}
+
+.addNew {
+  color: var(--234BF3, #234bf3);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 8px;
+  text-align: center;
+  border: none;
+  padding: 12px 16px;
+  cursor: pointer;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--EDF2FF, #edf2ff);
+  }
 }
 
 @media (max-width: 575px) {
   .iconBox {
-    width: 48px;
-    height: 48px;
+    width: 38px;
+    height: 38px;
     border-radius: 8px;
   }
 }

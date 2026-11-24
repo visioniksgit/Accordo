@@ -1,7 +1,7 @@
 'use client';
 
-import { useContext, useEffect, useMemo, useState } from 'react';
-import { RiAddLine, RiSubtractLine } from 'react-icons/ri';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { RiAddLine, RiSubtractLine, RiSparklingLine } from 'react-icons/ri';
 import Btn from '@/elements/buttons/Btn';
 import CartContext from '@/helper/cartContext';
 import { useRouter } from 'next/navigation';
@@ -18,7 +18,7 @@ import { CUSTOMER_TYPES, getProductCustomerType } from '@/utils/cart/cartUtils';
  * When calling CartContext functions, a minimal cart-compatible product object
  * is constructed (adding id: product.uid) so existing cart infrastructure works.
  */
-const PdpCartActions = ({ productState, setProductState }) => {
+const PdpCartActions = ({ productState, setProductState, onNegotiateWithAi }) => {
   const router = useRouter();
   const {
     cartProducts,
@@ -31,6 +31,33 @@ const PdpCartActions = ({ productState, setProductState }) => {
   const [productQty, setProductQty] = useState(productState?.productQty || 1);
   const [isOpen, setIsOpen] = useState(false);
   const [isBuyingNow, setIsBuyingNow] = useState(false);
+  const [isNegotiating, setIsNegotiating] = useState(false);
+  const negotiateTimerRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (negotiateTimerRef.current) {
+        clearTimeout(negotiateTimerRef.current);
+      }
+    };
+  }, []);
+
+  const handleNegotiateWithAi = () => {
+    if (isNegotiating) return;
+    setIsNegotiating(true);
+
+    if (typeof onNegotiateWithAi === 'function') {
+      onNegotiateWithAi();
+    }
+
+    if (negotiateTimerRef.current) {
+      clearTimeout(negotiateTimerRef.current);
+    }
+
+    negotiateTimerRef.current = setTimeout(() => {
+      setIsNegotiating(false);
+    }, 5000);
+  };
 
   const product = productState?.product || {};
   const selectedVariation = productState?.selectedVariation;
@@ -278,13 +305,35 @@ const PdpCartActions = ({ productState, setProductState }) => {
               {isBuyingNow ? <span className="btn-spinner" /> : 'Buy Now'}
             </Btn> */}
 
+            {!isBook && (
+              <button
+                type="button"
+                className={`btn-negotiate-ai scroll-button ${isNegotiating ? 'is-negotiating' : ''}`}
+                onClick={handleNegotiateWithAi}
+                disabled={isNegotiating || isCartUpdating || isBuyingNow}
+                title={isNegotiating ? 'Negotiating with AI...' : 'Negotiate with AI'}
+              >
+                <span className="btn-negotiate-ai-inner">
+                  {isNegotiating ? (
+                    <>
+                      <span className="ai-btn-spinner" />
+                      <span>Loading...</span>
+                    </>
+                  ) : (
+                    <>
+                      <RiSparklingLine className="ai-sparkle-icon" />
+                      <span>Negotiate with AI</span>
+                    </>
+                  )}
+                </span>
+              </button>
+            )}
+
             {isOpen && !isBook && productQty >= 1 ? (
               <div
-                className="qty-inline-box w-100 scroll-button"
+                className="qty-inline-box scroll-button"
                 style={{
                   opacity: isCartUpdating ? 0.6 : 1,
-                  flex: '1 1 100%',
-                  width: '100%',
                 }}
               >
                 <Btn
@@ -309,8 +358,7 @@ const PdpCartActions = ({ productState, setProductState }) => {
               !isBook && (
                 <Btn
                   color="primary"
-                  className="btn-add-cart addcart-button shimmer w-100 scroll-button"
-                  style={{ flex: '1 1 100%', width: '100%' }}
+                  className="btn-add-cart addcart-button shimmer scroll-button"
                   onClick={handleAddToCart}
                   disabled={isCartUpdating || isBuyingNow}
                 >

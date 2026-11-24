@@ -1,4 +1,5 @@
 export const COLLECTION_FILTER_DEFAULTS = {
+  vertical: '',
   department: '',
   category: [],
   healthInterests: [],
@@ -27,7 +28,7 @@ export const COLLECTION_FILTER_ARRAY_KEYS = [
   'discount',
 ];
 
-export const COLLECTION_FILTER_STRING_KEYS = ['department', 'sortBy', 'field'];
+export const COLLECTION_FILTER_STRING_KEYS = ['vertical', 'department', 'sortBy', 'field'];
 
 const RESERVED_QUERY_KEYS = new Set([
   'layout',
@@ -37,6 +38,7 @@ const RESERVED_QUERY_KEYS = new Set([
   'q',
   'sort',
   'sortBy',
+  'vertical',
   'department',
   'field',
   'minPrice',
@@ -257,6 +259,12 @@ export const parseCollectionFilters = (params = {}, filterDefinitions = []) => {
       typeof params[key] === 'string' ? params[key] : '';
   });
 
+  const resolvedVertical = params.vertical || params.department || '';
+  if (resolvedVertical) {
+    nextFilter.vertical = resolvedVertical;
+    nextFilter.department = resolvedVertical;
+  }
+
   if (minPrice !== null && maxPrice !== null) {
     nextFilter.price = [`${minPrice}-${maxPrice}`];
   }
@@ -352,7 +360,7 @@ export const updateSearchParamsWithFilters = (
   nextParams.delete('field');
 
   COLLECTION_FILTER_STRING_KEYS.forEach((key) => {
-    if (key === 'sortBy' || key === 'field') {
+    if (key === 'sortBy' || key === 'field' || key === 'vertical' || key === 'department') {
       return;
     }
 
@@ -362,6 +370,14 @@ export const updateSearchParamsWithFilters = (
       nextParams.delete(key);
     }
   });
+
+  const verticalValue = filter?.vertical || filter?.department;
+  if (verticalValue) {
+    nextParams.set('vertical', toHyphenatedValue(verticalValue));
+  } else {
+    nextParams.delete('vertical');
+  }
+  nextParams.delete('department');
 
   const apiSort = mapCollectionSortToApiSort(filter?.sortBy);
 

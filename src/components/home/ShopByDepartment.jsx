@@ -88,8 +88,8 @@ const ShopByDepartment = () => {
         <Col>
           <CustomHeading
             customClass="mb-0"
-            title="Shop by Department"
-            subTitle="Explore Our Top Departments"
+            title="Shop by Vertical"
+            subTitle="Explore Our Top Verticals"
             svgUrl={<LeafSVG className="icon-width" />}
           />
         </Col>
@@ -105,7 +105,7 @@ const ShopByDepartment = () => {
                 {departments.slice(0, 3).map((department) => (
                   <div key={department.uid}>
                     <Link
-                      href={`/collections?department=${department.slug}`}
+                      href={`/collections?vertical=${department.slug}`}
                       className={styles['department-card']}
                     >
                       <div className={styles['department-image-wrapper']}>

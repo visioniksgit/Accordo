@@ -40,6 +40,7 @@ async function getProductFallbackMetadata(productSlug) {
 
   const categoryName =
     product.category?.name ||
+    product.vertical?.name ||
     product.department?.name ||
     undefined;
 
@@ -115,6 +116,7 @@ function createProductSchema(productData, productSlug, imagesData) {
 
   const categoryName =
     product.category?.name ||
+    product.vertical?.name ||
     product.department?.name ||
     undefined;
 

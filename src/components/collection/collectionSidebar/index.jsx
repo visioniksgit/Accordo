@@ -42,7 +42,7 @@ const CollectionSidebar = ({
   } = useCollectionFilters(filter);
 
   const filterDefinitions = collectionFilters.definitions.filter(
-    (definition) => definition?.key !== 'department'
+    (definition) => definition?.key !== 'department' && definition?.key !== 'vertical'
   );
 
   const updateFilters = useCallback(

@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { RiRefreshLine } from 'react-icons/ri';
 
 /**
- * @typedef {'product'|'category'|'department'|'health interest'|'herb'|'event category'|'event subcategory'|'event'|'blog category'|'blog'|'resource category'|'resource subcategory'|'resources'} SearchResultType
+ * @typedef {'product'|'category'|'department'|'vertical'|'verticals'|'health interest'|'herb'|'event category'|'event subcategory'|'event'|'blog category'|'blog'|'resource category'|'resource subcategory'|'resources'} SearchResultType
  */
 
 /**
@@ -25,10 +25,22 @@ const TYPE_CONFIG_MAP = {
     colorVar: '--search-icon-category-color',
   },
   department: {
-    subtext: 'Browse department',
-    badge: 'Department',
-    bgVar: '--search-icon-department-bg',
-    colorVar: '--search-icon-department-color',
+    subtext: 'Browse vertical',
+    badge: 'Vertical',
+    bgVar: '--search-icon-vertical-bg',
+    colorVar: '--search-icon-vertical-color',
+  },
+  vertical: {
+    subtext: 'Browse vertical',
+    badge: 'Vertical',
+    bgVar: '--search-icon-vertical-bg',
+    colorVar: '--search-icon-vertical-color',
+  },
+  verticals: {
+    subtext: 'Browse vertical',
+    badge: 'Vertical',
+    bgVar: '--search-icon-vertical-bg',
+    colorVar: '--search-icon-vertical-color',
   },
   'healthinterest': {
     subtext: 'Explore health concerns',
@@ -255,8 +267,17 @@ const SearchDropdown = ({
     >
       {results.map((item, index) => {
         const normalizedType = normalizeTypeKey(item?.type);
-        const { subtext, badge, bgVar, colorVar } =
-          TYPE_CONFIG_MAP[normalizedType] ?? DEFAULT_TYPE;
+        const config = TYPE_CONFIG_MAP[normalizedType];
+        const subtext =
+          config?.subtext ??
+          (normalizedType ? `Browse ${normalizedType}` : DEFAULT_TYPE.subtext);
+        const badge =
+          config?.badge ??
+          (item?.type
+            ? item.type.charAt(0).toUpperCase() + item.type.slice(1)
+            : DEFAULT_TYPE.badge);
+        const bgVar = config?.bgVar ?? DEFAULT_TYPE.bgVar;
+        const colorVar = config?.colorVar ?? DEFAULT_TYPE.colorVar;
         const isFocused = focusedIndex === index;
 
         return (
@@ -295,15 +316,17 @@ const SearchDropdown = ({
               <span className="search-result-sub">{subtext}</span>
             </span>
 
-            <span
-              className="search-type-badge"
-              style={{
-                background: `var(${bgVar})`,
-                color: `var(${colorVar})`,
-              }}
-            >
-              {badge}
-            </span>
+            {badge && (
+              <span
+                className="search-type-badge"
+                style={{
+                  background: `var(${bgVar})`,
+                  color: `var(${colorVar})`,
+                }}
+              >
+                {badge}
+              </span>
+            )}
           </li>
         );
       })}

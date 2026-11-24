@@ -23,7 +23,7 @@ export const addressFormSchema = z.object({
       (val) => !val || EMAIL_PATTERN.test(val),
       { message: 'Invalid email address' }
     ),
-  addressType: z.enum(['Home', 'Office', 'Other'], {
+  addressType: z.enum(['Site', 'Office', 'Other'], {
     required_error: 'Address type is required',
   }),
   otherAddressType: z.string().max(20, 'Address type must be at most 20 characters').optional(),

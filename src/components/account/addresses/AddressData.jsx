@@ -52,6 +52,7 @@ const AddressData = ({
   };
 
   const getAddressIcon = (type) => {
+    if (type?.toLowerCase() === 'site') return <RiBuilding4Line />;
     if (type?.toLowerCase() === 'home') return <RiHome4Line />;
     if (type?.toLowerCase() === 'office') return <RiBuilding4Line />;
     return <RiHome4Line />;

@@ -3,7 +3,7 @@ import { getAuthHeaders } from "./wishlist.api";
 const SDL_BASE_URL = process.env.SDL_BASE_URL || process.env.NEXT_PUBLIC_SDL_BASE_URL;
 
 /**
- * @typedef {'product'|'category'|'department'|'health interest'|'herb'|'event category'|'event subcategory'|'event'|'blog category'|'blog'|'resource category'|'resource subcategory'|'resources'} SearchResultType
+ * @typedef {'product'|'category'|'department'|'vertical'|'verticals'|'health interest'|'herb'|'event category'|'event subcategory'|'event'|'blog category'|'blog'|'resource category'|'resource subcategory'|'resources'} SearchResultType
  */
 
 /**

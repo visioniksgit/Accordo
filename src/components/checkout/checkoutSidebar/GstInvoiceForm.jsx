@@ -108,7 +108,7 @@ const readGstVerificationLimit = (userId) => {
   } catch {
     try {
       window.localStorage.removeItem(key);
-    } catch { }
+    } catch {}
     return null;
   }
 };
@@ -171,11 +171,15 @@ const gstInvoiceFormSchema = z.object({
     .regex(/^\d{6}$/, 'Pincode must be exactly 6 digits'),
 });
 
-const GstInvoiceForm = ({ setModal, onSaved, selectedAddress }) => {
+const GstInvoiceForm = ({
+  setModal,
+  onSaved,
+  selectedAddress,
+  editingAddress,
+}) => {
   const schema = useMemo(() => gstInvoiceFormSchema, []);
   const { isAuthenticated, userData } = useContext(UserContext);
   const userId = userData?.uid || userData?.id || '';
-  console.log(userId, "user id from the context")
 
   const { data: customerAddressesData } = useCustomerAddresses({
     enabled: isAuthenticated,
@@ -185,15 +189,17 @@ const GstInvoiceForm = ({ setModal, onSaved, selectedAddress }) => {
   const isVerifyingGstInProgressRef = useRef(false);
 
   const billingAddress = useMemo(() => {
+    if (editingAddress) return editingAddress;
+    if (editingAddress === null) return null; // explicit add mode
     const addresses = Array.isArray(customerAddressesData?.data?.addresses)
       ? customerAddressesData.data.addresses
       : [];
     return addresses.find((address) => address?.type === 'billing') || null;
-  }, [customerAddressesData?.data?.addresses]);
+  }, [customerAddressesData?.data?.addresses, editingAddress]);
 
   const formAddress = billingAddress || null;
   const selectedAddressId =
-    billingAddress?.id || billingAddress?.uid || billingAddress?.userId || '';
+    formAddress?.id || formAddress?.uid || formAddress?.userId || '';
 
   const { mutateAsync: addCustomerAddress, isPending: isAddAddressPending } =
     useAddCustomerAddress();
@@ -242,7 +248,30 @@ const GstInvoiceForm = ({ setModal, onSaved, selectedAddress }) => {
   }, []);
 
   useEffect(() => {
-    const existingGst = billingAddress?.gstNo || '';
+    if (editingAddress === null) {
+      lastVerifiedGstRef.current = '';
+      reset({
+        countryCode: '+91',
+        phone: String(userData?.phone || ''),
+        alternate_phone: '',
+        email: userData?.email || '',
+        gstNumber: '',
+        companyName: '',
+        address1: '',
+        address2: '',
+        city: '',
+        state: '',
+        pincode: '',
+        latitude: '',
+        longitude: '',
+        placeId: '',
+        googleAddress: '',
+      });
+      return;
+    }
+
+    const targetAddress = editingAddress || billingAddress;
+    const existingGst = targetAddress?.gstNo || '';
 
     // Mark this existing GST as already verified so the auto-trigger ignores it on mount/edit
     if (existingGst) {
@@ -253,31 +282,31 @@ const GstInvoiceForm = ({ setModal, onSaved, selectedAddress }) => {
 
     reset({
       countryCode: String(
-        formAddress?.countryCode || formAddress?.country_code || '+91'
+        targetAddress?.countryCode || targetAddress?.country_code || '+91'
       ),
-      phone: String(formAddress?.phone || ''),
-      alternate_phone: String(formAddress?.alternate_phone || ''),
-      email: formAddress?.email || '',
+      phone: String(targetAddress?.phone || ''),
+      alternate_phone: String(targetAddress?.alternate_phone || ''),
+      email: targetAddress?.email || '',
       gstNumber: existingGst,
-      companyName: billingAddress?.companyName || '',
-      address1: formAddress?.addressLine1 || formAddress?.address1 || '',
-      address2: formAddress?.addressLine2 || formAddress?.address2 || '',
-      city: formAddress?.city || '',
+      companyName: targetAddress?.companyName || '',
+      address1: targetAddress?.addressLine1 || targetAddress?.address1 || '',
+      address2: targetAddress?.addressLine2 || targetAddress?.address2 || '',
+      city: targetAddress?.city || '',
       state:
-        findMatchingState(formAddress?.state, formAddress?.googleAddress) ||
-        formAddress?.state ||
+        findMatchingState(targetAddress?.state, targetAddress?.googleAddress) ||
+        targetAddress?.state ||
         '',
-      pincode: String(formAddress?.pincode || ''),
-      latitude: String(formAddress?.latitude || ''),
-      longitude: String(formAddress?.longitude || ''),
-      placeId: formAddress?.placeId || formAddress?.place_id || '',
+      pincode: String(targetAddress?.pincode || ''),
+      latitude: String(targetAddress?.latitude || ''),
+      longitude: String(targetAddress?.longitude || ''),
+      placeId: targetAddress?.placeId || targetAddress?.place_id || '',
       googleAddress:
-        formAddress?.googleAddress ||
-        formAddress?.addressLine1 ||
-        formAddress?.address1 ||
+        targetAddress?.googleAddress ||
+        targetAddress?.addressLine1 ||
+        targetAddress?.address1 ||
         '',
     });
-  }, [billingAddress, formAddress, reset]);
+  }, [billingAddress, editingAddress, reset, selectedAddress, userData]);
 
   // Wrapped in useCallback to prevent dependency issues in useEffect
   const handleVerifyGst = useCallback(
@@ -300,7 +329,8 @@ const GstInvoiceForm = ({ setModal, onSaved, selectedAddress }) => {
 
       if (currentLimitData) {
         const isBlocked =
-          (currentLimitData.blockedUntil && now < currentLimitData.blockedUntil) ||
+          (currentLimitData.blockedUntil &&
+            now < currentLimitData.blockedUntil) ||
           currentLimitData.attempts >= GST_MAX_VERIFICATION_ATTEMPTS;
 
         if (isBlocked) {
@@ -438,9 +468,13 @@ const GstInvoiceForm = ({ setModal, onSaved, selectedAddress }) => {
         formAddress
       );
 
+      const isEditMode =
+        Boolean(editingAddress) ||
+        Boolean(selectedAddressId && editingAddress !== null);
+
       let response;
 
-      if (selectedAddressId) {
+      if (isEditMode && selectedAddressId) {
         response = await updateCustomerAddress({
           userId: selectedAddressId,
           payload,
@@ -634,8 +668,7 @@ const GstInvoiceForm = ({ setModal, onSaved, selectedAddress }) => {
               <Col md={6}>
                 <FormGroup>
                   <Label for="alternate_phone">
-                    Alternate Number{' '}
-                    <i className="text-secondary">(if any)</i>
+                    Alternate Number <i className="text-secondary">(if any)</i>
                   </Label>
                   <Controller
                     name="alternate_phone"

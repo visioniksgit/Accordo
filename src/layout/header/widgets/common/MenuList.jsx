@@ -90,7 +90,7 @@ const MENU_TITLES_WITH_CHILD_THUMBS = [
   'Shop by Herbs',
   'Shop by Health Concerns',
   'Shop by Category',
-  'For Business',
+  'Shop by Vertical',
 ];
 
 const MENU_TITLES_WITH_THUMB_GRID = [
@@ -98,7 +98,7 @@ const MENU_TITLES_WITH_THUMB_GRID = [
   'Shop by Category',
 ];
 
-const FOR_BUSINESS_TITLE = 'For Business';
+const FOR_BUSINESS_TITLE = 'Shop by Vertical';
 
 const resolveMenuItemImage = (item) => {
   const candidate =

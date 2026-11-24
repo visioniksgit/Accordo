@@ -50,8 +50,10 @@ const getImageUrl = (...sources) => {
       ) {
         return source.original_url;
       }
-      if (typeof source.url === 'string' && source.url.trim()) return source.url;
-      if (typeof source.src === 'string' && source.src.trim()) return source.src;
+      if (typeof source.url === 'string' && source.url.trim())
+        return source.url;
+      if (typeof source.src === 'string' && source.src.trim())
+        return source.src;
     }
   }
 
@@ -75,6 +77,7 @@ const CheckoutSidebar = ({
     useState(false);
   const [checkoutProduct, setCheckoutProduct] = useState(null);
   const [isGstInvoiceModalOpen, setIsGstInvoiceModalOpen] = useState(false);
+  const [editingBillingAddress, setEditingBillingAddress] = useState(null);
   const [isGstInvoiceSelected, setIsGstInvoiceSelected] = useState(false);
   const [gstBillingAddressUid, setGstBillingAddressUid] = useState('');
   const [selectedCoinUsedAmount, setSelectedCoinUsedAmount] = useState(0);
@@ -375,7 +378,9 @@ const CheckoutSidebar = ({
       const match = sourceList.find(
         (r) =>
           (r.id && item.cartUid && String(r.id) === String(item.cartUid)) ||
-          (r.cartUid && item.cartUid && String(r.cartUid) === String(item.cartUid)) ||
+          (r.cartUid &&
+            item.cartUid &&
+            String(r.cartUid) === String(item.cartUid)) ||
           (String(r.product_id) === String(item.product_id) &&
             String(r.variation_id) === String(item.variation_id))
       );
@@ -385,13 +390,20 @@ const CheckoutSidebar = ({
         item?.variation?.color ||
         match?.color ||
         match?.variation?.color ||
-        (Array.isArray(item?.variation?.colors) && (item?.colorUid || match?.colorUid)
-          ? item.variation.colors.find((c) => c?.uid === (item?.colorUid || match?.colorUid))
+        (Array.isArray(item?.variation?.colors) &&
+        (item?.colorUid || match?.colorUid)
+          ? item.variation.colors.find(
+              (c) => c?.uid === (item?.colorUid || match?.colorUid)
+            )
           : null) ||
-        (Array.isArray(match?.variation?.colors) && (item?.colorUid || match?.colorUid)
-          ? match.variation.colors.find((c) => c?.uid === (item?.colorUid || match?.colorUid))
+        (Array.isArray(match?.variation?.colors) &&
+        (item?.colorUid || match?.colorUid)
+          ? match.variation.colors.find(
+              (c) => c?.uid === (item?.colorUid || match?.colorUid)
+            )
           : null) ||
-        (Array.isArray(item?.variation?.colors) && item.variation.colors.length === 1
+        (Array.isArray(item?.variation?.colors) &&
+        item.variation.colors.length === 1
           ? item.variation.colors[0]
           : null) ||
         null;
@@ -755,7 +767,9 @@ const CheckoutSidebar = ({
             {variantName && <span>{variantName}</span>}
             {item?.color && (item.color.name || item.color.hexcode) && (
               <span className="d-inline-flex align-items-center gap-1">
-                {variantName && <span style={{ color: '#bbb', margin: '0 2px' }}>•</span>}
+                {variantName && (
+                  <span style={{ color: '#bbb', margin: '0 2px' }}>•</span>
+                )}
                 {item.color.hexcode && (
                   <span
                     style={{
@@ -938,20 +952,32 @@ const CheckoutSidebar = ({
             <>
               <div className="mt-3">
                 <GstInvoiceCard
-                  onClick={() => setIsGstInvoiceModalOpen(true)}
+                  onClick={() => {
+                    setEditingBillingAddress(null);
+                    setIsGstInvoiceModalOpen(true);
+                  }}
                   isBillingSelected={isGstInvoiceSelected}
                   onBillingSelectionChange={setIsGstInvoiceSelected}
                   onBillingAddressChange={setGstBillingAddressUid}
+                  onEditAddress={(address) => {
+                    setEditingBillingAddress(address);
+                    setIsGstInvoiceModalOpen(true);
+                  }}
                 />
               </div>
 
               <ResponsiveModal
                 modal={isGstInvoiceModalOpen}
-                setModal={setIsGstInvoiceModalOpen}
+                setModal={(isOpen) => {
+                  setIsGstInvoiceModalOpen(isOpen);
+                  if (!isOpen) setEditingBillingAddress(null);
+                }}
                 classes={{
                   modalClass: 'theme-modal view-modal modal-md',
                   modalHeaderClass: 'justify-content-between',
-                  title: 'GST Invoice Details',
+                  title: editingBillingAddress
+                    ? 'Edit GST Invoice Details'
+                    : 'GST Invoice Details',
                 }}
                 backdrop="static"
               >
@@ -970,8 +996,10 @@ const CheckoutSidebar = ({
                       }
 
                       setIsGstInvoiceSelected(true);
+                      setEditingBillingAddress(null);
                     }}
                     selectedAddress={selectedShippingAddress}
+                    editingAddress={editingBillingAddress}
                   />
                 </div>
               </ResponsiveModal>

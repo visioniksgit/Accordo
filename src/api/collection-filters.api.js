@@ -1,6 +1,7 @@
 const SDL_BASE_URL = process.env.SDL_BASE_URL || process.env.NEXT_PUBLIC_SDL_BASE_URL;
 
 const RESERVED_FILTER_PARAM_KEYS = new Set([
+  'vertical',
   'department',
   'field',
   'sort',
@@ -183,8 +184,9 @@ const buildCollectionFiltersQueryString = (params = {}) => {
     }
   });
 
-  if (params?.department) {
-    searchParams.set('department', params.department);
+  const vertical = params?.vertical || params?.department;
+  if (vertical) {
+    searchParams.set('vertical', vertical);
   }
 
   if (params?.field) {

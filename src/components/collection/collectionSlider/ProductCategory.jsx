@@ -25,43 +25,26 @@ const ProductCategory = ({ filter, setFilter }) => {
     [departments]
   );
 
-  const activeDepartment = filter?.department || '';
+  const activeVertical = filter?.vertical || filter?.department || '';
 
-  const handleDepartmentSelect = useCallback(
-    (departmentSlug) => {
+  const handleVerticalSelect = useCallback(
+    (verticalSlug) => {
       const nextFilter = {
-        department: departmentSlug,
+        vertical: verticalSlug,
+        department: verticalSlug,
       };
 
-      // If your parent component reads from the URL, remove setFilter entirely.
-      // If it relies on local state, keep it, but be aware it triggers a render.
       if (setFilter) {
         setFilter(nextFilter);
       }
 
-      // // Merge with existing search params instead of starting fresh (optional, but recommended)
-      // const currentParams = new URLSearchParams(Array.from(searchParams.entries()));
-      // const nextSearchParams = updateSearchParamsWithFilters(
-      //   currentParams,
-      //   nextFilter
-      // );
-
       const nextSearchParams = new URLSearchParams();
 
-      if (departmentSlug) {
-        nextSearchParams.set('department', departmentSlug);
+      if (verticalSlug) {
+        nextSearchParams.set('vertical', verticalSlug);
       }
 
-      router.push(
-        nextSearchParams.toString()
-          ? `${pathname}?${nextSearchParams.toString()}`
-          : pathname,
-        { scroll: false }
-      );
-
       const queryString = nextSearchParams.toString();
-
-      // IMPORTANT: Add { scroll: false } so Next.js doesn't trigger a hard navigation evaluation
       router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
     },
     [pathname, router, setFilter]
@@ -94,14 +77,14 @@ const ProductCategory = ({ filter, setFilter }) => {
       >
         <ul className={styles.categoryList}>
           {categoryItems.map((category) => {
-            const isActive = (category.slug || '') === activeDepartment;
+            const isActive = (category.slug || '') === activeVertical;
 
             return (
               <li key={category.uid}>
                 <button
                   type="button"
                   className={`${styles.categoryItem} ${isActive ? styles.active : ''}`}
-                  onClick={() => handleDepartmentSelect(category.slug)}
+                  onClick={() => handleVerticalSelect(category.slug)}
                   disabled={category.disabled}
                 >
                   <span className={styles.categoryIcon}>{category.icon}</span>

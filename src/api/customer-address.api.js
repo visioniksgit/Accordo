@@ -14,7 +14,7 @@ export const mapAddressFormToCustomerAddressPayload = (
 ) => {
   const resolvedAddressType = formData?.addressType === 'Other'
     ? String(formData?.otherAddressType || '').trim()
-    : formData?.addressType || 'Home';
+    : formData?.addressType || 'Site';
 
   return {
     type: type === 'billing' ? 'billing' : 'shipping',
@@ -36,7 +36,7 @@ export const mapAddressFormToCustomerAddressPayload = (
     placeId: formData?.placeId || '',
     googleAddress: formData?.googleAddress || '',
     gstAvailibilty: 'No',
-    addressType: resolvedAddressType || 'Home',
+    addressType: resolvedAddressType || 'Site',
   };
 };
 

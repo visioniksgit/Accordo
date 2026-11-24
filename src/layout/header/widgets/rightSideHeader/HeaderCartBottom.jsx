@@ -56,9 +56,9 @@ const getImageUrl = (...sources) => {
 const getItemMaxQuantity = (item) => {
   const parsedQuantity = Number(
     item?.variant?.stockQty ??
-    item?.variation?.quantity ??
-    item?.product?.stockQty ??
-    item?.product?.quantity
+      item?.variation?.quantity ??
+      item?.product?.stockQty ??
+      item?.product?.quantity
   );
 
   return Number.isFinite(parsedQuantity) ? Math.max(0, parsedQuantity) : null;
@@ -131,6 +131,7 @@ const HeaderCartBottom = ({
   const [pendingRemovalItem, setPendingRemovalItem] = useState(null);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [isGstInvoiceModalOpen, setIsGstInvoiceModalOpen] = useState(false);
+  const [editingBillingAddress, setEditingBillingAddress] = useState(null);
   const [isGstInvoiceSelected, setIsGstInvoiceSelected] = useState(false);
   const [gstBillingAddressUid, setGstBillingAddressUid] = useState('');
   const [selectedCoinUsedAmount, setSelectedCoinUsedAmount] = useState(0);
@@ -210,7 +211,9 @@ const HeaderCartBottom = ({
       const rawMatch = (rawCartProducts || []).find(
         (r) =>
           (r.id && item.cartUid && String(r.id) === String(item.cartUid)) ||
-          (r.cartUid && item.cartUid && String(r.cartUid) === String(item.cartUid)) ||
+          (r.cartUid &&
+            item.cartUid &&
+            String(r.cartUid) === String(item.cartUid)) ||
           (String(r.product_id) === String(item.product_id) &&
             String(r.variation_id) === String(item.variation_id))
       );
@@ -220,13 +223,20 @@ const HeaderCartBottom = ({
         item?.variation?.color ||
         rawMatch?.color ||
         rawMatch?.variation?.color ||
-        (Array.isArray(item?.variation?.colors) && (item?.colorUid || rawMatch?.colorUid)
-          ? item.variation.colors.find((c) => c?.uid === (item?.colorUid || rawMatch?.colorUid))
+        (Array.isArray(item?.variation?.colors) &&
+        (item?.colorUid || rawMatch?.colorUid)
+          ? item.variation.colors.find(
+              (c) => c?.uid === (item?.colorUid || rawMatch?.colorUid)
+            )
           : null) ||
-        (Array.isArray(rawMatch?.variation?.colors) && (item?.colorUid || rawMatch?.colorUid)
-          ? rawMatch.variation.colors.find((c) => c?.uid === (item?.colorUid || rawMatch?.colorUid))
+        (Array.isArray(rawMatch?.variation?.colors) &&
+        (item?.colorUid || rawMatch?.colorUid)
+          ? rawMatch.variation.colors.find(
+              (c) => c?.uid === (item?.colorUid || rawMatch?.colorUid)
+            )
           : null) ||
-        (Array.isArray(item?.variation?.colors) && item.variation.colors.length === 1
+        (Array.isArray(item?.variation?.colors) &&
+        item.variation.colors.length === 1
           ? item.variation.colors[0]
           : null) ||
         null;
@@ -246,9 +256,9 @@ const HeaderCartBottom = ({
         color: resolvedColor,
         variation: item.variation
           ? {
-            ...item.variation,
-            color: resolvedColor,
-          }
+              ...item.variation,
+              color: resolvedColor,
+            }
           : item.variation,
       };
     });
@@ -587,7 +597,8 @@ const HeaderCartBottom = ({
     }
 
     const currentItem = pendingRemovalItem;
-    const { productUid, variantUid, colorUid } = getItemIdentifiers(currentItem);
+    const { productUid, variantUid, colorUid } =
+      getItemIdentifiers(currentItem);
 
     if (!productUid || !variantUid) {
       ToastNotification('error', 'Unable to update this cart item.');
@@ -725,7 +736,9 @@ const HeaderCartBottom = ({
       variation?.color ||
       item?.variant?.color ||
       (Array.isArray(variation?.colors) && (item?.colorUid || item?.color_id)
-        ? variation.colors.find((c) => c?.uid === (item?.colorUid || item?.color_id))
+        ? variation.colors.find(
+            (c) => c?.uid === (item?.colorUid || item?.color_id)
+          )
         : null) ||
       (Array.isArray(variation?.colors) && variation.colors.length === 1
         ? variation.colors[0]
@@ -745,17 +758,17 @@ const HeaderCartBottom = ({
     const name = product?.name || 'Product';
     const salePrice = Number(
       pricing?.snapPrice ??
-      variation?.disPrice ??
-      variation?.sale_price ??
-      product?.sale_price ??
-      0
+        variation?.disPrice ??
+        variation?.sale_price ??
+        product?.sale_price ??
+        0
     );
     const mrp = Number(
       pricing?.snapMrp ??
-      variation?.mrp ??
-      variation?.price ??
-      product?.price ??
-      0
+        variation?.mrp ??
+        variation?.price ??
+        product?.price ??
+        0
     );
     const quantity = Number(
       item?.qty ?? item?.quantity ?? pricing?.quantity ?? 1
@@ -819,7 +832,9 @@ const HeaderCartBottom = ({
               {variation?.name && <span>{variation.name}</span>}
               {color && (color.name || color.hexcode) && (
                 <span className="d-inline-flex align-items-center gap-1">
-                  {variation?.name && <span style={{ color: '#bbb', margin: '0 2px' }}>•</span>}
+                  {variation?.name && (
+                    <span style={{ color: '#bbb', margin: '0 2px' }}>•</span>
+                  )}
                   {color.hexcode && (
                     <span
                       style={{
@@ -939,7 +954,9 @@ const HeaderCartBottom = ({
             {variantName && <span>{variantName}</span>}
             {item?.color && (item.color.name || item.color.hexcode) && (
               <span className="d-inline-flex align-items-center gap-1">
-                {variantName && <span style={{ color: '#bbb', margin: '0 2px' }}>•</span>}
+                {variantName && (
+                  <span style={{ color: '#bbb', margin: '0 2px' }}>•</span>
+                )}
                 {item.color.hexcode && (
                   <span
                     style={{
@@ -1036,23 +1053,23 @@ const HeaderCartBottom = ({
 
               {((groupedCartProducts?.length ?? 0) > 0 ||
                 (selectedFreeItems?.length ?? 0) > 0) && (
-                  <div className="cart-product-group order-summary-section mb-3">
-                    {/* 1. Render standard grouped cart items */}
-                    {groupedCartProducts?.length > 0 &&
-                      groupedCartProducts.map((group) => (
-                        <ul className="order-items" key={group.key}>
-                          {group.items.map(renderCartItem)}
-                        </ul>
-                      ))}
-
-                    {/* 2. Render free items inside the SAME wrapper */}
-                    {selectedFreeItems?.length > 0 && (
-                      <ul className="order-items">
-                        {selectedFreeItems.map(renderFreeCartValueItem)}
+                <div className="cart-product-group order-summary-section mb-3">
+                  {/* 1. Render standard grouped cart items */}
+                  {groupedCartProducts?.length > 0 &&
+                    groupedCartProducts.map((group) => (
+                      <ul className="order-items" key={group.key}>
+                        {group.items.map(renderCartItem)}
                       </ul>
-                    )}
-                  </div>
-                )}
+                    ))}
+
+                  {/* 2. Render free items inside the SAME wrapper */}
+                  {selectedFreeItems?.length > 0 && (
+                    <ul className="order-items">
+                      {selectedFreeItems.map(renderFreeCartValueItem)}
+                    </ul>
+                  )}
+                </div>
+              )}
 
               {/* {hiddenCartProducts?.length > 0 && (
                 <div className="alert alert-warning py-2 px-3 mb-0">
@@ -1112,10 +1129,17 @@ const HeaderCartBottom = ({
             {isAuthenticated && (
               <div style={{ padding: '16px 16px 0' }}>
                 <GstInvoiceCard
-                  onClick={() => setIsGstInvoiceModalOpen(true)}
+                  onClick={() => {
+                    setEditingBillingAddress(null);
+                    setIsGstInvoiceModalOpen(true);
+                  }}
                   isBillingSelected={isGstInvoiceSelected}
                   onBillingSelectionChange={setIsGstInvoiceSelected}
                   onBillingAddressChange={setGstBillingAddressUid}
+                  onEditAddress={(address) => {
+                    setEditingBillingAddress(address);
+                    setIsGstInvoiceModalOpen(true);
+                  }}
                 />
               </div>
             )}
@@ -1182,10 +1206,9 @@ const HeaderCartBottom = ({
         <div className="text-center p-4">
           <h5 className="modal-title mb-2">Remove Item?</h5>
           <p className="mb-4">
-            Do you want to remove{' '}
-            {/* pendingRemovalItem?.product?.name || */}
-            {'this item'} from your cart.
-            You can save it to your wishlist for later.
+            Do you want to remove {/* pendingRemovalItem?.product?.name || */}
+            {'this item'} from your cart. You can save it to your wishlist for
+            later.
           </p>
           <div className="d-flex flex-wrap gap-2">
             <Btn
@@ -1223,11 +1246,16 @@ const HeaderCartBottom = ({
       {isAuthenticated && (
         <ResponsiveModal
           modal={isGstInvoiceModalOpen}
-          setModal={setIsGstInvoiceModalOpen}
+          setModal={(isOpen) => {
+            setIsGstInvoiceModalOpen(isOpen);
+            if (!isOpen) setEditingBillingAddress(null);
+          }}
           classes={{
             modalClass: 'theme-modal view-modal modal-md',
             modalHeaderClass: 'justify-content-between',
-            title: 'GST Invoice Details',
+            title: editingBillingAddress
+              ? 'Edit GST Invoice Details'
+              : 'GST Invoice Details',
           }}
           backdrop="static"
         >
@@ -1246,8 +1274,10 @@ const HeaderCartBottom = ({
                 }
 
                 setIsGstInvoiceSelected(true);
+                setEditingBillingAddress(null);
               }}
               selectedAddress={selectedAddress}
+              editingAddress={editingBillingAddress}
             />
           </div>
         </ResponsiveModal>

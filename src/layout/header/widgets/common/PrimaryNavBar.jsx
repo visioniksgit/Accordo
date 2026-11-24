@@ -12,7 +12,7 @@ const PRIMARY_NAV_TITLES = [
   'Best Sellers',
   'Deals',
   'AI Negotiations',
-  'For Business',
+  'Shop by Vertical',
   'About Us',
   // 'Blogs',
   // 'Media',
