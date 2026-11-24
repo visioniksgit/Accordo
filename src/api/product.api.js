@@ -576,6 +576,7 @@ export const fetchProductRedirectByVariant = async (variantId) => {
   }
 
   return {
+    ...payload,
     productSlug,
     variantSlug,
   };

@@ -447,9 +447,14 @@ const MyOrders = () => {
       const { productSlug, variantSlug } =
         await resolveProductRedirectByVariant(variantUid);
 
-      const nextUrl = variantSlug
-        ? `/products/${encodeURIComponent(productSlug)}?productVariant=${encodeURIComponent(variantSlug)}`
-        : `/products/${encodeURIComponent(productSlug)}`;
+      const colorUid = String(item?.colorUid || '').trim();
+
+      const params = new URLSearchParams();
+      if (variantSlug) params.set('productVariant', variantSlug);
+      if (colorUid) params.set('color', colorUid);
+
+      const queryString = params.toString();
+      const nextUrl = `/products/${encodeURIComponent(productSlug)}${queryString ? `?${queryString}` : ''}`;
 
       router.push(nextUrl);
     } catch (error) {
@@ -534,7 +539,7 @@ const MyOrders = () => {
   const isActiveOrderDelivered = canReturnOrder(
     activeOrderDetails?.displayStatus
   );
-  // const isActiveOrderCancelable = canCancelOrder(activeOrderDetails?.displayStatus);
+  // const isActiveOrderCancelable =  canCancelOrder(activeOrderDetails?.displayStatus);
   const isActiveOrderCancelable = activeOrderDetails?.isCancellable;
   const canRaiseReturn = activeOrderDetails?.canRaiseReturn;
   const isActiveOrderRateable =

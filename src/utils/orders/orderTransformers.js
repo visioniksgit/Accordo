@@ -70,6 +70,24 @@ const resolveOrderItemVariantId = (item = {}) => {
   ).trim();
 };
 
+export const resolveOrderItemColorId = (item = {}) => {
+  return String(
+    item?.snapColorUid ||
+    item?.colorUid ||
+    item?.color_id ||
+    item?.colorId ||
+    item?.snapColorId ||
+    item?.color?.uid ||
+    item?.color?.id ||
+    item?.snapColor?.uid ||
+    item?.snapColor?.id ||
+    item?.variant?.colorUid ||
+    item?.variant?.color?.uid ||
+    item?.selectedColorUid ||
+    ''
+  ).trim();
+};
+
 export const formatPlacedAt = (isoDate) => {
   if (!isoDate) return '';
 
@@ -222,6 +240,12 @@ export const mapApiOrderToCardModel = (apiOrder) => {
       currentStatus: item?.currentStatus || '',
       snapColorName: item?.snapColorName ?? item?.colorName ?? item?.color?.name ?? null,
       snapColorHexCode: item?.snapColorHexCode ?? item?.colorHexCode ?? item?.color?.hexcode ?? item?.color?.hex ?? null,
+      colorUid: resolveOrderItemColorId(item),
+      snapColorUid: resolveOrderItemColorId(item),
+      colorName: item?.snapColorName ?? item?.colorName ?? item?.color?.name ?? null,
+      colorSlug: item?.snapColorSlug ?? item?.colorSlug ?? item?.color?.slug ?? null,
+      color: item?.color || null,
+      rawItem: item,
     })),
     // Attach the unified summary object to list items natively
     summary: {
@@ -302,6 +326,12 @@ export const mapOrderDetailToOrderModel = (apiOrder) => {
     currentStatus: item?.currentStatus || '',
     snapColorName: item?.snapColorName ?? item?.colorName ?? item?.color?.name ?? null,
     snapColorHexCode: item?.snapColorHexCode ?? item?.colorHexCode ?? item?.color?.hexcode ?? item?.color?.hex ?? null,
+    colorUid: resolveOrderItemColorId(item),
+    snapColorUid: resolveOrderItemColorId(item),
+    colorName: item?.snapColorName ?? item?.colorName ?? item?.color?.name ?? null,
+    colorSlug: item?.snapColorSlug ?? item?.colorSlug ?? item?.color?.slug ?? null,
+    color: item?.color || null,
+    rawItem: item,
   }));
 
   return {
