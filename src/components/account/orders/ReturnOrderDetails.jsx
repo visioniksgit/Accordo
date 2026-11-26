@@ -47,7 +47,7 @@ const REASON_LABELS = {
   defective_product: 'Defective Product',
   not_as_described: 'Not as Described',
   quality_issue: 'Quality Issue',
-  expired_product: 'Expired Product',
+  // expired_product: 'Expired Product',
   missing_parts: 'Missing Parts / Accessories',
   changed_mind: 'Changed Mind',
   other: 'Other',

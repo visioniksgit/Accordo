@@ -19,8 +19,8 @@ import CompanyDocuments from '@/app/(mainLayout)/company-documents/CompanyDocume
 const AboutUsContent = () => {
   return (
     <>
-      <AboutHeroBanner />
-      <AboutSection />
+      {/* <AboutHeroBanner /> */}
+      {/* <AboutSection /> */}
 
       {/* <Breadcrumb title={'AboutUs'} subNavigation={[{ name: 'AboutUs' }]} /> */}
       {/* <WrapperComponent
@@ -37,6 +37,8 @@ const AboutUsContent = () => {
       {/* <CreativeTeam /> */}
 
       <CompanyDocuments />
+      <AboutDirectors />
+
       {/* <ReviewSection />
       <OurBlog /> */}
     </>

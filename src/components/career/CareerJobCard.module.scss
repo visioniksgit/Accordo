@@ -43,11 +43,9 @@
 
 .topBar {
   height: 4px;
-  background: linear-gradient(
-    90deg,
-    var(--theme-color),
-    var(--theme-color-light)
-  );
+  background: linear-gradient(90deg,
+      var(--theme-color),
+      var(--theme-color-light));
 }
 
 .cardBody {
@@ -224,7 +222,7 @@
   &:hover {
     border-color: var(--theme-color);
     color: var(--theme-color);
-    background: rgba(var(--theme-color-rgb), 0.06);
+    background: #edf2ff;
   }
 }
 
@@ -252,32 +250,33 @@
 .actionButtons {
   display: flex;
   gap: 10px;
-  
-  .applyBtn,
-.viewBtn {
-  flex: 1 1 50%;
-  width: 50%;
-  max-width: 50%;
-  min-width: 0;
-  height: 48px;
-  margin-top: 0;
-}
-}
-.applyBtn {
-    margin-top: 25px;
-    width: 100%;
-    height: 48px;
-    border: none;
-    border-radius: 12px;
-    border: 1px solid var(--theme-color);
-    // background: var(--theme-color);
-    color: var(--theme-color);
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 
-    &:hover {
-        background: var(--theme-color);
-        color: var(--white);
-    }
+  .applyBtn,
+  .viewBtn {
+    flex: 1 1 50%;
+    width: 50%;
+    max-width: 50%;
+    min-width: 0;
+    height: 48px;
+    margin-top: 0;
+  }
+}
+
+.applyBtn {
+  margin-top: 25px;
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  border: 1px solid var(--theme-color);
+  // background: var(--theme-color);
+  color: var(--theme-color);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    background: var(--theme-color);
+    color: var(--white);
+  }
 }

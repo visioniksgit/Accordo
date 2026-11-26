@@ -10,89 +10,56 @@ import WrapperComponent from '@/components/common/WrapperComponent';
 const directors = [
   {
     id: 1,
-    title: 'Shri Ranjit Anand Puranik',
+    title: 'Director Name',
     designation: 'Managing Director',
     description: (
-      <>
-        <p>
-          Managing Director of Shree Dhootapapeshwar Ltd., he represents the
-          fifth generation and is the seventh member of the Puranik family to
-          lead the organization. Under his robust leadership, the company today
-          boasts last-mile engagement with the largest network of Ayurved
-          physicians of any company. He strongly believes that what is good for
-          Ayurveda is best for the enterprise, staying true to the vision of its
-          founding fathers.
-        </p>
-
-        <p>
-          Mr. Puranik is Director of Shree Dhootapapeshwar Research Foundation.
-          He also serves as President of Ayurvidya Prasarak Mandal, a
-          60-year-old Ayurveda college and teaching hospital. He is a Member of
-          the Advisory Committee, Ministry of AYUSH, Government of India. Mr.
-          Puranik has been a vocal advocate for the recognition and acceptance
-          of traditional medicine, particularly the classical principles of
-          Ayurveda.
-        </p>
-
-        <p>
-          As Trustee of the All India Ayurveda Congress and the World Ayurveda
-          Foundation, he actively advocates for the advancement of Ayurveda. He
-          currently holds the following positions:
-        </p>
-
-        <ul>
-          <li>Trustee, Shree Dhootapapeshwar Ayurved Vidyalay Samiti</li>
-          <li>Board Member, National Medicinal Plants Board</li>
-          <li>
-            Founder Trustee, National Ayurveda Students &amp; Youth Association
-            (NASYA)
-          </li>
-          <li>Founder Group Member, AYUSH Export Promotion Council (FICCI)</li>
-          <li>
-            Vice President (West), Ayurvedic Drug Manufacturers' Association
-          </li>
-          <li>
-            Member, Ayurvedic Committee, American Herbal Products Association
-            (AHPA)
-          </li>
-          <li>Member, AYUSH Core Group, CII</li>
-        </ul>
-      </>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+        ea commodo consequat.
+      </p>
     ),
-    image: '/assets/images/aboutus/director1.webp',
+    image: '/assets/images/accordo-test-image/wire.png',
   },
   {
     id: 2,
-    title: 'Adv. Yashodhan Divekar',
+    title: 'Director Name',
     designation: 'Director',
-    description:
-      `Adv. Yashodhan Divekar is associated with Shree Dhootapapeshwar Limites since the year 2020. He is an Advocate and Solicitor of the Incorporated Law Society of
-India and Law Society of England. He is 3rd generation Solicitor and Partner of Divekar and Co., a 101 year old and most reputed Law firm in Mumbai. Mr. Divekar
-has robust experience as an Solicitor and Counsel. He is an expert on matters pertaining to Hindu law, property and Constitutional law and handles the firm's
-plenteous Arbitration work.
-`,
-    image: '/assets/images/aboutus/director2.webp',
+    description: (
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure
+        dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+        nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+      </p>
+    ),
+    image: '/assets/images/accordo-test-image/wire.png',
   },
   {
     id: 3,
-    title: 'Adv. Mrs. N.R.Patankar',
+    title: 'Director Name',
     designation: 'Director',
     description: (
-      <>
-        <p>
-          Adv. Mrs. N. R. Patankar has been associated with Shree Dhootapapeshwar Limited since the mid 1980's and has been a steadfast support to the enterprise aims.
-          She has an extensive experience of over 40 years in the field of Labour & Industrial Law. Her expertise involves arbitration, mediation and conciliation in her law
-          practice. She acts as a Counsel for formulation of policies and other matters related to litigation within the Company.
-
-        </p>
-
-        <p>
-          Mrs. Patankar is an acknowledged authority on Labour Law and her footprint in High Courts in India is well acclaimed.
-        </p>
-      </>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer feugiat
+        neque at tincidunt vulputate, justo erat malesuada augue, vitae posuere
+        sapien magna at erat. Vestibulum ante ipsum primis in faucibus orci.
+      </p>
     ),
-
-    image: '/assets/images/aboutus/director3.webp',
+    image: '/assets/images/accordo-test-image/wire.png',
+  },
+  {
+    id: 4,
+    title: 'Director Name',
+    designation: 'Director',
+    description: (
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor
+        in reprehenderit in voluptate velit esse cillum dolore.
+      </p>
+    ),
+    image: '/assets/images/accordo-test-image/wire.png',
   },
 ];
 
@@ -104,7 +71,7 @@ const AboutDirectors = () => {
 
   return (
     <>
-      <WrapperComponent
+      {/* <WrapperComponent
         classes={{ sectionClass: 'blog-section section-b-space' }}
         customCol={true}
       >
@@ -117,13 +84,13 @@ const AboutDirectors = () => {
             </p>
           </div>
         </div>
-      </WrapperComponent>
+      </WrapperComponent> */}
       <section className={`${styles.section} section-b-space section-t-space`}>
         <div className="container-fluid-lg">
           <CustomHeading
             customClass="mb-0"
-            title="Meet the minds behind SDL (BOD)"
-            subTitle="Shree Dhootapapeshwar is guided by a board that blends Ayurvedic authority, legal expertise and professional governance. Together they uphold the founding belief that what is Good for Ayurveda is Best for the enterprise."
+            title="The People Behind Accordo"
+            subTitle="Meet the passionate minds driving smarter procurement, better connections, and seamless business experiences."
             svgUrl={<LeafSVG className="icon-width" />}
           />
 
@@ -132,7 +99,7 @@ const AboutDirectors = () => {
               const isFlipped = flippedId === item.id;
 
               return (
-                <div key={item.id} className="col-lg-4 col-md-6 col-sm-12">
+                <div key={item.id} className="col-lg-3 col-md-6 col-sm-12">
                   <div
                     className={`${styles.card} ${isFlipped ? styles.flipped : ''}`}
                   >
