@@ -66,8 +66,10 @@ const HeaderCartData = ({ cartStyle, onNegotiateWithAi }) => {
   const [showAddressDropdown, setShowAddressDropdown] = useState(false);
   const [showAddressLimitModal, setShowAddressLimitModal] = useState(false);
   const [isProceedingToCheckout, setIsProceedingToCheckout] = useState(false);
+  const [pendingOrderType, setPendingOrderType] = useState(null);
   const [isNegotiating, setIsNegotiating] = useState(false);
   const negotiateTimerRef = useRef(null);
+  const pendingOrderTypeRef = useRef(null);
 
   useEffect(() => {
     return () => {
@@ -225,6 +227,8 @@ const HeaderCartData = ({ cartStyle, onNegotiateWithAi }) => {
       if (!data?.razorpay) {
         await clearPrescriptionDraftsOnSuccess();
         setCartCanvas(false);
+        pendingOrderTypeRef.current = null;
+        setPendingOrderType(null);
         setIsProceedingToCheckout(false);
         if (data?.trxUid) sessionStorage.setItem('_osTrxUid', data.trxUid);
         router.replace(
@@ -234,6 +238,8 @@ const HeaderCartData = ({ cartStyle, onNegotiateWithAi }) => {
       }
 
       if (!data?.trxUid) {
+        pendingOrderTypeRef.current = null;
+        setPendingOrderType(null);
         setIsProceedingToCheckout(false);
         ToastNotification('error', 'Payment initialization failed');
         return;
@@ -274,10 +280,14 @@ const HeaderCartData = ({ cartStyle, onNegotiateWithAi }) => {
           );
         }
       } finally {
+        pendingOrderTypeRef.current = null;
+        setPendingOrderType(null);
         setIsProceedingToCheckout(false);
       }
     },
     onError: (error) => {
+      pendingOrderTypeRef.current = null;
+      setPendingOrderType(null);
       setIsProceedingToCheckout(false);
       ToastNotification(
         'error',
@@ -299,7 +309,7 @@ const HeaderCartData = ({ cartStyle, onNegotiateWithAi }) => {
     setAddressModal(true);
   };
 
-  const handleProceedToCheckout = async () => {
+  const handleProceedToCheckout = async (isCreditOrder = false) => {
     if (isProceedingToCheckout || isAddingAddress) {
       return;
     }
@@ -322,6 +332,9 @@ const HeaderCartData = ({ cartStyle, onNegotiateWithAi }) => {
       return;
     }
 
+    const orderType = isCreditOrder ? 'credit' : 'pay';
+    pendingOrderTypeRef.current = orderType;
+    setPendingOrderType(orderType);
     setIsProceedingToCheckout(true);
 
     const selectedShippingAddressUid = selectedAddress?.uid;
@@ -354,6 +367,7 @@ const HeaderCartData = ({ cartStyle, onNegotiateWithAi }) => {
         addThrough: 'Website',
         note: '',
         getGstInvoice: Boolean(checkoutState?.isGstInvoiceSelected),
+        ...(isCreditOrder ? { isCreditOrder: true } : {}),
         prescriptions,
         items: buyableCartItems.map((item) => ({
           colorUid: item?.colorUid || '',
@@ -373,6 +387,8 @@ const HeaderCartData = ({ cartStyle, onNegotiateWithAi }) => {
 
       submitOrder(orderPayload);
     } catch (error) {
+      pendingOrderTypeRef.current = null;
+      setPendingOrderType(null);
       setIsProceedingToCheckout(false);
       ToastNotification(
         'error',
@@ -550,36 +566,39 @@ const HeaderCartData = ({ cartStyle, onNegotiateWithAi }) => {
                     <div className="cart-footer-actions">
                       <button
                         type="button"
-                        className={`btn-negotiate-ai ${isNegotiating ? 'is-negotiating' : ''}`}
-                        onClick={handleNegotiateWithAi}
-                        disabled={isNegotiating}
-                        title={isNegotiating ? 'Negotiating with AI...' : 'Negotiate with AI'}
+                        className={`btn-credit-request ${pendingOrderType === 'credit' ? 'is-submitting' : ''}`}
+                        onClick={() => handleProceedToCheckout(true)}
+                        disabled={
+                          isProceedingToCheckout ||
+                          isAddingAddress ||
+                          !hasEligibleCartProducts
+                        }
+                        title={
+                          pendingOrderType === 'credit'
+                            ? 'Submitting Credit Request...'
+                            : 'Credit Request'
+                        }
                       >
-                        <span className="btn-negotiate-ai-inner">
-                          {isNegotiating ? (
-                            <>
-                              <span className="ai-btn-spinner" />
-                              <span>Loading...</span>
-                            </>
-                          ) : (
-                            <>
-                              <RiSparklingLine className="ai-sparkle-icon" />
-                              <span>Credit Request</span>
-                            </>
-                          )}
-                        </span>
+                        {pendingOrderType === 'credit' ? (
+                          <>
+                            <span className="credit-btn-spinner" />
+                            <span>Submitting...</span>
+                          </>
+                        ) : (
+                          <span>Credit Request</span>
+                        )}
                       </button>
 
                       <button
                         className="btn-payment"
-                        onClick={handleProceedToCheckout}
+                        onClick={() => handleProceedToCheckout(false)}
                         disabled={
                           isProceedingToCheckout ||
                           isAddingAddress ||
                           !hasEligibleCartProducts
                         }
                       >
-                        {isProceedingToCheckout
+                        {pendingOrderType === 'pay'
                           ? 'Processing...'
                           : !hasEligibleCartProducts
                             ? noEligibleItemsLabel

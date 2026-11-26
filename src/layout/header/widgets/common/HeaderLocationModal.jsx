@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Modal, ModalBody } from 'reactstrap';
 import {
   RiMapPin2Line,
@@ -8,183 +8,275 @@ import {
   RiCloseLine,
   RiSearchLine,
   RiFocus3Line,
-  RiArrowLeftLine,
+  RiLoader4Line,
+  RiErrorWarningLine,
 } from 'react-icons/ri';
+import { useGooglePlacesPredictions } from '../../../../utils/hooks/useGooglePlacesPredictions';
+import { GoogleMapsProvider } from '../../../../helper/mapsContext/googleMapsProvider';
+import {
+  formatAddress,
+  useGoogleMapsStatus,
+  MapsStatus,
+  parseGooglePlace,
+} from '../../../../utils/helpers';
+import useDebounce from '../../../../utils/hooks/useDebounce';
+import {
+  extractPincodeFromText,
+  isPincodeServiceable,
+  reverseGeocodeWithPincode,
+} from '../../../../utils/locationServiceability';
 
-// Sample mock locations matching the design
-const SAMPLE_LOCATIONS = [
-  {
-    id: 1,
-    title: 'HYPLAP IT SOLUTION PVT LTD, Sector 30A, Vashi, Navi Mumbai, Maharashtra, India',
-    subtitle: 'Sector 30A-Vashi',
-  },
-  {
-    id: 2,
-    title: 'Hyplast Industries, off Link Road, Bhagat Singh II, Goregaon West, Mumbai, Maharashtra, India',
-    subtitle: 'off Link Road-Bhagat Singh II',
-  },
-  {
-    id: 3,
-    title: 'HyPlus Technologies Laptop Desktop Mobilephone Service Center, Sreekandapuram, Keralam, India',
-    subtitle: 'Sreekandapuram-Keralam',
-  },
-  {
-    id: 4,
-    title: 'HYPLEX QUALITY DOOR, Pazhayangadi, Keralam, India',
-    subtitle: 'Pazhayangadi-Keralam',
-  },
-  {
-    id: 5,
-    title: 'HyPlus Technology India Private Limited, opposite Sai Chowk Road, Pimple Saudagar, Pune, Maharashtra, India',
-    subtitle: 'Pimple Saudagar-Pune',
-  },
-];
-
-const HeaderLocationModal = ({
+// ─────────────────────────────────────────────────────────────
+// Inner modal (needs GoogleMapsProvider above it in tree)
+// ─────────────────────────────────────────────────────────────
+const HeaderLocationModalInner = ({
   modal,
   setModal,
   triggerRef,
-  onUseCurrentLocation,
-  onTypeManually,
   onSelectLocation,
+  initialView = 'prompt',
+  canClose = true,
+  savedShippingAddresses = [],
 }) => {
-  const [view, setView] = useState('prompt'); // 'prompt' | 'manual'
+  const [view, setView] = useState(initialView); // 'prompt' | 'manual'
   const [searchQuery, setSearchQuery] = useState('');
   const [dialogStyle, setDialogStyle] = useState({});
+  const [gpsLoading, setGpsLoading] = useState(false);
+  const [gpsError, setGpsError] = useState('');
+  const [notServiceableMsg, setNotServiceableMsg] = useState('');
+  const [checkingPlaceId, setCheckingPlaceId] = useState(null);
+  const searchInputRef = useRef(null);
 
-  // Reset to prompt view and clear query when modal closes
+  // Debounce search so we don't fire on every keystroke
+  const debouncedQuery = useDebounce(searchQuery.trim(), 500);
+
+  // Only call the hook when Maps SDK is ready
+  const mapsStatus = useGoogleMapsStatus();
+  const mapsReady = mapsStatus === MapsStatus.READY;
+
+  const { results: predictions, loading: placesLoading } =
+    useGooglePlacesPredictions(mapsReady ? debouncedQuery : '', 'in');
+
+  // ── Sync view on open & reset state on close ──
   useEffect(() => {
-    if (!modal) {
-      const timer = setTimeout(() => {
-        setView('prompt');
+    if (modal) {
+      setView(initialView);
+    } else {
+      const t = setTimeout(() => {
+        setView(initialView);
         setSearchQuery('');
+        setGpsError('');
+        setGpsLoading(false);
+        setNotServiceableMsg('');
+        setCheckingPlaceId(null);
       }, 300);
-      return () => clearTimeout(timer);
+      return () => clearTimeout(t);
     }
-  }, [modal]);
+  }, [modal, initialView]);
 
-  // Position calculation for prompt view (anchored directly under header trigger)
-  const calculatePosition = () => {
+  // Auto-focus search input when manual view opens
+  useEffect(() => {
+    if (view === 'manual' && modal) {
+      setTimeout(() => searchInputRef.current?.focus(), 150);
+    }
+  }, [view, modal]);
+
+  // ── Position the prompt popover below the header trigger ──
+  const calculatePosition = useCallback(() => {
     if (triggerRef?.current && typeof window !== 'undefined') {
       const rect = triggerRef.current.getBoundingClientRect();
-      const isRtl =
-        document.dir === 'rtl' || document.documentElement.dir === 'rtl';
+      const isRtl = document.dir === 'rtl' || document.documentElement.dir === 'rtl';
       const modalWidth = 400;
 
       if (window.innerWidth > 576) {
         const top = rect.bottom + 12;
-
         if (isRtl) {
           const right = Math.max(16, window.innerWidth - rect.right);
-          return {
-            position: 'absolute',
-            top: `${top}px`,
-            right: `${right}px`,
-            left: 'auto',
-            margin: 0,
-          };
+          return { position: 'absolute', top: `${top}px`, right: `${right}px`, left: 'auto', margin: 0 };
         } else {
           let left = rect.left;
           if (left + modalWidth > window.innerWidth - 16) {
             left = Math.max(16, window.innerWidth - modalWidth - 16);
           }
-          return {
-            position: 'absolute',
-            top: `${top}px`,
-            left: `${left}px`,
-            right: 'auto',
-            margin: 0,
-          };
+          return { position: 'absolute', top: `${top}px`, left: `${left}px`, right: 'auto', margin: 0 };
         }
-      } else {
-        return { margin: '1rem auto' };
       }
+      return { margin: '1rem auto' };
     }
     return {};
-  };
+  }, [triggerRef]);
 
   useEffect(() => {
     if (!modal || view !== 'prompt') return;
-
-    const updatePosition = () => {
-      setDialogStyle(calculatePosition());
-    };
-
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition);
-
+    const update = () => setDialogStyle(calculatePosition());
+    update();
+    window.addEventListener('resize', update);
+    window.addEventListener('scroll', update);
     return () => {
-      window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition);
+      window.removeEventListener('resize', update);
+      window.removeEventListener('scroll', update);
     };
-  }, [modal, view, triggerRef]);
+  }, [modal, view, calculatePosition]);
 
-  const toggle = () => setModal((prev) => !prev);
-
-  const handleUseCurrentLocation = () => {
-    if (onUseCurrentLocation) {
-      onUseCurrentLocation();
+  // ── Validate pincode before saving & closing ──
+  const validateAndSelect = ({ address, pincode }) => {
+    if (!pincode) {
+      setNotServiceableMsg(
+        'Could not detect a pincode for this location. Please pick a more specific street or area.'
+      );
+      return false;
     }
+
+    if (!isPincodeServiceable(pincode)) {
+      setNotServiceableMsg(
+        `Not Serviceable: We don't deliver to pincode ${pincode} yet. Accordo currently serves only Navi Mumbai.`
+      );
+      return false;
+    }
+
+    setNotServiceableMsg('');
+    onSelectLocation?.(address, pincode);
     setModal(false);
+    return true;
   };
 
-  const handleTypeManuallyClick = () => {
-    if (onTypeManually) {
-      onTypeManually();
+  // ── GPS handler ──
+  const handleGps = () => {
+    if (!navigator.geolocation) {
+      setGpsError('Geolocation is not supported by your browser.');
+      return;
     }
-    setView('manual');
-  };
-
-  const handleSelectLocationItem = (item) => {
-    if (onSelectLocation) {
-      onSelectLocation(item.subtitle || item.title);
-    }
-    setModal(false);
-  };
-
-  const hasSearchQuery = searchQuery.trim().length > 0;
-
-  // Filter locations by search query
-  const filteredLocations = SAMPLE_LOCATIONS.filter((loc) => {
-    const q = searchQuery.toLowerCase().trim();
-    return (
-      loc.title.toLowerCase().includes(q) ||
-      loc.subtitle.toLowerCase().includes(q)
+    setGpsLoading(true);
+    setGpsError('');
+    setNotServiceableMsg('');
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        try {
+          const { address, pincode } = await reverseGeocodeWithPincode(
+            latitude,
+            longitude
+          );
+          validateAndSelect({ address, pincode });
+        } catch {
+          setGpsError('Unable to fetch address for your current location. Please search manually.');
+        } finally {
+          setGpsLoading(false);
+        }
+      },
+      (err) => {
+        setGpsLoading(false);
+        const messages = {
+          1: 'Location permission denied. Please allow access in your browser settings.',
+          2: 'Location unavailable. Try again or search manually.',
+          3: 'Location request timed out. Try again.',
+        };
+        setGpsError(messages[err.code] || 'Unable to get your location.');
+      },
+      { timeout: 10000 }
     );
-  });
+  };
+
+  // ── Select a Places prediction & verify its pincode ──
+  const handleSelectPrediction = (prediction) => {
+    if (checkingPlaceId) return;
+    setNotServiceableMsg('');
+    setGpsError('');
+
+    const fallbackAddress = prediction.description;
+
+    if (!window.google?.maps?.places) {
+      const pincode = extractPincodeFromText(fallbackAddress);
+      validateAndSelect({ address: fallbackAddress, pincode });
+      return;
+    }
+
+    setCheckingPlaceId(prediction.place_id);
+    const service = new window.google.maps.places.PlacesService(
+      document.createElement('div')
+    );
+
+    service.getDetails(
+      {
+        placeId: prediction.place_id,
+        fields: ['address_components', 'formatted_address', 'geometry'],
+      },
+      async (place, status) => {
+        try {
+          let pincode = '';
+          let address = fallbackAddress;
+
+          if (
+            status === window.google.maps.places.PlacesServiceStatus.OK &&
+            place
+          ) {
+            const parsed = parseGooglePlace(place);
+            address = place.formatted_address || fallbackAddress;
+            pincode = parsed.pincode || extractPincodeFromText(address);
+
+            // If Google Places didn't include a postal_code (e.g., broad locality),
+            // reverse-geocode its coordinates to resolve the pincode.
+            if (!pincode && place.geometry?.location) {
+              try {
+                const geo = await reverseGeocodeWithPincode(
+                  place.geometry.location.lat(),
+                  place.geometry.location.lng()
+                );
+                pincode = geo.pincode;
+              } catch {
+                // Keep pincode empty; validateAndSelect will inform the user
+              }
+            }
+          } else {
+            pincode = extractPincodeFromText(fallbackAddress);
+          }
+
+          validateAndSelect({ address, pincode });
+        } finally {
+          setCheckingPlaceId(null);
+        }
+      }
+    );
+  };
 
   const isManualView = view === 'manual';
+  const hasQuery = searchQuery.trim().length > 0;
+  // Show results only once debounced query has arrived
+  const showResults = debouncedQuery.length > 0;
 
   return (
     <Modal
       isOpen={modal}
-      toggle={toggle}
+      toggle={() => {
+        if (canClose) setModal((p) => !p);
+      }}
+      backdrop={canClose ? true : 'static'}
+      keyboard={canClose}
       centered={isManualView}
-      className={`theme-modal header-location-modal ${isManualView
-          ? 'header-location-modal--manual'
-          : 'header-location-modal--prompt'
-        }`}
+      className={`theme-modal header-location-modal ${
+        isManualView ? 'header-location-modal--manual' : 'header-location-modal--prompt'
+      }`}
       style={isManualView ? {} : dialogStyle}
     >
       <ModalBody
-        className={`header-location-modal__body ${isManualView ? 'header-location-modal__body--manual' : ''
-          }`}
+        className={`header-location-modal__body ${
+          isManualView ? 'header-location-modal__body--manual' : ''
+        }`}
       >
         {/* ─── VIEW 1: Initial Prompt Popover ─── */}
         {!isManualView ? (
           <>
-            {/* Close button */}
-            <button
-              type="button"
-              className="header-location-modal__close"
-              aria-label="Close location modal"
-              onClick={() => setModal(false)}
-            >
-              <RiCloseLine />
-            </button>
+            {canClose && (
+              <button
+                type="button"
+                className="header-location-modal__close"
+                aria-label="Close location modal"
+                onClick={() => setModal(false)}
+              >
+                <RiCloseLine />
+              </button>
+            )}
 
-            {/* Icon + message */}
             <div className="header-location-modal__content">
               <div className="header-location-modal__icon-wrap">
                 <RiMapPin2Line className="header-location-modal__pin" />
@@ -194,133 +286,258 @@ const HeaderLocationModal = ({
               </p>
             </div>
 
-            {/* Actions */}
+            {gpsError && (
+              <p className="header-location-modal__gps-error">{gpsError}</p>
+            )}
+
+            {notServiceableMsg && (
+              <div className="location-not-serviceable" role="alert">
+                <RiErrorWarningLine className="location-not-serviceable__icon" />
+                <span>{notServiceableMsg}</span>
+              </div>
+            )}
+
             <div className="header-location-modal__actions">
               <button
                 type="button"
                 className="header-location-modal__btn header-location-modal__btn--outline"
-                onClick={handleTypeManuallyClick}
+                onClick={() => {
+                  setNotServiceableMsg('');
+                  setGpsError('');
+                  setView('manual');
+                }}
               >
                 Type Manually
               </button>
               <button
                 type="button"
                 className="header-location-modal__btn header-location-modal__btn--primary"
-                onClick={handleUseCurrentLocation}
+                onClick={handleGps}
+                disabled={gpsLoading}
               >
-                Use Current Location
+                {gpsLoading ? (
+                  <><RiLoader4Line className="spin-icon" /> Locating…</>
+                ) : (
+                  'Use Current Location'
+                )}
               </button>
             </div>
           </>
         ) : (
-          /* ─── VIEW 2: Manual Location Search Modal ─── */
+          /* ─── VIEW 2: Manual Search Modal ─── */
           <div className="location-manual-view">
-            {/* Header: Back + Title + Close Button */}
+            {/* Header */}
             <div className="location-manual-view__header">
-              <div className="location-manual-view__title-group">
-                {/* <button
-                  type="button"
-                  className="location-manual-view__back-btn"
-                  onClick={() => {
-                    setView('prompt');
-                    setSearchQuery('');
-                  }}
-                  aria-label="Back to prompt"
-                  title="Back"
-                >
-                  <RiArrowLeftLine />
-                </button> */}
-                <h4 className="location-manual-view__title">YOUR LOCATION</h4>
-              </div>
-              <button
-                type="button"
-                className="location-manual-view__close-btn"
-                aria-label="Close"
-                onClick={() => setModal(false)}
-              >
-                <RiCloseLine />
-              </button>
-            </div>
-
-            {/* Search Input Box (styled like header search bar) */}
-            <div className="location-search-box">
-              <RiSearchLine
-                className="location-search-box__search-icon"
-                aria-hidden="true"
-              />
-              <input
-                type="text"
-                className="location-search-box__input"
-                placeholder='Search for "Address, area or landmark"...'
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                autoFocus
-              />
-              {hasSearchQuery && (
+              <h4 className="location-manual-view__title">YOUR LOCATION</h4>
+              {canClose && (
                 <button
                   type="button"
-                  className="location-search-box__clear-btn"
-                  onClick={() => setSearchQuery('')}
-                  aria-label="Clear search"
-                  title="Clear"
+                  className="location-manual-view__close-btn"
+                  aria-label="Close"
+                  onClick={() => setModal(false)}
                 >
                   <RiCloseLine />
                 </button>
               )}
             </div>
 
-            {/* FIRST VIEW: Only Current Location Enable option (no suggestions) */}
-            {!hasSearchQuery && (
-              <div className="current-location-row">
-                <div className="current-location-row__left">
-                  <span className="current-location-row__icon">
-                    <RiFocus3Line />
-                  </span>
-                  <div className="current-location-row__info">
-                    <h6 className="current-location-row__title">Current Location</h6>
-                    <p className="current-location-row__subtitle">
-                      Enable your current location for better services
-                    </p>
-                  </div>
-                </div>
+            {/* Search input */}
+            <div className="location-search-box">
+              <RiSearchLine className="location-search-box__search-icon" aria-hidden="true" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                className="location-search-box__input"
+                placeholder='Search for "Address, area or landmark"...'
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  if (notServiceableMsg) setNotServiceableMsg('');
+                }}
+                autoComplete="off"
+              />
+              {hasQuery && (
                 <button
                   type="button"
-                  className="current-location-row__enable-btn"
-                  onClick={handleUseCurrentLocation}
+                  className="location-search-box__clear-btn"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setNotServiceableMsg('');
+                  }}
+                  aria-label="Clear search"
                 >
-                  ENABLE
+                  <RiCloseLine />
                 </button>
+              )}
+            </div>
+
+            {/* Not Serviceable Alert */}
+            {notServiceableMsg && (
+              <div className="location-not-serviceable" role="alert">
+                <RiErrorWarningLine className="location-not-serviceable__icon" />
+                <span>{notServiceableMsg}</span>
               </div>
             )}
 
-            {/* SEARCH VIEW: When user types, Current Location is hidden and suggestions are shown */}
-            {hasSearchQuery && (
-              <div className="location-results-container">
-                <ul className="location-results-list">
-                  {filteredLocations.map((loc, idx) => (
-                    <li
-                      key={loc.id}
-                      className={`location-results-list__item ${idx === 0 ? 'is-active' : ''
-                        }`}
-                      onClick={() => handleSelectLocationItem(loc)}
-                    >
-                      <span className="location-results-list__icon">
-                        <RiMapPinLine />
-                      </span>
-                      <div className="location-results-list__details">
-                        <p className="location-results-list__title">{loc.title}</p>
-                        <span className="location-results-list__subtitle">
-                          {loc.subtitle}
-                        </span>
-                      </div>
-                    </li>
-                  ))}
-                  {filteredLocations.length === 0 && (
-                    <li className="location-results-list__empty">
-                      <p>No locations found matching &ldquo;{searchQuery}&rdquo;</p>
-                    </li>
+            {/* Maps unavailable warning */}
+            {!mapsReady && hasQuery && (
+              <p className="location-results-empty">
+                ⚠️ Address search is loading, please wait…
+              </p>
+            )}
+
+            {/* Current Location row — always visible */}
+            <div
+              className="current-location-row"
+              role="button"
+              tabIndex={0}
+              onClick={handleGps}
+              onKeyDown={(e) => e.key === 'Enter' && handleGps()}
+            >
+              <div className="current-location-row__left">
+                <span className="current-location-row__icon">
+                  {gpsLoading ? <RiLoader4Line className="spin-icon" /> : <RiFocus3Line />}
+                </span>
+                <div className="current-location-row__info">
+                  <h6 className="current-location-row__title">
+                    {gpsLoading ? 'Detecting your location…' : 'Current Location'}
+                  </h6>
+                  {gpsError ? (
+                    <p className="current-location-row__subtitle current-location-row__subtitle--error">
+                      {gpsError}
+                    </p>
+                  ) : (
+                    <p className="current-location-row__subtitle">
+                      {gpsLoading ? 'Please wait…' : 'Use GPS to auto-detect your location'}
+                    </p>
                   )}
-                </ul>
+                </div>
+              </div>
+              {!gpsLoading && (
+                <span className="current-location-row__enable-btn">ENABLE</span>
+              )}
+            </div>
+
+            {/* Saved Shipping Addresses (shown when search is empty) */}
+            {!hasQuery && savedShippingAddresses.length > 0 && (
+              <div className="saved-addresses-section">
+                <h5 className="saved-addresses-section__title">
+                  Saved Addresses
+                </h5>
+                <div className="saved-addresses-list">
+                  {savedShippingAddresses.map((addr, idx) => {
+                    const formatted = formatAddress(addr);
+                    const label =
+                      addr?.addressType ||
+                      addr?.landmark ||
+                      addr?.city ||
+                      'Shipping Address';
+                    const handleSelectSaved = () => {
+                      setNotServiceableMsg('');
+                      setGpsError('');
+                      validateAndSelect({
+                        address: formatted,
+                        pincode:
+                          addr?.pincode || extractPincodeFromText(formatted),
+                      });
+                    };
+
+                    return (
+                      <div
+                        key={addr?.uid || idx}
+                        className="saved-address-card"
+                        role="button"
+                        tabIndex={0}
+                        onClick={handleSelectSaved}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            handleSelectSaved();
+                          }
+                        }}
+                      >
+                        <span className="saved-address-card__icon">
+                          <RiMapPinLine />
+                        </span>
+                        <div className="saved-address-card__content">
+                          <div className="saved-address-card__header">
+                            <span className="saved-address-card__label">
+                              {label}
+                            </span>
+                            {addr?.pincode && (
+                              <span className="saved-address-card__pincode">
+                                • {addr.pincode}
+                              </span>
+                            )}
+                            {addr?.defaultFlag && (
+                              <span className="saved-address-card__badge">
+                                Default
+                              </span>
+                            )}
+                          </div>
+                          <p
+                            className="saved-address-card__address"
+                            title={formatted}
+                          >
+                            {formatted}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Google Places predictions */}
+            {mapsReady && (
+              <div className="location-results-container">
+                {/* Spinner only while debounce is pending OR Places is fetching */}
+                {hasQuery && (placesLoading || debouncedQuery !== searchQuery.trim()) && (
+                  <p className="location-results-loading">Searching…</p>
+                )}
+
+                {showResults && !placesLoading && predictions.length === 0 && (
+                  <p className="location-results-empty">
+                    No results for &ldquo;{debouncedQuery}&rdquo;
+                  </p>
+                )}
+
+                {predictions.length > 0 && (
+                  <ul className="location-results-list">
+                    {predictions.map((pred, idx) => {
+                      const isChecking = checkingPlaceId === pred.place_id;
+                      return (
+                        <li
+                          key={pred.place_id}
+                          className={`location-results-list__item ${idx === 0 ? 'is-active' : ''}`}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => handleSelectPrediction(pred)}
+                          onKeyDown={(e) => e.key === 'Enter' && handleSelectPrediction(pred)}
+                        >
+                          <span className="location-results-list__icon">
+                            {isChecking ? (
+                              <RiLoader4Line className="spin-icon" />
+                            ) : (
+                              <RiMapPinLine />
+                            )}
+                          </span>
+                          <div className="location-results-list__details">
+                            <p className="location-results-list__title">
+                              {pred.structured_formatting?.main_text || pred.description}
+                            </p>
+                            <span className="location-results-list__subtitle">
+                              {isChecking
+                                ? 'Checking serviceability…'
+                                : pred.structured_formatting?.secondary_text || ''}
+                            </span>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
               </div>
             )}
           </div>
@@ -329,5 +546,15 @@ const HeaderLocationModal = ({
     </Modal>
   );
 };
+
+// ─────────────────────────────────────────────────────────────
+// Public export — wraps inner modal with GoogleMapsProvider
+// so the Places SDK is loaded before the hook runs.
+// ─────────────────────────────────────────────────────────────
+const HeaderLocationModal = (props) => (
+  <GoogleMapsProvider>
+    <HeaderLocationModalInner {...props} />
+  </GoogleMapsProvider>
+);
 
 export default HeaderLocationModal;

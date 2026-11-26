@@ -1981,18 +1981,16 @@
             width: 400px;
             height: 400px;
             transform: translate(-50%, -50%);
-            background: conic-gradient(
-              from 0deg,
-              transparent 0deg,
-              transparent 40deg,
-              #4285F4 80deg,
-              #34A853 120deg,
-              #FBBC05 160deg,
-              #EA4335 200deg,
-              #c0392b 230deg,
-              transparent 260deg,
-              transparent 360deg
-            );
+            background: conic-gradient(from 0deg,
+                transparent 0deg,
+                transparent 40deg,
+                #4285F4 80deg,
+                #34A853 120deg,
+                #FBBC05 160deg,
+                #EA4335 200deg,
+                #c0392b 230deg,
+                transparent 260deg,
+                transparent 360deg);
             animation: rotateMovingBorder 3s linear infinite;
             z-index: 0;
           }
@@ -2130,7 +2128,7 @@
           &:hover {
             background-color: var(--btn-add-cart-bg-hover);
             border-color: var(--btn-add-cart-bg-hover);
-            box-shadow: 0 4px 4px 0 var(--btn-add-cart-shadow-hover);
+            // box-shadow: 0 4px 4px 0 var(--btn-add-cart-shadow-hover);
           }
 
           &:disabled,
@@ -3195,7 +3193,7 @@
           &:hover {
             background-color: var(--btn-add-cart-bg-hover);
             border-color: var(--btn-add-cart-bg-hover);
-            box-shadow: 0 4px 4px 0 var(--btn-add-cart-shadow-hover);
+            // box-shadow: 0 4px 4px 0 var(--btn-add-cart-shadow-hover);
           }
 
           &:disabled,
