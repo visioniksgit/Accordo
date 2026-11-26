@@ -77,7 +77,7 @@
   .section-title {
     font-size: 15px;
     font-weight: 700;
-    color: var(--content-color);
+    color: var(--title-color);
     margin-bottom: 8px;
   }
 
@@ -123,7 +123,7 @@
 
   &.selected {
     border-color: var(--theme-color);
-    background: rgba(13, 164, 135, 0.04);
+    background: #edf2ff;
   }
 
   &.disabled {
@@ -232,7 +232,7 @@
     font-size: 11px;
     font-weight: 600;
     color: var(--theme-color-dark);
-    background: #d1fae5;
+    background: #edf2ff;
     padding: 2px 8px;
     border-radius: 4px;
     margin-top: 2px;
@@ -324,7 +324,7 @@
     display: block;
 
     .required {
-      color: #dc2626;
+      color: var(--red);
     }
   }
 
@@ -369,7 +369,7 @@
 
   .reason-product-item {
     margin-bottom: 14px;
-    background: var(--bg-secondary);
+    background: #edf2ff;
 
     .product-info {
       .product-name {
@@ -459,7 +459,7 @@
     display: block;
 
     .required {
-      color: #dc2626;
+      color: var(--red);
     }
   }
 
@@ -490,7 +490,7 @@
   font-size: 11px;
   font-weight: 500;
   color: var(--theme-color);
-  background: rgba(13, 164, 135, 0.08);
+  background: #edf2ff;
   border: 1px solid rgba(13, 164, 135, 0.2);
   padding: 4px 10px;
   border-radius: 12px;
@@ -673,7 +673,7 @@
 
 .form-label {
   .required {
-    color: #dc2626;
+    color: var(--red);
     font-size: 11px;
     font-weight: 500;
     margin-left: 4px;
@@ -1067,6 +1067,7 @@
 }
 
 .return-create-skeleton {
+
   .skeleton-line,
   .skeleton-card {
     border-radius: 8px;
@@ -1188,7 +1189,7 @@
 
   .address-card {
     padding: 10px 12px;
-    background: var(--bg-secondary);
+    background: #edf2ff;
     border-radius: 8px;
     border: 1px solid var(--border-color);
 

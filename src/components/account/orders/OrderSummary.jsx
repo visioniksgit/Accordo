@@ -25,6 +25,7 @@ const OrderSummary = ({ summary }) => {
   } = summary || {};
 
   const slabDiscountTooltipId = useId().replace(/:/g, '');
+  const gstTooltipId = useId().replace(/:/g, '');
 
   // const productDiscount = (mrp || itemTotal) - (discountedPrice || itemTotal);
 
@@ -143,7 +144,23 @@ const OrderSummary = ({ summary }) => {
 
         {gstAmount > 0 && (
           <div className="summary-row">
-            <span className="label">GST charges</span>
+            <span className="label d-flex gap-1 align-items-center">
+              GST charges
+              <span
+                id={gstTooltipId}
+                className="d-inline-flex align-items-center"
+                style={{ cursor: 'pointer', color: 'var(--9e9e9e)' }}
+              >
+                <RiInformationLine size={16} />
+              </span>
+            </span>
+            <UncontrolledTooltip
+              placement="top"
+              target={gstTooltipId}
+              style={{ fontSize: 12 }}
+            >
+              GST is calculated as per the applicable tax rate and shown in the order price breakdown.
+            </UncontrolledTooltip>
             <span className="value">{formatInr(gstAmount)}</span>
           </div>
         )}

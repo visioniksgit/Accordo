@@ -103,9 +103,9 @@
 }
 
 .statusBadgeTheme {
-  background: rgba(var(--theme-color-rgb), 0.12);
+  background: #edf2ff;
   color: var(--theme-color);
-  border: 1px solid rgba(var(--theme-color-rgb), 0.24);
+  border: 1px solid var(--border-color);
 }
 
 .statusTextTheme {
@@ -228,7 +228,7 @@ $border-color: var(--border-color);
   align-items: center;
   justify-content: space-between;
   padding: 12px 14px;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+  background: #edf2ff;
   border-radius: 10px;
   margin-bottom: 12px;
   border: 1px solid rgba(16, 185, 129, 0.15);
@@ -243,7 +243,8 @@ $border-color: var(--border-color);
 .refundAmountValue {
   font-size: 22px;
   font-weight: 800;
-  color: #047857;
+  // color: #047857;
+  color: var(--theme-color);
   letter-spacing: -0.5px;
 }
 
@@ -551,7 +552,7 @@ $border-color: var(--border-color);
   font-size: 11px;
   font-weight: 600;
   padding: 2px 8px;
-  background: rgba(13, 164, 135, 0.08);
+  background: #edf2ff;
   color: var(--theme-color);
   border-radius: 10px;
   border: 1px solid rgba(13, 164, 135, 0.2);

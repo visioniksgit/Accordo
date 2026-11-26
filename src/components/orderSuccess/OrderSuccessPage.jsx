@@ -331,10 +331,10 @@ const OrderSuccessPage = () => {
           {/* ── Actions ── */}
           <div className={styles.actions}>
             <Link href="/account/orders" replace className={styles.btnPrimary}>
-              View My Orders
+              View Orders
             </Link>
             <Link href="/collections" replace className={styles.btnSecondary}>
-              Continue Shopping
+              Explore More
             </Link>
           </div>
           {/* <div className={styles.actions}>

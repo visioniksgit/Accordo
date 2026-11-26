@@ -9,7 +9,7 @@
   .review-header {
     border-bottom: 1px solid variables.$order-border;
     padding: 1rem;
-    
+
     .modal-title {
       font-size: 16px;
       font-weight: 600;
@@ -96,7 +96,7 @@
       margin-bottom: 12px;
 
       .required {
-        color: variables.$danger-color;
+        color: var(--red);
       }
     }
 
@@ -331,7 +331,7 @@
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
-  
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -339,6 +339,7 @@
 
 // Responsive adjustments
 @media (max-width: 767px) {
+
   .review-modal,
   .review-offcanvas {
     .review-product-card {

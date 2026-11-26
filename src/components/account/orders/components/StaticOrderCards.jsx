@@ -70,11 +70,12 @@ const StaticOrderCards = ({
 
         <div className="order-footer">
           <button className="btn full-width" onClick={(event) => onRateOrderClick(event)}>
-            Rate Order <RiStarFill color="#f5c518" />
+            Rate Order
+            {/* <RiStarFill color="#f5c518" /> */}
           </button>
           <button className="btn primary">
             Order Again
-            <IoMdRefresh />
+            {/* <IoMdRefresh /> */}
           </button>
         </div>
       </div>
@@ -151,11 +152,12 @@ const StaticOrderCards = ({
 
         <div className="order-footer">
           <button className="btn secondary" onClick={(event) => onRateOrderClick(event)}>
-            Rate Order <RiStarFill color="#f5c518" />
+            Rate Order
+            {/* <RiStarFill color="#f5c518" /> */}
           </button>
           <button className="btn primary">
             Order Again
-            <IoMdRefresh />
+            {/* <IoMdRefresh /> */}
           </button>
         </div>
       </div>
@@ -230,11 +232,12 @@ const StaticOrderCards = ({
 
         <div className="order-footer">
           <button className="btn secondary" onClick={(event) => onRateOrderClick(event)} disabled>
-            Rate Order <RiStarFill color="#f5c518" />
+            Rate Order
+            {/* <RiStarFill color="#f5c518" /> */}
           </button>
           <button className="btn primary">
             Order Again
-            <IoMdRefresh />
+            {/* <IoMdRefresh /> */}
           </button>
         </div>
       </div>

@@ -70,12 +70,12 @@ const ApiOrderCard = ({
       >
         <div className="order-info">
           <div className="status">
-            <span>{`Order ${String(statusLabel || '').toLowerCase()}`}</span>
             <span style={{
               lineHeight: 1
             }}>
               <StatusIcon style={{ color }} />
             </span>
+            <span>{`Order ${String(statusLabel || '').toLowerCase()}`}</span>
             {returnBadge && (
               <div className="refund-badge-wrapper">
                 <span className="refund-badge" style={THEME_BADGE_STYLE}>
@@ -122,7 +122,8 @@ const ApiOrderCard = ({
             onClick={(event) => onRateOrderClick(event, order)}
             disabled={!canRateOrder}
           >
-            Rate Order <RiStarFill color="#f5c518" />
+            Rate Order
+            {/* <RiStarFill color="#f5c518" /> */}
           </button>
           <button
             type="button"
@@ -131,7 +132,7 @@ const ApiOrderCard = ({
             disabled={isOrderAgainPending}
           >
             Order Again
-            <IoMdRefresh />
+            {/* <IoMdRefresh /> */}
           </button>
         </div>
         :
@@ -146,7 +147,8 @@ const ApiOrderCard = ({
               }, 500);
             }}
           >
-            Track Order <CgTrack color="var(--theme-color)" />
+            Track Order
+            {/* <CgTrack color="var(--theme-color)" /> */}
           </button>
           <button
             type="button"
@@ -154,7 +156,7 @@ const ApiOrderCard = ({
             onClick={() => onOpenOrderDetails(order)}
           >
             View Order
-            <IoMdRefresh />
+            {/* <IoMdRefresh /> */}
           </button>
         </div>
       }

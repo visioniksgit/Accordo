@@ -43,14 +43,13 @@ const MAX_VIDEO_SIZE = 20 * 1024 * 1024;
 
 const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
 const allowedVideoTypes = ['video/mp4', 'video/webm'];
-const RETURN_POLICY_PDF_URL =
-  '/assets/uploads/Consumer Ayurved Swamala Return Policy_c2c.pdf';
+const RETURN_POLICY_PDF_URL = '/assets/uploads/accordo_return_policy.pdf';
 const RETURN_PROOF_UPLOAD_FOLDER = 'SDL/return-requests';
 
 const VIEW = { CREATE: 'CREATE', OVERVIEW: 'OVERVIEW' };
 const THEME_STATUS_ICON_STYLE = { color: 'var(--theme-color)' };
 const THEME_STATUS_BADGE_STYLE = {
-  background: 'rgba(var(--theme-color-rgb), 0.12)',
+  background: '#edf2ff',
   borderColor: 'rgba(var(--theme-color-rgb), 0.22)',
   color: 'var(--theme-color)',
 };
@@ -743,13 +742,13 @@ const NewReturnForm = ({
         </div> */}
 
         {/* <div className="return-policy-note sdl-coins-disclaimer"> */}
-        <div className="return-policy-note">
+        {/* <div className="return-policy-note">
           <RiInformationLine size={16} />
           <span>
             <strong>SDL Points Notice:</strong> SDL Points used for this
             order will be refunded back to source.
           </span>
-        </div>
+        </div> */}
       </div>
 
       {/* RETURN SUMMARY */}

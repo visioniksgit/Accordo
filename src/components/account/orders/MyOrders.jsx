@@ -899,10 +899,10 @@ const MyOrders = () => {
                             disabled={!isActiveOrderRateable}
                           >
                             Rate Order{' '}
-                            <RiStarFill
+                            {/* <RiStarFill
                               className="stroke-w-1"
                               color="#f5c518"
-                            />
+                            /> */}
                           </button>
 
                           <button
@@ -915,7 +915,8 @@ const MyOrders = () => {
                             }}
                             disabled={isOrderAgainPending}
                           >
-                            Order Again <IoMdRefresh className="stroke-w-1" />
+                            Order Again
+                            {/* <IoMdRefresh className="stroke-w-1" /> */}
                           </button>
                         </>
                       ) : (

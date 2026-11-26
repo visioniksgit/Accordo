@@ -9,7 +9,7 @@
   .rate-order-header {
     border-bottom: 1px solid variables.$order-border;
     padding: 1rem;
-    
+
     .modal-title {
       font-size: 16px;
       font-weight: 600;
@@ -33,7 +33,7 @@
       display: flex;
       align-items: center;
       gap: 1rem;
-      background: var(--light-gray);
+      background: #edf2ff;
       padding: 1rem;
       border-radius: 8px;
       -webkit-border-radius: 8px;
@@ -70,13 +70,14 @@
           transform: translate(-50%, -50%);
         }
 
-        img + .delivery-icon-fallback {
+        img+.delivery-icon-fallback {
           display: none;
         }
       }
 
       .delivery-info {
         margin-top: 0;
+
         h6 {
           margin: 0 0 4px 0;
           font-size: 14px;
@@ -232,7 +233,7 @@
     // Feedback Section (Animated)
     .feedback-section {
       // background: var(--border-color);
-      
+
       .feedback-content {
         padding: 0.75em;
         border-top: 1px solid variables.$order-border;
@@ -368,12 +369,12 @@
         color: #aaa !important;
         opacity: 1 !important;
       }
-    
+
       &:focus::placeholder {
         color: #aaa !important;
         opacity: 1 !important;
       }
-    
+
       &:focus {
         outline: none;
       }
@@ -447,7 +448,7 @@
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
-  
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -455,6 +456,7 @@
 
 // Responsive adjustments
 @media (max-width: 767px) {
+
   .rate-order-modal,
   .rate-order-offcanvas {
     .product-rating-item {

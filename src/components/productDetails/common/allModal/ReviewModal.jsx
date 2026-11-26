@@ -32,25 +32,25 @@ import { useVideoCapture } from '@/components/account/orders/hooks/useVideoCaptu
 // --- Feedback Constants ---
 const POSITIVE_FEEDBACK_QUESTIONS = [
   {
-    id: 'positive_quality',
-    question: 'What did you like about this product?',
+    id: 'positive_delivery',
+    question: 'How was your delivery experience?',
     options: [
-      'Good overall quality',
-      'Met expectations',
-      'Felt reliable',
-      'Easy to use',
-      'Worth the purchase',
+      'Delivered on time',
+      'Fast delivery',
+      'Well-packed products',
+      'Helpful delivery partner',
     ],
   },
   {
-    id: 'positive_experience',
-    question: 'How was your overall experience?',
+    id: 'positive_quality',
+    question: 'What did you like about this product?',
     options: [
-      'Smooth experience',
-      'Satisfied with the product',
-      'Good value for money',
-      'Would buy again',
-      'Would recommend to others',
+      'Excellent product quality',
+      'Matched specifications',
+
+      'Good packaging',
+      'Worth the price',
+      'Genuine product',
     ],
   },
 ];
@@ -58,24 +58,23 @@ const POSITIVE_FEEDBACK_QUESTIONS = [
 const NEGATIVE_FEEDBACK_QUESTIONS = [
   {
     id: 'negative_quality',
-    question: 'What could be improved in this product?',
+    question: 'What could be improved about this product?',
     options: [
-      'Quality could be better',
+      'Product quality could be better',
       'Did not meet expectations',
-      'Needs improvement',
-      'Not easy to use',
-      'Did not feel worth the price',
+      'Specifications were different',
+      'Not worth the price',
     ],
   },
   {
     id: 'negative_experience',
-    question: 'What issue did you notice?',
+    question: 'What issue did you experience?',
     options: [
-      'Unsatisfactory experience',
-      'Product was not good',
-      'Not as expected',
-      'Had usability issues',
-      'Would not purchase again',
+      'Product was damaged',
+      'Received incorrect product',
+      'Product was defective',
+      'Product was not as described',
+      'Other issue',
     ],
   },
 ];
